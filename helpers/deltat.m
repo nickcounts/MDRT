@@ -1,4 +1,4 @@
-function deltat (fig)
+function marker (fig)
 
 % deltat is a helper routine designed to operate data-tip pairs in a plot
 % finds two data tips and displays the elapsed time between them
