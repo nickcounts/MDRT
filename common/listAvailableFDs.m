@@ -23,34 +23,45 @@ function [ availFDs ] = listAvailableFDs( path, fileType )
 %   N. Counts, Spaceport Support Services, 2014
 
     filesOfType = dir(fullfile(path, ['*.' fileType]));
+    
+    availFDs = {};
 
     N = numel(filesOfType);
     
-    progressbar('Retrieving Available FDs');
+    
+    
+    if N % Files are found!
+    
+        progressbar('Retrieving Available FDs');
 
-    availFDs {N,2} = '';
+        availFDs {N,2} = '';
 
-    for i = 1:N
-        % disp(sprintf('%s ',filesOfType(i).name));
+        for i = 1:N
+            % disp(sprintf('%s ',filesOfType(i).name));
 
-        F = load([path filesOfType(i).name],'-mat');
-        % disp(sprintf('%s',[fd.Type '-' fd.ID]))
+            F = load([path filesOfType(i).name],'-mat');
+            % disp(sprintf('%s',[fd.Type '-' fd.ID]))
 
-        if isfield(F, 'fd')
+            if isfield(F, 'fd')
 
-%             availFDs{i,1} = sprintf('%s     %s-%s',F.fd.ID,F.fd.Type,F.fd.ID);
-            availFDs{i,1} = sprintf('%s     %s',F.fd.ID, F.fd.FullString);
-            availFDs{i,2} = filesOfType(i).name;
+    %             availFDs{i,1} = sprintf('%s     %s-%s',F.fd.ID,F.fd.Type,F.fd.ID);
+                availFDs{i,1} = sprintf('%s     %s',F.fd.ID, F.fd.FullString);
+                availFDs{i,2} = filesOfType(i).name;
+
+            end
+
+            progressbar(i/N);
 
         end
-        
-        progressbar(i/N);
+
+        availFDs = availFDs(~cellfun('isempty',availFDs));
+
+        availFDs = reshape(availFDs,length(availFDs)/2,2);
+    
+    else % no files are found
+        % return an empty cell
         
     end
-    
-    availFDs = availFDs(~cellfun('isempty',availFDs));
-    
-    availFDs = reshape(availFDs,length(availFDs)/2,2);
     
         
 end
