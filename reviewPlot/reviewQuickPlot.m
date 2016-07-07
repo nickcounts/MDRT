@@ -7,6 +7,8 @@ function [ figureHandle ] = reviewQuickPlot( fdFileName, config, varargin )
 %   Landscape and appropriately styled for printing to PDF or another
 %   format.
 %
+%   Counts 2014, Spaceport Support Services
+%   Counts 2016, VCSFA - Updated
 
 
     % SET PLOT STYLE INFO FOR SAVING TO PDF
@@ -22,6 +24,11 @@ function [ figureHandle ] = reviewQuickPlot( fdFileName, config, varargin )
     figureHandle = figure();
     set(figureHandle,'Tag','quickPlot');
     
+   
+    
+    
+    
+    % Fix orientation for printing and .pdf generation
     orient('landscape');
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
@@ -37,7 +44,7 @@ function [ figureHandle ] = reviewQuickPlot( fdFileName, config, varargin )
 
     
 switch upper(fd.Type)
-    case {'DCVNC','DCVNO','RV','BV','FV'}   
+    case {'DCVNC','DCVNO','PCVNC','PCVNO','RV','BV','FV'}   
 
         if isfield(fd,'position')
             % Check for proportional valve special case
@@ -52,20 +59,34 @@ switch upper(fd.Type)
 end
 
     
+
     h_zoom = zoom(figureHandle);
-    set(h_zoom,'Motion','horizontal','Enable','on');
     
-    set(h_zoom,'ActionPostCallback',@mypostcallback);
-    set(h_zoom,'ActionPreCallback',@myprecallback);
-        
-    set(h_zoom,'Enable','on');
+    
+    
+%     set(h_zoom,'Motion','horizontal','Enable','on');
+%     set(h_zoom,'ActionPostCallback',@mypostcallback);
+%     set(h_zoom,'ActionPreCallback',@myprecallback);
+    
+   
+    h_zoom.ActionPreCallback = @myprecallback;
+    h_zoom.ActionPostCallback = @mypostcallback;
+    
+    h_zoom.motion = 'horizontal';
+    h_zoom.enable = 'on';
+    
+%     set(h_zoom,'Enable','on');
     
 
 
     % set(pan(ax), 'ActionPostCallback',@(x,y) reviewRedrawOnGraphLimitChange(ax));
 
     dynamicDateTicks;
-    plotStyle;
+    plotStyle; 
+    
+    % Point the datatip cursor callback function to my function
+    dcm_obj = datacursormode(figureHandle);
+    set(dcm_obj, 'UpdateFcn', @dataTipDateCallbackDecimal);
 
 
     if nargin == 2
@@ -104,18 +125,18 @@ newLim = get(evd.Axes,'XLim');
 msgbox(sprintf('The new X-Limits are [%.2f %.2f].',newLim));
 
 
-function reviewRedrawOnGraphLimitChange(obj,evd)
-%% reviewRedrawOnGraphLimitChange(obj,evd)
-%
-%   custom callback function to execute when plot is resized or panned
-%
-
-newLim = get(evd.Axes, 'XLim');
-
-disp(newLim)
-disp('Actually inside my callback!')
-
-reviewRescaleAllTimelineEvents;
+% function myprecallback(obj,evd)
+% %% reviewRedrawOnGraphLimitChange(obj,evd)
+% %
+% %   custom callback function to execute when plot is resized or panned
+% %
+% 
+% newLim = get(evd.Axes, 'XLim');
+% 
+% disp(newLim)
+% disp('Actually inside my callback!')
+% 
+% reviewRescaleAllTimelineEvents;
 
 
 

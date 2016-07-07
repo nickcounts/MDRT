@@ -64,6 +64,7 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Load the project configuration (paths to data, plots and raw data)
     config = getConfig;
+    dataInfo = getDataIndex;
  
 % Store configuration in handles structure    
     handles.configuration = config;
@@ -852,7 +853,7 @@ graphName = get(handles.ui_editBox_graphTitle, 'String');
 
 function uiSaveButton_ClickedCallback(hObject, eventdata, handles)
 
-    keyboard
+    
 
     % Retrieve graph structure to be saved from GUI elements
     graph = returnGraphStructureFromGUI(handles);
@@ -879,7 +880,7 @@ function uiSaveButton_ClickedCallback(hObject, eventdata, handles)
         % Set default path... to graph
         lookInPath = handles.configuration.dataFolderPath;
     end    
-    keyboard
+    
     % Open UI for save name and path
     [file,path] = uiputfile('*.gcf','Save Graph Configuration as:',fullfile(lookInPath, defaultName));
 
@@ -908,13 +909,14 @@ function uiLoadButton_ClickedCallback(hObject, eventdata, handles)
     
     
 
+
     % Open UI Window to Choolse Graph Config File
     [filename, pathname, filterindex] = uigetfile( ...
             {  '*.gcf',         'Graph Config File (*.gcf)'; ...
                '*.xlsx',        'Excel file (*.xlsx)'; ...
                '*.xls',         'Excel file (*.xls)'; ...
                '*.*',           'All Files (*.*)'}, ...
-               'Pick a file',   fullfile(lookInPath,'*.gcf'));
+               [fullfile(lookInPath,'*.gcf')], 'Pick a file');
    
   
     switch filterindex

@@ -14,6 +14,12 @@ function varargout = plotGraphFromGUI(graph, options)
 
 % temporary hack for non-timeline plots
     useTimeline = true;
+    
+% temporary hack to handle giant data sets
+    useReducePlot = true;
+    
+% Flag to supress warning dialogs
+    supressWarningDialogs = false;
 
 
 % Load the project configuration (paths to data, plots and raw data)
@@ -25,8 +31,11 @@ function varargout = plotGraphFromGUI(graph, options)
     if useTimeline
         if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
             load(fullfile(config.dataFolderPath, 'timeline.mat'));
+            disp('using timeline markers')
         else
-            warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
+            if ~supressWarningDialogs
+                warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
+            end
             useTimeline = false;
         end
     end
@@ -92,8 +101,13 @@ for graphNumber = 1:numberOfGraphs
     set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
     
     orient('landscape');
+    
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
+                            
+    
+    % TODO: Insert code to parse graph title meta tags!
+    %     graphName = parseGraphTitle(graph(graphNumber).name);                      
                             
     ST_h = suptitle(graph(graphNumber).name);
 
@@ -144,17 +158,38 @@ for graphNumber = 1:numberOfGraphs
                             %TODO: Implement selective plotting for
                             %proportional valves
                             
-                            hDataPlot(graphNumber,subPlotNumber,i) = plot(s(i).fd.position.Time, ...
+                            
+                            if useReducePlot
+                                
+                                hDataPlot(graphNumber,subPlotNumber,i) = reduce_plot(s(i).fd.position.Time, ...
                                                   s(i).fd.position.Data, ...
                                                   'displayname', ...
                                                   [s(i).fd.Type '-' s(i).fd.ID]);
+                            else
+                            
+                                hDataPlot(graphNumber,subPlotNumber,i) = plot(s(i).fd.position.Time, ...
+                                                      s(i).fd.position.Data, ...
+                                                      'displayname', ...
+                                                      [s(i).fd.Type '-' s(i).fd.ID]);
+                            end
+                            
                         else
                             
-
-                            hDataPlot(graphNumber,subPlotNumber,i) = stairs(s(i).fd.ts.Time, ...
+                            if useReducePlot
+                                
+                                hDataPlot(graphNumber,subPlotNumber,i) = stairs(s(i).fd.ts.Time, ...
                                                   s(i).fd.ts.Data, ...
                                                   'displayname', ...
                                                   [s(i).fd.Type '-' s(i).fd.ID]);
+                                              
+                            else
+
+                                hDataPlot(graphNumber,subPlotNumber,i) = stairs(s(i).fd.ts.Time, ...
+                                                      s(i).fd.ts.Data, ...
+                                                      'displayname', ...
+                                                      [s(i).fd.Type '-' s(i).fd.ID]);
+                            end
+                            
                         end
                     elseif(any(strcmp('isLimit',fieldnames(s(i).fd))))
 
@@ -165,9 +200,19 @@ for graphNumber = 1:numberOfGraphs
                         isColorOverride = true;
                         overrideColor = [1 0 0];
                     else
-                        hDataPlot(graphNumber,subPlotNumber,i) = plot(s(i).fd.ts, ...
-                                        'displayname', ...
-                                        [s(i).fd.Type '-' s(i).fd.ID]);
+                        
+                        if useReducePlot
+                            
+                            hDataPlot(graphNumber,subPlotNumber,i) = reduce_plot(s(i).fd.ts, ...
+                                            'displayname', ...
+                                            [s(i).fd.Type '-' s(i).fd.ID]);
+                                        
+                        else
+                                    
+                            hDataPlot(graphNumber,subPlotNumber,i) = plot(s(i).fd.ts, ...
+                                            'displayname', ...
+                                            [s(i).fd.Type '-' s(i).fd.ID]);
+                        end
                     end
                                 
                 % Apply the appropriate color
@@ -250,7 +295,7 @@ for graphNumber = 1:numberOfGraphs
                     set(subPlotAxes(subPlotNumber),'YGrid','on','YMinorGrid','on','YMinorTick','on');
 
                 % dynamicDateTicks
-                    tlabel
+                    
                     xLim = get(subPlotAxes(subPlotNumber), 'XLim');
 %                     setDateAxes(subPlotAxes(subPlotNumber), 'XLim', [timeToPlot.start timeToPlot.stop]);
                     setDateAxes(subPlotAxes(subPlotNumber), 'XLim', xLim);
@@ -267,8 +312,20 @@ for graphNumber = 1:numberOfGraphs
                 % Reset any subplot specific loop variables
                     axesTypeCell = [];
                     clear s
-        
+                    
+                    if subPlotNumber == numberOfSubplots
+                        % on last subplot, so add date string
+                        tlabel('WhichAxes', 'last')
+                        disp('last tlabel call')
+                        
+                    else
+                        tlabel('Reference', 'none')
+                        disp('regular tlabel call')
+                        
+                    end
+                    
     end % subplot loop
+    
     
     % Link x axes?
         linkaxes(subPlotAxes(:),'x');
@@ -305,6 +362,7 @@ for graphNumber = 1:numberOfGraphs
                     end
             end
         end
+        
         
         set(subPlotAxes(subPlotNumber),'XLim',timeLimits);
 

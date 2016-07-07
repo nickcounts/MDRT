@@ -168,7 +168,7 @@ function [ availQPs QPTitle ] = listAvailableQPs( )
 %listAvailableFDs 
 
 
-availQPs = findall(0,'Tag','quickPlot');
+availQPs = findall(0,'Tag','quickPlot');clc
 
 QPTitle = cell(0);
 

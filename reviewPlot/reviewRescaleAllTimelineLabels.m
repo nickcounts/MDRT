@@ -19,7 +19,6 @@ eventTextPrintFontSize = 6;
 parentObject = 0;
 
 
-
 %% Find all event labels in parentObject
 
 lines = findall(parentObject,'Tag','vline');

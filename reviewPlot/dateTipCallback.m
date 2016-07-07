@@ -9,7 +9,7 @@ pos = get(event_obj,'Position');
 % Y Value precision scaling/formatting
 xFormatString = '%1.2e';
 if (pos(2) < 99999)
-    xFormatString = '%.f';
+    xFormatString = '%3.2f';
 elseif (pos(2)) < 10;
     xFormatString = '%2.2f';
 elseif (pos(2)) < 500;
@@ -20,7 +20,7 @@ elseif (pos(2)) < 9999
     xFormatString = '%5f';   
 end
 
-output_txt = {['X: ', datestr(pos(1),'HH:MM:SS') ],...
+output_txt = {['X: ', datestr(pos(1),'HH:MM:SS.FFF') ],...
     ['Y: ',num2str( pos(2), xFormatString )]};
 
 % If there is a Z-coordinate in the position, display it as well
