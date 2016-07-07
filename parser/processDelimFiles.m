@@ -268,10 +268,14 @@ for i = 1:length(filenameCellList)
                 % ---------------------------------------------------------
                 
                 disp('Processing state and percent open');
-
+                
                 % Strip out the values that contain 'State' in the descriptor
                 valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
-                info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
+                if ~isempty(valveState)
+                    info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
+                else
+                    disp('NOTE: Valve state not found. No state data added to structure');
+                end
 
                 valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
 
@@ -387,10 +391,11 @@ for i = 1:length(filenameCellList)
                             
                             ts = timeseries( sscanf(sprintf('%s ', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
                             
+                            % This is the old way and it was REALLY REALLY slow
+                            % ts = timeseries( str2double(valueCell), timeVect, 'Name', info.FullString);
                     end
                     
-                    % This is the old way and it was REALLY REALLY slow
-%                     ts = timeseries( str2double(valueCell), timeVect, 'Name', info.FullString);
+
 
                
                     
@@ -453,22 +458,26 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         % first checking the structure against a list of special cases and
         % updating the FD fields and filename.
         
+%% Old Code to hanle file naming
         % Start with default filename
-        fileName = info.ID;
+%         fileName = info.ID;
         
-        % Special cases for set-point types
-        % For {'RANGE','SETPOINT','SET POINT','BOUND','BOUNDS','BOUNDARY','LIMIT','HTR'}
-        if ismember(upper(info.Type), {'RANGE','SETPOINT','SET POINT','BOUND','BOUNDS','BOUNDARY','LIMIT','HTR'})
-            if isequal(info.Type, 'Set Point')
-                % default filename is fine
-                fileName = info.ID;
-            else
-                % modify fileName for typical FDs
-                fileName = [info.System ' ' info.ID];
-            end
-        end
+        % Adjust file names for special cases for set-point types
+            
+%         if ismember(upper(info.Type), {'RANGE','SETPOINT','SET POINT','BOUND','BOUNDS','BOUNDARY','LIMIT','HTR'})
+%             if isequal(info.Type, 'Set Point')
+%                 % default filename is fine
+%                 fileName = info.ID;
+%             else
+%                 % modify fileName for typical FDs
+%                 fileName = [info.System ' ' info.ID];
+%             end
+%         end
         
+        
+%% New code to fix overloaded FD file names
 
+        fileName = makeFileNameForFD(info);
         
         % Check fullstring against override list
         
@@ -493,6 +502,35 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         end
         
         save([savePath fileName '.mat'],'fd','-mat')
+        
+    end
+
+
+    function fileName = makeFileNameForFD(FDinfo)
+        %% Pseudo code for filename generator
+        
+        % Tokenize the fullstring
+        
+        % fullStringTokens = regexp(info.FullString, '\w*','match');
+        fullStringTokens = regexp(FDinfo.FullString, '\S+','match'); % keeps ABC-1234 together as one token
+        
+        % If fullstring follows ABC-#####, then start filename with #####
+        
+            prependFindNumber = '';
+        
+            if max( logical( regexp( FDinfo.FullString, '\w-\d{4,5}' ) ))
+                
+                reQueryForFindNumber = '(?<=\w+-)(\d{4,5})';
+                
+                prependFindNumber = regexp( FDinfo.FullString, reQueryForFindNumber, 'match' );
+                
+            end
+            
+        
+        % Build filename, use entire FD Fullstring (do I want to exclude
+        % certain terms in the future?)
+        
+            fileName = strjoin([prependFindNumber, fullStringTokens]);
         
     end
 

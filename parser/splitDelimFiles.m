@@ -7,12 +7,16 @@ function [ output_args ] = splitDelimFiles( config )
 %   
 %   Counts, Spaceport Support Services. 2014
 
+%   Updated 2016, Counts, VCSFA - Better delim naming convention, should
+%   eliminate overloaded filenames.
+
+
 
 % Define paths from config structure
 %     delimPath = '~/Documents/MATLAB/Data Review/ORB-2/delim';
     delimPath = config.delimFolderPath;
-    processPath = fullfile(delimPath, '..');
-
+    % processPath = fullfile(delimPath, '..'); % Not sure why I ever did this
+    processPath = fullfile(delimPath);
 
     [fileName processPath] = uigetfile( {...
                             '*.delim', 'CCT Delim File'; ...
@@ -151,6 +155,16 @@ fid = fopen(fullfile(processPath,fileName));
 progressbar('Pre-processing .delim files');
 reverseStr = '';
 
+    % TODO: rename variabls with semantic names for future clarity 
+    
+    useCustomNames = false;
+    
+    if exist('processDelimFiles.cfg','file')
+        load('processDelimFiles.cfg', '-mat');
+        useCustomNames = true;
+    end 
+
+
     for i = 1:length(FDlistForGrep)
         
 %         % Find indices of cells containing FD Identifier
@@ -158,13 +172,21 @@ reverseStr = '';
 %         FDindex  = find(not(cellfun('isempty', FDindexC)));
 %         
 
-% TODO: rename variabls with semantic names for future clarity
         
+        
+        % max(max(strcmp('ECS C1ECU Fan Speed Setpoint', customFDnames)));
+        isCustomRule = find(strcmp(FDlistForGrep{i}, customFDnames));
+        
+
         m = regexp(FDlistForGrep{i}, '\w*','match');
-        if length(m) > 2
-            outName = strcat(m{1:3},'.delim');
+        if length(m) > 3
+            if isCustomRule
+               outName = strcat(customFDnames{isCustomRule, 6}, '.delim');
+            else
+               outName = strcat(m{1:4},'.delim');
+            end
         else
-            disp('FD was less than 3 tokens long. Processed array:');
+            disp('FD was less than 4 tokens long. Processed array:');
             m
             outName = strcat(m{:});
         end
