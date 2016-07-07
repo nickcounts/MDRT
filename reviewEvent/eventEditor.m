@@ -22,7 +22,7 @@ function varargout = eventEditor(varargin)
 
 % Edit the above text to modify the response to help eventEditor1
 
-% Last Modified by GUIDE v2.5 08-Nov-2014 04:12:04
+% Last Modified by GUIDE v2.5 10-Jun-2016 15:11:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -601,6 +601,20 @@ else
 end
 
 
+
+% Update FD and String
+handles.timeline.milestone(eventIndex).FD = handles.ui_editBox_eventTriggerFD.String;
+handles.timeline.milestone(eventIndex).String = handles.ui_editBox_eventNameString.String;
+
+guidata(hObject, handles);
+
+eventEditor_pre_populate_GUI(handles)
+
+
+
+
+
+
 function isValid = validDateTime (t)
 
 
@@ -618,30 +632,6 @@ if ~isValid
 end 
 
 
-% --- Executes on button press in ui_button_saveTimeline.
-function ui_button_saveTimeline_Callback(~, ~, handles)
-% retrieve the current working directory from the handles structure
-% What hapens if this isn't there!?
-
-    path = handles.config.dataFolderPath;
-    timelineFile = 'timeline.mat';
-
-    % Bring up the save-as dialog prepopulated with the current working
-    % directory and the default filename
-    [file,path] = uiputfile('*.mat','Save timeline file as:',fullfile(path, timelineFile));
-    
-    if file
-        % User did not hit cancel
-        % grab the variable to save
-        timeline = handles.timeline; %#ok<NASGU>
-        
-        keyboard
-
-        save(fullfile(path,file),'timeline')
-    else
-        % User hit cancel button
-        disp('User cancelled save');
-    end
 
 
 function ui_editBox_eventNameString_Callback(hObject, eventdata, handles)
@@ -784,17 +774,40 @@ function uipanel_timeZone_SelectionChangeFcn(hObject, ~, handles)
      
     
     
-% --- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% --- Executes on button press in checkbox_UseT0.
+% --- Executes on button press in uiAddEventButton.
+function uiAddEventButton_Callback(hObject, eventdata, handles)
+    
+    timeline = handles.timeline;
+    milestone = handles.timeline.milestone;
+    selected = handles.ui_eventListBox.Value;
 
-
-% --- Executes on button press in pushbutton6.
-function pushbutton6_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton6 (see GCBO)
+    list = handles.ui_eventListBox.String;
+    
+    % Generate new event contents;
+    newTimeline = newTimelineStructure;
+    newMilestone = newTimeline.milestone;
+    
+    if timeline.uset0
+        newMilestone.Time = timeline.t0.time;
+    else
+        newMilestone.Time = today;
+    end
+    
+    % add new timeline event to the structure
+    handles.timeline.milestone = [timeline.milestone; newMilestone];
+    
+    guidata(hObject, handles);
+    
+    eventEditor_pre_populate_GUI(handles)
+    
+    % Add new line:
+    
+    
+    
+    
+% --- Executes on button press in uiDeleteEventButton.
+function uiDeleteEventButton_Callback(hObject, eventdata, handles)
+% hObject    handle to uiDeleteEventButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -878,3 +891,29 @@ function updateT0fromGUI(hObject, handles)
     
     
     
+
+
+% --------------------------------------------------------------------
+function uiToolbar_saveButton_ClickedCallback(hObject, eventdata, handles)
+% retrieve the current working directory from the handles structure
+% What hapens if this isn't there!?
+
+    path = handles.config.dataFolderPath;
+    timelineFile = 'timeline.mat';
+
+    % Bring up the save-as dialog prepopulated with the current working
+    % directory and the default filename
+    [file,path] = uiputfile('*.mat','Save timeline file as:',fullfile(path, timelineFile));
+    
+    if file
+        % User did not hit cancel
+        % grab the variable to save
+        timeline = handles.timeline; %#ok<NASGU>
+        
+        keyboard
+
+        save(fullfile(path,file),'timeline')
+    else
+        % User hit cancel button
+        disp('User cancelled save');
+    end
