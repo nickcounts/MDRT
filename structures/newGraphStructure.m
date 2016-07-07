@@ -4,10 +4,21 @@ function [ graph ] = newGraphStructure( varargin )
 %
 %   newGraphStructure('GraphName')
 %
+%   newGraphStructure('newGraphTimeStruct') returns an empty graph time
+%   structure
+%
+%
 
 switch nargin
     case 1
         % Supplied Graph Name
+        
+        
+        if strcmpi('newGraphTimeStruct', varargin(1))
+            graph = makeNewTimeStruct;
+            return        
+        end
+        
         graphName = varargin(1);
     otherwise
         % use default name
@@ -51,22 +62,27 @@ graph = struct(     'name',             cellstr(graphName));
 
 graph.subplots = cellstr(subplotTitle);
 
-streams = struct(   'toPlot', {});
-streams(2).toPlot = {};
-streams(3).toPlot = {};
+    streams = struct(   'toPlot', {});
+    streams(2).toPlot = {};
+    streams(3).toPlot = {};
 
-time = struct(      'isStartTimeUTC',   1,	...
-                    'isStartTimeAuto',  1,	...
-                    'startTime',        [],	...
-                    'isStopTimeUTC',    1,	...
-                    'isStopTimeAuto',   1,	...
-                    'stopTime',         []);
+    time = makeNewTimeStruct;
 
 
 
 graph(1).streams = streams;
 graph(1).time = time;
 
+end
+
+function timeStruct = makeNewTimeStruct
+
+    timeStruct = struct(    'isStartTimeUTC',   true, ...
+                            'isStartTimeAuto',  true, ...
+                            'startTime',        [], ...
+                            'isStopTimeUTC',    true, ...
+                            'isStopTimeAuto',   true, ...
+                            'stopTime',         []);
 
 end
 
