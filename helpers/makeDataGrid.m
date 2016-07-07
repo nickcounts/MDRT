@@ -23,13 +23,13 @@ FDList = {5902;5919;4930;4912;5917;5920;5906;5921;5909;5908;5924;5903;4913;
 % path = fullfile('/','Users','nick','Documents','MATLAB','Data Review','ORB-1','data'); % ORB-1 Data File Location
 % path = fullfile('/','Users','nick','Documents','MATLAB','ORB-D1','Data Files'); % ORB-D1 Data File Location
 % path = fullfile('/','Users','nick','Documents','MATLAB','Data Review','ORB-2','data'); % ORB-2 Data File Location
-% path = fullfile('~','Documents','Spaceport','Data','ORB-3','LA-2','data'); %ORB-3 r2 Data File Location
-path = fullfile('~','Documents','Spaceport','Data','ORB-3','LA-1','data'); %ORB-3 r1 Data File Location
+path = fullfile('~','Documents','Spaceport','Data','ORB-3','LA-2','data'); %ORB-3 r2 Data File Location
+% path = fullfile('~','Documents','Spaceport','Data','ORB-3','LA-1','data'); %ORB-3 r1 Data File Location
 
 %% Use timeHacks vector to generate the timesteps
 
-% t0 = datenum(2014,10,28,22,22,38.014); % ORB-3 r2
-t0 = datenum(2014,10,27,22,43,03.0); % ORB-3 r1
+t0 = datenum(2014,10,28,22,22,38.014); % ORB-3 r2
+% t0 = datenum(2014,10,27,22,43,03.0); % ORB-3 r1
 % t0 = datenum(2014, 7,13,16,52,14);   % ORB-2
 % t0 = datenum(2014,1, 9,18,07,06);   % ORB-1
 
@@ -54,6 +54,9 @@ newTimeVector = t0 - timeHacks;
 
 
 filePaths = cell(size(FDList));
+
+
+
 
 for i = 1:length(FDList)
     
