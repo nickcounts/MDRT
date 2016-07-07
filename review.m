@@ -28,7 +28,7 @@ function varargout = review(varargin)
 
 % Edit the above text to modify the response to help review
 
-% Last Modified by GUIDE v2.5 26-Oct-2014 13:05:37
+% Last Modified by GUIDE v2.5 27-May-2016 14:09:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -207,10 +207,13 @@ if dataFolderPath ~= 0
     dataFolderPath = [dataFolderPath '/'];
     handles.configuration.dataFolderPath = dataFolderPath;
     set(handles.uiTextbox_dataFolderTextbox, 'String', dataFolderPath);
+    % Use existing FD list to update GUI on folder change
+    populateFDlistFromDataFolder(hObject, handles, dataFolderPath);
 else
     % oh noes, there was nothing selected!
     % right now I won't do anything... maybe later I will?
 end
+
 guidata(hObject, handles);
 
 
@@ -294,6 +297,10 @@ config = handles.configuration;
 if ( exist(config.dataFolderPath,'dir') && exist(config.delimFolderPath,'dir') )
     % Confirmed that these folders DO EXIST
     processDelimFiles(config);
+    
+    % Refresh the FD list
+    uiButton_updateFDList_Callback(hObject, eventdata, handles);
+    
 else
     % Uh-OH!!! One of those folders was bad!
     % TODO: Error handling - popup error dialog?
@@ -360,15 +367,27 @@ function uiButton_updateFDList_Callback(hObject, eventdata, handles)
 
 % Calls helper function to list the FDs
     FDList = listAvailableFDs(handles.configuration.dataFolderPath, 'mat');
+    
+    
+    
+    if ~isempty(FDList)
 
-% adds to the GUI handles and
-    handles.quickPlotFDs = FDList;
+        % adds to the GUI handles and
+            handles.quickPlotFDs = FDList;
 
-% updates the dropdown.
-    set(handles.uiPopup_FDList, 'String', FDList(:,1))
+        % updates the dropdown.
+            set(handles.uiPopup_FDList, 'String', FDList(:,1))
 
-% Write the new list to disk
-    save(fullfile(handles.configuration.dataFolderPath, 'AvailableFDs.mat'),'FDList');
+        % Write the new list to disk
+            save(fullfile(handles.configuration.dataFolderPath, 'AvailableFDs.mat'),'FDList');
+            
+    else
+        
+        % updates the dropdown.
+            set(handles.uiPopup_FDList, 'String', ' ');
+            set(handles.uiPopup_FDList, 'Value', 1);
+    end
+        
 
 guidata(hObject, handles);
 
@@ -492,3 +511,79 @@ function uiButton_splitDelims_Callback(~, ~, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 splitDelimFiles(handles.configuration);
+
+function populateFDlistFromDataFolder(hObject, handles, folder)
+
+    if exist(fullfile(folder, 'AvailableFDs.mat'),'file')
+
+        load(fullfile(folder, 'AvailableFDs.mat'),'-mat');
+
+        % Add the loaded list to the GUI handles structure
+        handles.quickPlotFDs = FDList;
+
+        % add the list to the GUI menu
+        set(handles.uiPopup_FDList, 'String', FDList(:,1));
+
+    else
+
+        % TODO: Should this do something if the file isn't there... maybe do
+        % the initial parsing? That might be bad for the user experience...
+
+    end
+    
+    guidata(hObject, handles);
+    
+
+
+% --- Executes on button press in ui_newDataButton.
+function ui_newDataButton_Callback(hObject, eventdata, handles)
+
+    rootGuess = handles.configuration.dataFolderPath;
+    
+    if exist(fullfile(rootGuess),'dir')
+        
+    else
+        rootGuess = pwd;
+    end
+    
+    rootFolder = uigetdir(fullfile(rootGuess,'..'));
+
+    % Make sure the user selected something!
+    if rootFolder ~= 0
+        % We got a path selection. Now append the trailing / for linux
+        % Note, we are not implementing OS checking at this time (isunix, ispc)
+        dataFolderPath = [rootFolder '/'];
+        handles.configuration.dataFolderPath = dataFolderPath;
+        set(handles.uiTextbox_dataFolderTextbox, 'String', dataFolderPath);
+        % Use existing FD list to update GUI on folder change
+        populateFDlistFromDataFolder(hObject, handles, dataFolderPath);
+    else
+        % oh noes, there was nothing selected!
+        return
+    end
+    
+    newDataPath  = fullfile(rootFolder, 'data',  filesep);
+    newDelimPath = fullfile(rootFolder, 'delim', filesep);
+    newPlotPath  = fullfile(rootFolder, 'plots', filesep);
+
+    % Create new directory structure    
+    mkdir(newDataPath);
+    mkdir(newDelimPath);
+    mkdir(fullfile(newDelimPath, 'original'));
+    mkdir(fullfile(newDelimPath, 'ignore'));
+    mkdir(newPlotPath);
+    
+    % Update the handles structure
+    handles.configuration.dataFolderPath    = newDataPath;
+    handles.configuration.delimFolderPath   = newDelimPath;
+    handles.configuration.outputFolderPath  = newPlotPath;
+    
+    % populate the initial GUI text fields
+    set(handles.uiTextbox_dataFolderTextbox, 'String', newDataPath);
+    set(handles.uiTextbox_delimFolderTextbox, 'String', newDelimPath);
+    set(handles.uiTextbox_outputFolderTextbox, 'String', newPlotPath);
+
+    % Refresh the FD list
+    uiButton_updateFDList_Callback(hObject, eventdata, handles);
+    
+    guidata(hObject, handles);
