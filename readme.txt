@@ -1,3 +1,13 @@
+IMPORTANT NOTE: Please do not modify VERSION or CHANGES. These files are 
+generated in the versioning process and changes made outside of the release
+process can cause issues with version control.
+
+
+Quickstart Guide:
+
+
+
+
 To launch the MARS Review Tool, run 'review' at the command line, or 
 right click 'review.m' and selet 'Run'.
 
