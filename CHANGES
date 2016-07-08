@@ -1,0 +1,13 @@
+Version 0.1.0
+ - "latest version 7/7/16"
+ - "Fixed file naming issue - filename generator was creating duplicate filenames, causing parsed data to be lost.
+ - "Updated so it actually works (sort of)"
+ - "Latest code 7/7/16"
+ - "added: can return an empty time structure"
+ - "Latest code 7/7/16"
+ - "Latest code 7/7/16"
+ - "Latest code 7/7/16"
+ - "Latest GUI 7/7/16"
+ - New common starting point for development
+ - MDR Initial Commit
+
