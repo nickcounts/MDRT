@@ -149,6 +149,7 @@ else
     hold off
     end
     set(h,'tag','vline','handlevisibility','off')
+    set(th,'tag','vlinetext','handlevisibility','off');
 end % else
 
 if nargout
