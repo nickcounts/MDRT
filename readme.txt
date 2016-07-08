@@ -7,7 +7,6 @@ Quickstart Guide:
 -------------------------------------------------------------------------
 
 
-
 To launch the MARS Review Tool, run 'review' at the command line, or 
 right click 'review.m' and selet 'Run'.
 
