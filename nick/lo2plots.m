@@ -21,17 +21,32 @@
 
 %% LO2 Plot #1
 
-    filenames = {'2117' '2905' '2116' '2912' '2118' '2908'};
+%     filenames = {'2117' '2905' '2116' '2912' '2118' '2908'};
+%     path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
+% 
+% hold on;
+%     
+% i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 2; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 5; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 6; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i-5}, 'displayname', [fd.Type '-' fd.ID], 'linestyle', '--')
+% 
+% hline([-293.8 -297.4], {'--r' '--r'});
+
+
+%% LO2 Plot #2
+
+    filenames = {'2913' '2916' 'LOLS Storage Tank Pressure Set Point' '2069' '2059' '4168'};
     path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
 
 hold on;
-    
+
 i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
 i = 2; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 5; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 6; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i-5}, 'displayname', [fd.Type '-' fd.ID], 'linestyle', '--')
-
-hline([-293.8 -297.4], {'--r' '--r'});
+i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', ['LOLS Storage Tank Press SP'])
+i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+i = 5; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+i = 6; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i-5}, 'displayname', [fd.Type '-' fd.ID], 'linestyle', '--')
 
