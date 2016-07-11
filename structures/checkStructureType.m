@@ -45,8 +45,16 @@ prototypes = {  'fd',       fieldnames(fdPrototype)';
 % validate a structure. Additional fields may be present and are not
 % checked
 
+    
+    % Only test if testVariable is a structure (this method is actually
+    % robust to non-structure variables being passed. This is not required)
+    
+    if ~isstruct(testVariable)
+        return
+    end
+        
             
-for n = 1:length(prototypes)
+    for n = 1:length(prototypes)
     
     
     % Using switch statement for readability - lots of duplicated code
@@ -55,37 +63,37 @@ for n = 1:length(prototypes)
     % TODO: change this to automatically return the structure type using
     % the prototypes cell array?
     
-    switch prototypes{n, 1}
-        case 'fd'
-            if doesVariableHaveAllFields(testVariable, prototypes{n,2})
-                structureTypeString = 'fd';
-                break 
-            end
-            
-        case 'graph'
-            if doesVariableHaveAllFields(testVariable, prototypes{n,2})
-                structureTypeString = 'graph';
-                break
-            end
-            
-        case 'timeline'
-            if doesVariableHaveAllFields(testVariable, prototypes{n,2})
-                structureTypeString = 'timeline';
-                break
-            end
-            
-        case 'metadata'
-            if doesVariableHaveAllFields(testVariable, prototypes{n,2})
-                structureTypeString = 'metadata';
-                break
-            end
-            
-        otherwise
-            % Why did I include this case? Probably nothing to do here
+        switch prototypes{n, 1}
+            case 'fd'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'fd';
+                    break 
+                end
+
+            case 'graph'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'graph';
+                    break
+                end
+
+            case 'timeline'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'timeline';
+                    break
+                end
+
+            case 'metadata'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'metadata';
+                    break
+                end
+
+            otherwise
+                % Why did I include this case? Probably nothing to do here
+        end
+
+
     end
-    
-    
-end
 
 
 end
