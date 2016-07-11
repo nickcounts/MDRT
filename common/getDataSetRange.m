@@ -38,17 +38,22 @@ function [ availFDs ] = getDataSetRange( path, fileType )
 
         for i = 1:N
             % disp(sprintf('%s ',filesOfType(i).name));
+            
+            if ~ strcmpi(filesOfType(i).name(1:2), '._') % Ignore weird system files hopefully
+                % disp(sprintf('%s ',filesOfType(i).name));
 
-            F = load([path filesOfType(i).name],'-mat');
-            % disp(sprintf('%s',[fd.Type '-' fd.ID]))
+                F = load([path filesOfType(i).name],'-mat');
+                % disp(sprintf('%s',[fd.Type '-' fd.ID]))
 
-            if isfield(F, 'fd')
+                if isfield(F, 'fd')
 
-    %           availFDs{i,1} = sprintf('%s     %s-%s',F.fd.ID,F.fd.Type,F.fd.ID);
-                availFDs{i,1} = sprintf('%s', F.fd.FullString);
-                availFDs{i,2} = filesOfType(i).name;
-                availFDs{i,3} = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
+        %           availFDs{i,1} = sprintf('%s     %s-%s',F.fd.ID,F.fd.Type,F.fd.ID);
+                    availFDs{i,1} = sprintf('%s', F.fd.FullString);
+                    availFDs{i,2} = filesOfType(i).name;
+                    availFDs{i,3} = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
 
+                end
+                
             end
 
             progressbar(i/N);
