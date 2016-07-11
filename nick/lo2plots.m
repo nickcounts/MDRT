@@ -50,3 +50,6 @@ i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offs
 i = 5; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
 i = 6; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i-5}, 'displayname', [fd.Type '-' fd.ID], 'linestyle', '--')
 
+%% LO2 Plot #3
+
+
