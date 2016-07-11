@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 08-Jul-2016 13:53:24
+% Last Modified by GUIDE v2.5 11-Jul-2016 14:34:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,23 +61,7 @@ function dataSearchToPlot_OpeningFcn(hObject, eventdata, handles, varargin)
 % %%%%                                                                   %%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
-% % Display the available data streams in the dropdown
-% if exist(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'file')
-%    
-%     load(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'-mat');
-%     
-%     % Add the loaded list to the GUI handles structure
-%     handles.quickPlotFDs = FDList;
-%     
-%     % add the list to the GUI menu
-%     set(handles.ui_dropdown_dataStreamList, 'String', FDList(:,1));
-%     
-% else
-%     
-%     % TODO: Should this do something if the file isn't there... maybe do
-%     % the initial parsing? That might be bad for the user experience...
 % 
-% end
 
 % Start GUI with a new graph structure and populate GUI
 %     handles.graph = newGraphStructure;
@@ -86,6 +70,10 @@ function dataSearchToPlot_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for dataSearchToPlot
 handles.output = hObject;
+
+% Add custum handles
+handles.startDateValue = [];
+handles.endDateValue = [];
 
 % Update handles structure
 guidata(hObject, handles);
@@ -103,20 +91,64 @@ function varargout = dataSearchToPlot_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
+%>>>----------------------------------------------------------------------
+% --- Executes during object creation, after setting all properties.
+function start_edit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to start_edit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
 
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+% displayStartDate
 
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
+% --- Executes on button press in StartDate_pushbutton3.
+function StartDate_pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to StartDate_pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+startDate =  guiDatePicker(now);
+handles.startDateValue = startDate;
+
+% Display selected date in edit text box
+startDateString = datestr(startDate);
+
+% uh=uicontrol('position',[0.154,0.87,0.226,0.056],'style','edit','string',startDateString);
+% startDisplay =uicontrol('position',[104,320,100,30],'style','edit','string',startDateString)
+
+handles.start_textbox.String = startDateString;
+
+% Update handle list ----
+guidata(hObject, handles);
+
+function start_edit_Callback(hObject, eventdata, handles)
+% hObject    handle to start_edit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of start_edit as text
+%        str2double(get(hObject,'String')) returns contents of start_edit as a double
+% displayStartDate
+
+%>>>-----------------------------------------------------------------------
+
+
+function end_edit_Callback(hObject, eventdata, handles)
+% hObject    handle to end_edit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of end_edit as text
+%        str2double(get(hObject,'String')) returns contents of end_edit as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
+function end_edit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to end_edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -128,26 +160,25 @@ end
 
 
 
-function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
+% --- Executes on button press in EndDate_pushbutton4.
+function EndDate_pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to EndDate_pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
 
+endDate =  guiDatePicker(now);
+handles.endDateValue = endDate;
 
-% --- Executes during object creation, after setting all properties.
-function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+% Display selected date in edit text box
+endDateString = datestr(endDate);
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+% uh=uicontrol('position',[0.154,0.87,0.226,0.056],'style','edit','string',startDateString);
+% startDisplay =uicontrol('position',[104,320,100,30],'style','edit','string',startDateString)
+
+handles.end_textbox.String = endDateString;
+
+guidata(hObject,handles);
 
 
 % --- Executes on selection change in popupmenu1.
@@ -243,19 +274,6 @@ function AIR_radiobutton7_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of AIR_radiobutton7
 
 
-% --- Executes on button press in StartDate_pushbutton3.
-function StartDate_pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to StartDate_pushbutton3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in EndDate_pushbutton4.
-function EndDate_pushbutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to EndDate_pushbutton4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 
 % --- Executes on button press in WDS_radiobutton8.
 function WDS_radiobutton8_Callback(hObject, eventdata, handles)
@@ -271,3 +289,57 @@ function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to dateSearch_pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+time = handles.startDateValue;
+% --- Staten's search function
+statenSearchFunction(time)
+% --- call handles containing 2 datenums
+% --- Store into time array
+% --- input into staten's function
+% --- Output array of structures
+% --- Call function to display list in drop down menu
+
+
+
+function start_textbox_Callback(hObject, eventdata, handles)
+% hObject    handle to start_textbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of start_textbox as text
+%        str2double(get(hObject,'String')) returns contents of start_textbox as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function start_textbox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to start_textbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function end_textbox_Callback(hObject, eventdata, handles)
+% hObject    handle to end_textbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of end_textbox as text
+%        str2double(get(hObject,'String')) returns contents of end_textbox as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function end_textbox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to end_textbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
