@@ -167,17 +167,19 @@ handles.timeline.milestone(eventIndex);
 
 t = handles.timeline.milestone(eventIndex).Time;
 
+% TODO: rewrite this section so it is NOT dependant on the financial toolbox
+
 tm = num2cell([month(t) day(t) year(t) hour(t) minute(t) second(t)]);
 [eMonth, eDay, eYear, eHour, eMinute, eSecond] = deal(tm{:}); 
 
 % Populate the UI with known values
-set(handles.ui_popup_eventMonthPicker,  'Value',    eMonth);
-set(handles.ui_editBox_eventDay,        'String',   eDay);
-set(handles.ui_editBox_eventYear,       'String',   eYear);
+    set(handles.ui_popup_eventMonthPicker,  'Value',    eMonth);
+    set(handles.ui_editBox_eventDay,        'String',   eDay);
+    set(handles.ui_editBox_eventYear,       'String',   eYear);
 
-set(handles.ui_editBox_eventHour,       'String',   eHour);
-set(handles.ui_editBox_eventMinute,     'String',   eMinute);
-set(handles.ui_editBox_eventSecond,     'String',   eSecond);
+    set(handles.ui_editBox_eventHour,       'String',   eHour);
+    set(handles.ui_editBox_eventMinute,     'String',   eMinute);
+    set(handles.ui_editBox_eventSecond,     'String',   eSecond);
 
 
 
@@ -547,7 +549,52 @@ function eventEditor_pre_populate_GUI(handles)
     set(handles.ui_editBox_eventMinute,     'String',   t0Minute);
     set(handles.ui_editBox_eventSecond,     'String',   t0Second);
 
-set(handles.ui_eventListBox, 'String', {handles.timeline.milestone(:).String}');
+    % Update Event List
+    handles.ui_eventListBox.String = {handles.timeline.milestone.String}';
+    
+    
+
+function updateGUIfromHandles(handles)
+
+    
+    
+    index = handles.ui_eventListBox.Value;
+    currentEvent = handles.timeline.milestone(index);
+    
+    t0flag = handles.timeline.uset0;
+    
+    % Update T-Zero Editor Group
+    handles.checkbox_UseT0.Value = t0flag;
+    
+    if t0flag
+        % There is a t0, so load it and update the editor pane
+        t0time = handles.timeline.t0.time;
+        
+        handles.ui_popup_monthPicker.Value  = month(t0time);
+        handles.ui_editBox_year.String      = datestr(t0time, 'yyyy');
+        handles.ui_editBox_day.String       = datestr(t0time, 'dd');
+        
+        handles.ui_editBox_hour.String      = datestr(t0time, 'HH');
+        handles.ui_editBox_minute.String    = datestr(t0time, 'MM');
+        handles.ui_editBox_second.String    = datestr(t0time, 'SS.FFF');
+        
+    end
+        
+    % Update Event information group
+    handles.ui_popup_monthPicker.Value      = month(currentEvent.Time);
+    
+    handles.ui_editBox_eventDay.String      = datestr(currentEvent.Time, 'dd');
+    handles.ui_editBox_eventYear.String     = datestr(currentEvent.Time, 'yyyy');
+    
+    handles.ui_editBox_eventHour.String     = datestr(currentEvent.Time, 'HH');
+    handles.ui_editBox_eventMinute.String   = datestr(currentEvent.Time, 'MM');
+    handles.ui_editBox_eventSecond.String   = datestr(currentEvent.Time, 'SS.FFF');
+    
+    handles.ui_editBox_eventNameString.String = currentEvent.String;
+    handles.ui_editBox_eventTriggerFD.String  = currentEvent.FD;
+    
+    % Update Event List
+    handles.ui_eventListBox.String = {handles.timeline.milestone.String}';
 
 
 function setEventTimeGUIValuesFromNumericArray ( MDYhms, handles )
@@ -833,7 +880,7 @@ function uiDeleteEventButton_Callback(hObject, eventdata, handles)
 
 % Update the GUI Display
     handles.ui_eventListBox.String = {eventStructArray.String}';
-    eventEditor_pre_populate_GUI(handles);
+    updateGUIfromHandles(handles);
     
 % Store the updated timeline in the handles structure
     guidata(hObject, handles);
