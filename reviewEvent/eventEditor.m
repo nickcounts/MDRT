@@ -794,7 +794,8 @@ function uiAddEventButton_Callback(hObject, eventdata, handles)
     end
     
     % add new timeline event to the structure
-    handles.timeline.milestone = [timeline.milestone; newMilestone];
+
+    handles.timeline.milestone(end+1) = newMilestone;
     
     guidata(hObject, handles);
     
@@ -811,6 +812,30 @@ function uiDeleteEventButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
+
+% Get Current Selection Index
+    selected = handles.ui_eventListBox.Value;
+    eventList = handles.ui_eventListBox.String;
+
+% Remove timeline.milestone(index)
+    eventStructArray = handles.timeline.milestone;
+    eventStructArray(selected) = [];
+    
+% Make sure the selected index is still valid (fix if it isn't)
+    if length(eventStructArray) <= selected
+        keyboard
+        selected = length(eventStructArray);
+        handles.ui_eventListBox.Value = selected;
+    else
+        % The selection should still be valid, so don't do anything
+    end
+
+% Update the GUI Display
+    handles.ui_eventListBox.String = {eventStructArray.String}';
+    
+% Store the updated timeline in the handles structure
+    guidata(hObject, handles);
 
 % --- Executes on button press in pushbutton7.
 function pushbutton7_Callback(hObject, eventdata, handles)
