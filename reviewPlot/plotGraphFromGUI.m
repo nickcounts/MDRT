@@ -100,6 +100,9 @@ for graphNumber = 1:numberOfGraphs
     set(figureHandle(graphNumber), 'UserData', UserData);
     set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
     
+    % Add label size toggle and timeline refresh buttons
+    addToolButtonsToPlot(figureHandle);
+    
     orient('landscape');
     
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
