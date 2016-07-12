@@ -12,6 +12,17 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   Will return an empty string if no match. Extra fields will not falsify
 %   the check. The prototype (makeStructure) fields must ALL be present.
 %
+%       EXAMPLE: 
+% 
+%       checkStructureType( newGraphStructure )
+% 
+%       returns:
+% 
+%       ans =
+% 
+%       graph
+% 
+%
 %   This function uses the prototype definition functions to generate the
 %   test conditions. It does not require updating unless a new structure
 %   prototype is added. Existing prototype functions can be modified and
