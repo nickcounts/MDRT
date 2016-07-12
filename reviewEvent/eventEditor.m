@@ -821,10 +821,10 @@ function uiDeleteEventButton_Callback(hObject, eventdata, handles)
 % Remove timeline.milestone(index)
     eventStructArray = handles.timeline.milestone;
     eventStructArray(selected) = [];
+    handles.timeline.milestone = eventStructArray;
     
 % Make sure the selected index is still valid (fix if it isn't)
-    if length(eventStructArray) <= selected
-        keyboard
+    if length(eventStructArray) < selected
         selected = length(eventStructArray);
         handles.ui_eventListBox.Value = selected;
     else
@@ -833,6 +833,7 @@ function uiDeleteEventButton_Callback(hObject, eventdata, handles)
 
 % Update the GUI Display
     handles.ui_eventListBox.String = {eventStructArray.String}';
+    eventEditor_pre_populate_GUI(handles);
     
 % Store the updated timeline in the handles structure
     guidata(hObject, handles);
