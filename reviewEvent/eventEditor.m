@@ -287,8 +287,6 @@ function ui_editBox_year_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of ui_editBox_year as a double
 
     updateT0fromGUI(hObject, handles);
-    
-    keyboard
 
 
 % --- Executes during object creation, after setting all properties.
@@ -983,8 +981,6 @@ function uiToolbar_saveButton_ClickedCallback(hObject, eventdata, handles)
         % grab the variable to save
         timeline = handles.timeline; %#ok<NASGU>
         
-        keyboard
-
         save(fullfile(path,file),'timeline')
     else
         % User hit cancel button
