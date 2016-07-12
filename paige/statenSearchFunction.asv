@@ -4,12 +4,9 @@ function [FDList] = statenSearchFunction( time )
 
 
 display('Hooray! You searched by date! Good 4 u')
-FDList = { 'Paige' 'Orange';...
-           'Staten' 'Dog';...
-           'Ryan' 'Kite'};
-
-% data = {'Apple';'Bob';'Cat'};
-% celldata = cellstr(data)
-
+% FDList = cellstr([ 'Apple';'Bob' ;'Cat']);
+% 
+data = ['Apple';'Bob';'Cat'];
+celldata = cellstr(data)
 end
 

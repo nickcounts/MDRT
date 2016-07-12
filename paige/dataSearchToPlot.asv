@@ -286,9 +286,9 @@ function WDS_radiobutton8_Callback(hObject, eventdata, handles)
 
 
 
-%%%                       %%%%%%%%%%%%%%%%%
-%%%%%     STATEN SEARCH     %%%%%%%%%%%%%%%
-%%%%%%%                       %%%%%%%%%%%%%
+%%%                       %%%%%%%%%%%%%%%%%%%
+%%%%%   STATEN SEARCH       %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%                     %%%%%%%%%%%%%%%%%
 % --- Executes on button press in dateSearch_pushbutton5.
 function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to dateSearch_pushbutton5 (see GCBO)
@@ -303,10 +303,13 @@ if handles.startDateValue > handles.endDateValue
     %--- STATEN TO DO : Automatically switch times - warning not needed
 else
 % --- Staten's search function
-[FDList] = statenSearchFunction(time);
-handles.popupmenu1.String = FDList(:,1);
+statenSearchFunction(time)
 end
-
+% --- call handles containing 2 datenums
+% --- Store into time array
+% --- input into staten's function
+% --- Output array of structures
+% --- Call function to display list in drop down menu
 
 
 
