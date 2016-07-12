@@ -38,17 +38,17 @@
 
 %% LO2 Plot #2
 
-    filenames = {'2913' '2916' 'LO2 Flow Control Max SP' '2069' '2059' '4168'};
-    path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
-
-hold on;
-
-i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 2; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', ['LOLS Storage Tank Press SP'])
-i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 5; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-i = 6; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i-5}, 'displayname', [fd.Type '-' fd.ID], 'linestyle', '--')
+%     filenames = {'2913' '2916' 'LO2 Flow Control Max SP' '2069' '2059' '4168'};
+%     path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
+% 
+% hold on;
+% 
+% i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 2; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', ['LOLS Storage Tank Press SP'])
+% i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 5; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+% i = 6; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.position.Time + offset, fd.position.Data, 'color', colors{i-5}, 'displayname', [fd.Type '-' fd.ID], 'linestyle', '--')
 
 %% LO2 Plot #3
 
