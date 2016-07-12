@@ -227,6 +227,7 @@ function RP1_radiobutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of RP1_radiobutton1
+display('So you wanna filter by RP-1 eh?')
 
 
 % --- Executes on button press in LO2_radiobutton2.
