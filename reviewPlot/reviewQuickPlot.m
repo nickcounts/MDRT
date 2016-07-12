@@ -24,6 +24,9 @@ function [ figureHandle ] = reviewQuickPlot( fdFileName, config, varargin )
     figureHandle = figure();
     set(figureHandle,'Tag','quickPlot');
     
+    % Add label size toggle and timeline refresh buttons
+    addToolButtonsToPlot(figureHandle);
+    
    
     
     
