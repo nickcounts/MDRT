@@ -29,8 +29,8 @@ function [  ] = addToolButtonsToPlot( figureHandle )
                             'HandleVisibility','off');
 
 
-togBut.ClickedCallback = {@reviewRescaleAllTimelineLabels}
-refBut.ClickedCallback = {@reviewRescaleAllTimelineEvents}
+togBut.ClickedCallback = {@reviewRescaleAllTimelineLabels};
+refBut.ClickedCallback = {@reviewRescaleAllTimelineEvents};
 
 
 
