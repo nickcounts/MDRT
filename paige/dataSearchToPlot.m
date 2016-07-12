@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 11-Jul-2016 14:34:44
+% Last Modified by GUIDE v2.5 12-Jul-2016 09:55:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -284,14 +284,23 @@ function WDS_radiobutton8_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of WDS_radiobutton8
 
 
+%%%%%   STATEN SEARCH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --- Executes on button press in dateSearch_pushbutton5.
 function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to dateSearch_pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-time = handles.startDateValue;
+
+time = [handles.startDateValue, handles.endDateValue];
+% Check to make sure dates are in correct order
+if handles.startDateValue > handles.endDateValue 
+    display('Warning! Your start date is after your end date. That is not how time works!')
+    dateWarningDialog
+    %--- STATEN TO DO : Automatically switch times - warning not needed
+else
 % --- Staten's search function
 statenSearchFunction(time)
+end
 % --- call handles containing 2 datenums
 % --- Store into time array
 % --- input into staten's function
@@ -343,3 +352,16 @@ function end_textbox_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+function dateWarningDialog
+    d = dialog('Position',[300 300 250 150],'Name','WARNING');
+
+    txt = uicontrol('Parent',d,...
+               'Style','text',...
+               'Position',[20 80 210 40],...
+               'String','Warning! The End Date is before your Start Date. That is not how time works!');
+
+    btn = uicontrol('Parent',d,...
+               'Position',[85 20 70 25],...
+               'String','Close',...
+               'Callback','delete(gcf)');
