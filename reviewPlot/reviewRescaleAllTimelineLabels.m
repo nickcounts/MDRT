@@ -1,4 +1,6 @@
-% reviewRescaleAllTimelineLabels
+function reviewRescaleAllTimelineLabels( varargin )
+% reviewRescaleAllTimelineLabels toggles event label text size for viewing
+% or printing
 %
 % reviewRescaleAllTimelineLabels is a script that toggles all text labels
 % and legend text between a screen viewable size and the correct size for
