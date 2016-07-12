@@ -11,8 +11,8 @@ function [  ] = addToolButtonsToPlot( figureHandle )
 
 % Add a push tool to the toolbar
  
-    toggleIcon  = imread('images/toggleLabelSize_icon_16x16.png','png');
-    refreshIcon = imread('images/refreshTimeline_icon_16x16.png','png');
+    toggleIcon  = imread('reviewPlot/images/toggleLabelSize_icon_16x16.png','png');
+    refreshIcon = imread('reviewPlot/images/refreshTimeline_icon_16x16.png','png');
     
     
 % % Convert white pixels into a transparent background
