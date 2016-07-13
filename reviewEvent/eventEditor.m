@@ -22,7 +22,7 @@ function varargout = eventEditor(varargin)
 
 % Edit the above text to modify the response to help eventEditor1
 
-% Last Modified by GUIDE v2.5 10-Jun-2016 15:11:56
+% Last Modified by GUIDE v2.5 12-Jul-2016 20:12:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -167,17 +167,19 @@ handles.timeline.milestone(eventIndex);
 
 t = handles.timeline.milestone(eventIndex).Time;
 
+% TODO: rewrite this section so it is NOT dependant on the financial toolbox
+
 tm = num2cell([month(t) day(t) year(t) hour(t) minute(t) second(t)]);
 [eMonth, eDay, eYear, eHour, eMinute, eSecond] = deal(tm{:}); 
 
 % Populate the UI with known values
-set(handles.ui_popup_eventMonthPicker,  'Value',    eMonth);
-set(handles.ui_editBox_eventDay,        'String',   eDay);
-set(handles.ui_editBox_eventYear,       'String',   eYear);
+    set(handles.ui_popup_eventMonthPicker,  'Value',    eMonth);
+    set(handles.ui_editBox_eventDay,        'String',   eDay);
+    set(handles.ui_editBox_eventYear,       'String',   eYear);
 
-set(handles.ui_editBox_eventHour,       'String',   eHour);
-set(handles.ui_editBox_eventMinute,     'String',   eMinute);
-set(handles.ui_editBox_eventSecond,     'String',   eSecond);
+    set(handles.ui_editBox_eventHour,       'String',   eHour);
+    set(handles.ui_editBox_eventMinute,     'String',   eMinute);
+    set(handles.ui_editBox_eventSecond,     'String',   eSecond);
 
 
 
@@ -198,6 +200,8 @@ set(handles.ui_editBox_eventTriggerFD, 'String',   handles.timeline.milestone(ev
 
 
 dt = abs(dt);
+
+% TODO: rewrite this section so it is NOT dependant on the financial toolbox
 
 % Assign T+/- values to working variables
 etm = num2cell([month(dt) day(dt) year(dt) hour(dt) minute(dt) second(dt)]);
@@ -285,8 +289,6 @@ function ui_editBox_year_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of ui_editBox_year as a double
 
     updateT0fromGUI(hObject, handles);
-    
-    keyboard
 
 
 % --- Executes during object creation, after setting all properties.
@@ -547,7 +549,52 @@ function eventEditor_pre_populate_GUI(handles)
     set(handles.ui_editBox_eventMinute,     'String',   t0Minute);
     set(handles.ui_editBox_eventSecond,     'String',   t0Second);
 
-set(handles.ui_eventListBox, 'String', {handles.timeline.milestone(:).String}');
+    % Update Event List
+    handles.ui_eventListBox.String = {handles.timeline.milestone.String}';
+    
+    
+
+function updateGUIfromHandles(handles)
+
+    
+    
+    index = handles.ui_eventListBox.Value;
+    currentEvent = handles.timeline.milestone(index);
+    
+    t0flag = handles.timeline.uset0;
+    
+    % Update T-Zero Editor Group
+    handles.checkbox_UseT0.Value = t0flag;
+    
+    if t0flag
+        % There is a t0, so load it and update the editor pane
+        t0time = handles.timeline.t0.time;
+        
+        handles.ui_popup_monthPicker.Value  = month(t0time);
+        handles.ui_editBox_year.String      = datestr(t0time, 'yyyy');
+        handles.ui_editBox_day.String       = datestr(t0time, 'dd');
+        
+        handles.ui_editBox_hour.String      = datestr(t0time, 'HH');
+        handles.ui_editBox_minute.String    = datestr(t0time, 'MM');
+        handles.ui_editBox_second.String    = datestr(t0time, 'SS.FFF');
+        
+    end
+        
+    % Update Event information group
+    handles.ui_popup_monthPicker.Value      = month(currentEvent.Time);
+    
+    handles.ui_editBox_eventDay.String      = datestr(currentEvent.Time, 'dd');
+    handles.ui_editBox_eventYear.String     = datestr(currentEvent.Time, 'yyyy');
+    
+    handles.ui_editBox_eventHour.String     = datestr(currentEvent.Time, 'HH');
+    handles.ui_editBox_eventMinute.String   = datestr(currentEvent.Time, 'MM');
+    handles.ui_editBox_eventSecond.String   = datestr(currentEvent.Time, 'SS.FFF');
+    
+    handles.ui_editBox_eventNameString.String = currentEvent.String;
+    handles.ui_editBox_eventTriggerFD.String  = currentEvent.FD;
+    
+    % Update Event List
+    handles.ui_eventListBox.String = {handles.timeline.milestone.String}';
 
 
 function setEventTimeGUIValuesFromNumericArray ( MDYhms, handles )
@@ -794,7 +841,8 @@ function uiAddEventButton_Callback(hObject, eventdata, handles)
     end
     
     % add new timeline event to the structure
-    handles.timeline.milestone = [timeline.milestone; newMilestone];
+
+    handles.timeline.milestone(end+1) = newMilestone;
     
     guidata(hObject, handles);
     
@@ -811,6 +859,31 @@ function uiDeleteEventButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
+
+% Get Current Selection Index
+    selected = handles.ui_eventListBox.Value;
+    eventList = handles.ui_eventListBox.String;
+
+% Remove timeline.milestone(index)
+    eventStructArray = handles.timeline.milestone;
+    eventStructArray(selected) = [];
+    handles.timeline.milestone = eventStructArray;
+    
+% Make sure the selected index is still valid (fix if it isn't)
+    if length(eventStructArray) < selected
+        selected = length(eventStructArray);
+        handles.ui_eventListBox.Value = selected;
+    else
+        % The selection should still be valid, so don't do anything
+    end
+
+% Update the GUI Display
+    handles.ui_eventListBox.String = {eventStructArray.String}';
+    updateGUIfromHandles(handles);
+    
+% Store the updated timeline in the handles structure
+    guidata(hObject, handles);
 
 % --- Executes on button press in pushbutton7.
 function pushbutton7_Callback(hObject, eventdata, handles)
@@ -894,9 +967,12 @@ function updateT0fromGUI(hObject, handles)
 
 
 % --------------------------------------------------------------------
-function uiToolbar_saveButton_ClickedCallback(hObject, eventdata, handles)
+function uiToolbar_saveButton_callback(hObject, eventdata, handles)
 % retrieve the current working directory from the handles structure
 % What hapens if this isn't there!?
+
+% Use this in GUIDE Toolbar Editor as the callback
+% eventEditor('uiToolbar_saveButton_callback',hObject,eventdata,guidata(hObject))
 
     path = handles.config.dataFolderPath;
     timelineFile = 'timeline.mat';
@@ -910,10 +986,59 @@ function uiToolbar_saveButton_ClickedCallback(hObject, eventdata, handles)
         % grab the variable to save
         timeline = handles.timeline; %#ok<NASGU>
         
-        keyboard
-
         save(fullfile(path,file),'timeline')
     else
         % User hit cancel button
         disp('User cancelled save');
+    end
+    
+    
+function uiToolbar_openButton_callback(hObject, eventdata, handles)
+% uiToolbar_openButton_callback opens a timeline.mat file with error
+% handling and updates the GUI and handles structure
+
+% Use this in GUIDE Toolbar Editor as the callback
+% eventEditor('uiToolbar_openButton_callback',hObject,eventdata,guidata(hObject))
+
+    path = handles.config.dataFolderPath;
+    timelineFile = 'timeline.mat';
+    
+    [file, pathname] = uigetfile(fullfile(path, timelineFile),'Open a timeline file');
+    
+    if file
+        % User did not hit cancel
+        % grab the variable to save
+                
+        load(fullfile(pathname, file));
+        
+        if exist('timeline','var')
+            
+            % We loaded a variable with the right name. Now, is it the
+            % right variable?
+            
+            switch checkStructureType(timeline)
+                case 'timeline'
+                    
+                    % We have a valid timeline structure.
+                    
+                    handles.timeline = timeline;
+        
+                    updateGUIfromHandles(handles)
+
+                    guidata(hObject, handles);
+                    
+                    
+                otherwise
+                    % We do not have a valid timeline structure.
+                    % Do nothing to soft fail
+            end
+            
+            % We did not load a variable named timeline.
+            % Do nothing to soft fail
+            
+        end
+
+    else
+        % User hit cancel button
+        disp('User cancelled load');
     end
