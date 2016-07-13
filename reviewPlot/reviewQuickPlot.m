@@ -1,4 +1,4 @@
-function [ figureHandle ] = reviewQuickPlot( fdFileName, config, varargin )
+function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
 % reviewQuickPlot( fdFileName, config )
 %
 %   Designed to be called by the Data Review Tool helper GUI,
@@ -39,11 +39,10 @@ function [ figureHandle ] = reviewQuickPlot( fdFileName, config, varargin )
     % Set plotting axes!!
 	axes(subPlotAxes);
 
-
-    dataPath = config.dataFolderPath;
+  
 
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
-    load([dataPath fdFileName],'-mat');
+    load(fdFileNameWithPath,'-mat');
 
     
 switch upper(fd.Type)
@@ -92,11 +91,17 @@ end
     set(dcm_obj, 'UpdateFcn', @dataTipDateCallbackDecimal);
 
 
-    if nargin == 2
+    if nargin == 1
         % nothing to do if no events passed
     else
+        
+        % TODO: Does this still need to exist?
+        % -----------------------------------------------------------------
+        
         % an events structure was passed. Default to displaying only t0
         % Plot T=0 on top of data
+        
+        
         timeline = varargin{1};
 
 
@@ -113,7 +118,7 @@ end
         vline(timeline.t0.time,'r-',t0string,0.5)
 
         % Cheat and plot everything the quick and dirty way
-        reviewPlotAllTimelineEvents(config);
+        reviewPlotAllTimelineEvents;
 
 
 

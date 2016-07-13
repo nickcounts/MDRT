@@ -1,7 +1,14 @@
-function reviewPlotAllTimelineEvents ( config)
+function reviewPlotAllTimelineEvents ( varargin )
 % Accepts the config structure
 
+% Updated to allow plotting without passing a config structure
+% If nothing is passed, calls getConfig
 
+if nargin == 0
+    config = getConfig;
+elseif nargin == 1
+    config = varargin{1};
+end
 
 path = config.dataFolderPath;
 timelineFile = 'timeline.mat';
