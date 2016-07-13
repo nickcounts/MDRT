@@ -1,6 +1,5 @@
 function [ figureHandle ] = paigeQuickPlot( fdFileNameWithPath)
 % ---> REMOVED (config, varagin)^^ as inputs for testing purposes ^^
-% ---> Replace with fdFileNameWithPath
 %
 %   Designed to be called by the Data Review Tool helper GUI,
 %   reviewQuickPlot takes a data filename and the config structure as
@@ -40,10 +39,10 @@ function [ figureHandle ] = paigeQuickPlot( fdFileNameWithPath)
 
 
 %     dataPath = config.dataFolderPath;
-%       dataPath = 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/';
+      dataPath = 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/';
 
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
-     load(fdFileNameWithPath,'-mat');
+     load([dataPath fdFileNameWithPath],'-mat');
     
     % ---> Try to load a dummy file to plot, not using graph config
     %load(['/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat']);

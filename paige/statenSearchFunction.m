@@ -11,15 +11,11 @@ FDList = { 'Paige' 'Orange';...
            'Ryan' 'Kite'};
 else
     display('Oooooh weeee! Here is some dummy data!')
-%     FDList = { 'Pruce' 'Orange';...
-%                'Longo' 'Dog';...
-%                'McGuire' 'Kite'};
-
 % Want to import data from a single file path
 dummyData= 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
 dummyDataName = ('Orb-1 1014');
 % keyboard
-FDList = {dummyData  dummyDataName };
+FDList = {dummyDataName dummyData};
 config.dataFolderPath = dummyData;
 
 end

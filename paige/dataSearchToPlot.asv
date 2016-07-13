@@ -224,7 +224,7 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 index = get(handles.FDList_popupmenu,'Value');
 fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index,2});
 % fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
-% fdFileName = handles.activeList(index,2);
+% fdFileName = handles.activeList(index);
 % fdFileName = '1014.mat';
 
 figureNumber = paigeQuickPlot( fdFileName); 
@@ -234,7 +234,7 @@ figureNumber = paigeQuickPlot( fdFileName);
 %     
 %     
 %     
-%     figureNumber  = paigeQuickPlot( fdFileName, handles.configuration, timeline);
+%     figureNumber = paigeQuickPlot( fdFileName, handles.configuration, timeline);
 % 
 % else
 %     
@@ -320,7 +320,6 @@ function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
 
 time = [handles.startDateValue, handles.endDateValue];
 % Check to make sure dates are in correct order
-% ---> TAKE OUT COMMAND WINDOW WARNING
 if handles.startDateValue > handles.endDateValue 
     display('Warning! Your start date is after your end date. That is not how time works!')
     dateWarningDialog
