@@ -13,6 +13,7 @@ function [  ] = addToolButtonsToPlot( figureHandle )
  
     toggleIcon  = imread('reviewPlot/images/toggleLabelSize_icon_16x16.png','png');
     refreshIcon = imread('reviewPlot/images/refreshTimeline_icon_16x16.png','png');
+    showIcon    = imread('reviewPlot/images/showTimeline_icon_16x16.png','png');
     
     
 % % Convert white pixels into a transparent background
@@ -21,17 +22,22 @@ function [  ] = addToolButtonsToPlot( figureHandle )
 %     toggleIcon = ind2rgb(toggleIcon,map);
     
     togBut = uipushtool(tbh,'CData',toggleIcon,...
-                            'TooltipString','My push tool',...
+                            'TooltipString','Toggle label sizes',...
                             'HandleVisibility','off');
                         
     refBut = uipushtool(tbh,'CData',refreshIcon,...
-                            'TooltipString','My push tool',...
+                            'TooltipString','Refresh event markers',...
                             'HandleVisibility','off');
+                        
+    visBut = uitoggletool(tbh,'CData',showIcon, ...
+                            'TooltipString','Hide Event Markers',...
+                            'HandleVisibility','off', ...
+                            'State', 'on');
 
 
 togBut.ClickedCallback = {@reviewRescaleAllTimelineLabels};
 refBut.ClickedCallback = {@reviewRescaleAllTimelineEvents};
-
+visBut.ClickedCallback = {@reviewToggleEventVisibility};
 
 
 end
