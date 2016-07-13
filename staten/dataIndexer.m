@@ -18,7 +18,7 @@
 % dataIndexer runs recursive search for search expression (which will be 
 % set to metadata) through the base directory (which will be set to the data repository)
 
-function metaDataStructures = dataIndexer(dataRepositoryDirectory, searchExpression)
+function [metaDataStructures, metaDataName] = dataIndexer(dataRepositoryDirectory, searchExpression)
 
 %% go into each folder in data repository
 
@@ -30,6 +30,7 @@ function metaDataStructures = dataIndexer(dataRepositoryDirectory, searchExpress
 dataRepositoryStructure = dir(dataRepositoryDirectory); % searches current directory and puts results in structures
 
 metaDataStructures = {}; % empty < array of structures > to compile metadata files into
+metaDataName = [];
 
 for i = 1:length(dataRepositoryStructure); % for loop to iterate over entire length of current directory
     
@@ -38,28 +39,46 @@ for i = 1:length(dataRepositoryStructure); % for loop to iterate over entire len
     
     if isempty(strfind(dataRepositoryStructure(i).name, '._'))
     
-        % if list length in repository structure is NOT in current directory/ NOT a folder, and if regular expression string (dataRepositoryStructure(lengthRepository).name) and searchExpression (metadata) do NOT match
+        % if index in repository structure is NOT in current directory/ NOT a folder, and if regular expression string (dataRepositoryStructure(i).name) and searchExpression 'metadata' do NOT match
         if ~dataRepositoryStructure(i).isdir && ~isempty(regexp(dataRepositoryStructure(i).name,searchExpression,'match'))  % look for a match that isn't a directory
-              
+            
             metaDataStructures{length(metaDataStructures)+1} = dataRepositoryStructure(i).name; % adds new metadata file to list of metaDataStructures
         
-        % elseif list length in repository structure is in directory/ is a folder and string comparison is not in current folder or folder above
-        elseif dataRepositoryStructure(i).isdir && ~strcmp(dataRepositoryStructure(i).name,'.') && ~strcmp(dataRepositoryStructure(i).name,'..') % if it is a directory (and not current or up a level), search in that (NICK PLZ EXPLAIN DIS)
-        
+        % elseif index in repository structure is in directory/ is a folder and string comparison is not in current folder or folder above
+        elseif dataRepositoryStructure(i).isdir && ~strcmp(dataRepositoryStructure(i).name,'.') && ~strcmp(dataRepositoryStructure(i).name,'..') % if it is a directory (and not current or up a level), search in that 
+           
             metaDataName = fullfile(dataRepositoryDirectory,dataRepositoryStructure(i).name); % creates full file name for metadata file
-            metaDataStructuresTemp = dataIndexer(metaDataName,searchExpression);
+            metaDataStructuresTemp = dataIndexer(metaDataName,searchExpression); % runs dataIndexer function for each metadata full file name and search expression 'meta data'
         
             % if temporary metadata structures file is NOT empty
-                % add it to the current list of metadata structures    
-            if ~isempty(metaDataStructuresTemp)
-            
+            if ~isempty(metaDataStructuresTemp) 
+                
+                keyboard
+                % add it to the current list of metadata structures
                 metaDataStructures((length(metaDataStructures)+1):(length(metaDataStructures)+length(metaDataStructuresTemp))) = metaDataStructuresTemp;
-            
+                
+                
+                % NICK PLZ HELP WITH DIS
+                % add file path name to current list of metadata file path names
+                % for some reason I'm getting a random r,s,t at the end of
+                % my file paths? Also need to figure out how to only output
+                % the final file path (not every single file path to get to
+                % the metadata file)
+                
+                % if the metadata file is added to the structures array,
+                % add the full file name to an array structure of full file
+                % names
+                metaDataName((length(metaDataName)+1):(length(metaDataName)+length(metaDataName(i)))) = metaDataName(i)
+                
+                
             end
         end
     end
 end
+metaDataStructures = metaDataStructures';
+metaDataName;
 end
+
 
 
 % how do I have matlab point to the data repository folder and search expression for meta data (by string?)

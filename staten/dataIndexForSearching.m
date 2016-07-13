@@ -11,8 +11,10 @@ function [] = dataIndexForSearching()
 
 %dataIndexer(baseDir, searchExpression)
 
+% HARDCODED: set this up as a file path to be passed as input from the GUI
+% (in the future)
 dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository';
 
-dataIndexer(dataRepositoryDirectory, 'metadata')'
+dataIndexer(dataRepositoryDirectory, 'metadata')
 
 
