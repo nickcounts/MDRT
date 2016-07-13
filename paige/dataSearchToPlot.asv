@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 12-Jul-2016 09:55:23
+% Last Modified by GUIDE v2.5 13-Jul-2016 08:30:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -181,21 +181,21 @@ handles.end_textbox.String = endDateString;
 guidata(hObject,handles);
 
 
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+% --- Executes on selection change in FDList_popupmenu.
+function FDList_popupmenu_Callback(hObject, eventdata, handles)
+% hObject    handle to FDList_popupmenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
+% Hints: contents = cellstr(get(hObject,'String')) returns FDList_popupmenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from FDList_popupmenu
 handles.activeList = 1;
 guidata(hObject,handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+function FDList_popupmenu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FDList_popupmenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -206,9 +206,9 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in ConfigPlot_pushbutton1.
-function ConfigPlot_pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to ConfigPlot_pushbutton1 (see GCBO)
+% --- Executes on button press in ConfigPlot_pushbutton.
+function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to ConfigPlot_pushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -219,76 +219,99 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% ---> Test the 'paigeQuickPlot' version of reviewQuickPlot with a
+% ---> preloaded dummy data file
+index = get(handles.FDList_popupmenu,'Value');
+fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index,2});
+% fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
+% fdFileName = handles.activeList(index);
+% fdFileName = '1014.mat';
 
-% --- Executes on button press in RP1_radiobutton1.
-function RP1_radiobutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to RP1_radiobutton1 (see GCBO)
+figureNumber = paigeQuickPlot( fdFileName); 
+% If there is an events.mat file, then pass and plot t0
+% if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
+%     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
+%     
+%     
+%     
+%     figureNumber = paigeQuickPlot( fdFileName, handles.configuration, timeline);
+% 
+% else
+%     
+%     
+% 
+% end
+guidata(hObject, handles);
+
+
+
+% --- Executes on button press in RP1_radiobutton.
+function RP1_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to RP1_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of RP1_radiobutton1
+% Hint: get(hObject,'Value') returns toggle state of RP1_radiobutton
+display('So you wanna filter by RP-1 eh?')
 
 
-% --- Executes on button press in LO2_radiobutton2.
-function LO2_radiobutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to LO2_radiobutton2 (see GCBO)
+% --- Executes on button press in LO2_radiobutton.
+function LO2_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to LO2_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of LO2_radiobutton2
+% Hint: get(hObject,'Value') returns toggle state of LO2_radiobutton
 
 
-% --- Executes on button press in LN2_radiobutton4.
-function LN2_radiobutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to LN2_radiobutton4 (see GCBO)
+% --- Executes on button press in LN2_radiobutton.
+function LN2_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to LN2_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of LN2_radiobutton4
+% Hint: get(hObject,'Value') returns toggle state of LN2_radiobutton
 
 
-% --- Executes on button press in GN2_radiobutton5.
-function GN2_radiobutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to GN2_radiobutton5 (see GCBO)
+% --- Executes on button press in GN2_radiobutton.
+function GN2_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to GN2_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of GN2_radiobutton5
+% Hint: get(hObject,'Value') returns toggle state of GN2_radiobutton
 
 
-% --- Executes on button press in GHE_radiobutton6.
-function GHE_radiobutton6_Callback(hObject, eventdata, handles)
-% hObject    handle to GHE_radiobutton6 (see GCBO)
+% --- Executes on button press in GHE_radiobutton.
+function GHE_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to GHE_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of GHE_radiobutton6
+% Hint: get(hObject,'Value') returns toggle state of GHE_radiobutton
 
 
-% --- Executes on button press in AIR_radiobutton7.
-function AIR_radiobutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to AIR_radiobutton7 (see GCBO)
+% --- Executes on button press in AIR_radiobutton.
+function AIR_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to AIR_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of AIR_radiobutton7
+% Hint: get(hObject,'Value') returns toggle state of AIR_radiobutton
 
 
 
-% --- Executes on button press in WDS_radiobutton8.
-function WDS_radiobutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to WDS_radiobutton8 (see GCBO)
+% --- Executes on button press in WDS_radiobutton.
+function WDS_radiobutton_Callback(hObject, eventdata, handles)
+% hObject    handle to WDS_radiobutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of WDS_radiobutton8
+% Hint: get(hObject,'Value') returns toggle state of WDS_radiobutton
 
 
 
-
-%%%                       %%%%%%%%%%%%%%%%%%%
-%%%%%   STATEN SEARCH       %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%                     %%%%%%%%%%%%%%%%%
+% --------------------> STATEN SEARCH FUNTION <----------------------- %
 % --- Executes on button press in dateSearch_pushbutton5.
 function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to dateSearch_pushbutton5 (see GCBO)
@@ -303,13 +326,10 @@ if handles.startDateValue > handles.endDateValue
     %--- STATEN TO DO : Automatically switch times - warning not needed
 else
 % --- Staten's search function
-statenSearchFunction(time)
+[FDList] = statenSearchFunction(time);
+handles.FDList_popupmenu.String = FDList(:,1);
 end
-% --- call handles containing 2 datenums
-% --- Store into time array
-% --- input into staten's function
-% --- Output array of structures
-% --- Call function to display list in drop down menu
+
 
 
 
@@ -357,6 +377,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Helper Function to display warning dialog after Search Button is
+% selected - Displays if dates are entered backwards.
 function dateWarningDialog
     d = dialog('Position',[300 300 250 150],'Name','WARNING');
 
