@@ -1,4 +1,4 @@
-function reviewPlotAllTimelineEvents ( config )
+function reviewPlotAllTimelineEvents ( config)
 % Accepts the config structure
 
 
