@@ -22,7 +22,7 @@ function varargout = eventEditor(varargin)
 
 % Edit the above text to modify the response to help eventEditor1
 
-% Last Modified by GUIDE v2.5 10-Jun-2016 15:11:56
+% Last Modified by GUIDE v2.5 12-Jul-2016 20:12:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -200,6 +200,8 @@ set(handles.ui_editBox_eventTriggerFD, 'String',   handles.timeline.milestone(ev
 
 
 dt = abs(dt);
+
+% TODO: rewrite this section so it is NOT dependant on the financial toolbox
 
 % Assign T+/- values to working variables
 etm = num2cell([month(dt) day(dt) year(dt) hour(dt) minute(dt) second(dt)]);
@@ -965,9 +967,12 @@ function updateT0fromGUI(hObject, handles)
 
 
 % --------------------------------------------------------------------
-function uiToolbar_saveButton_ClickedCallback(hObject, eventdata, handles)
+function uiToolbar_saveButton_callback(hObject, eventdata, handles)
 % retrieve the current working directory from the handles structure
 % What hapens if this isn't there!?
+
+% Use this in GUIDE Toolbar Editor as the callback
+% eventEditor('uiToolbar_saveButton_callback',hObject,eventdata,guidata(hObject))
 
     path = handles.config.dataFolderPath;
     timelineFile = 'timeline.mat';
@@ -985,4 +990,55 @@ function uiToolbar_saveButton_ClickedCallback(hObject, eventdata, handles)
     else
         % User hit cancel button
         disp('User cancelled save');
+    end
+    
+    
+function uiToolbar_openButton_callback(hObject, eventdata, handles)
+% uiToolbar_openButton_callback opens a timeline.mat file with error
+% handling and updates the GUI and handles structure
+
+% Use this in GUIDE Toolbar Editor as the callback
+% eventEditor('uiToolbar_openButton_callback',hObject,eventdata,guidata(hObject))
+
+    path = handles.config.dataFolderPath;
+    timelineFile = 'timeline.mat';
+    
+    [file, pathname] = uigetfile(fullfile(path, timelineFile),'Open a timeline file');
+    
+    if file
+        % User did not hit cancel
+        % grab the variable to save
+                
+        load(fullfile(pathname, file));
+        
+        if exist('timeline','var')
+            
+            % We loaded a variable with the right name. Now, is it the
+            % right variable?
+            
+            switch checkStructureType(timeline)
+                case 'timeline'
+                    
+                    % We have a valid timeline structure.
+                    
+                    handles.timeline = timeline;
+        
+                    updateGUIfromHandles(handles)
+
+                    guidata(hObject, handles);
+                    
+                    
+                otherwise
+                    % We do not have a valid timeline structure.
+                    % Do nothing to soft fail
+            end
+            
+            % We did not load a variable named timeline.
+            % Do nothing to soft fail
+            
+        end
+
+    else
+        % User hit cancel button
+        disp('User cancelled load');
     end
