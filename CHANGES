@@ -1,3 +1,8 @@
+Version 0.4.2:
+ - Added folders for intern development
+ - release of v0.4.1 - bugfix for refresh timeline Merge branch 'hotfix-0.4.1'
+ - "added tag for vlinetext to fix refresh timeline bug"
+
 Version 0.4.1:
  - Merge branch 'release-0.4' Creating a starting-point release for version 0.4 This is the base, working release from which future development will stem.
  - Bumped version number to 0.4.0
