@@ -317,22 +317,25 @@ function uiButton_quickPlotFD_Callback(hObject, eventdata, handles)
 
 
 index = get(handles.uiPopup_FDList,'Value');
-fdFileName = handles.quickPlotFDs{index, 2};
+fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
+
+% TODO: Does you even need this, brah?
+
+% % If there is an events.mat file, then pass and plot t0
+% if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
+%     
+%     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
+%         
+%     figureNumber = reviewQuickPlot( fdFileName, handles.configuration, timeline);
+% 
+% else
+%     
+%     figureNumber = reviewQuickPlot( fdFileName, handles.configuration);
+% 
+% end
 
 
-% If there is an events.mat file, then pass and plot t0
-if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
-    load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
-    
-    
-    
-    figureNumber = reviewQuickPlot( fdFileName, handles.configuration, timeline);
-
-else
-    
-    figureNumber = reviewQuickPlot( fdFileName, handles.configuration);
-
-end
+figureNumber = reviewQuickPlot( fdFileName );
 
 
 
