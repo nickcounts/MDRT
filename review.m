@@ -321,21 +321,20 @@ fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs
 
 % TODO: Does you even need this, brah?
 
-% % If there is an events.mat file, then pass and plot t0
-% if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
-%     
-%     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
-%         
-%     figureNumber = reviewQuickPlot( fdFileName, handles.configuration, timeline);
-% 
-% else
-%     
-%     figureNumber = reviewQuickPlot( fdFileName, handles.configuration);
-% 
-% end
+% If there is an events.mat file, then pass and plot t0
+if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
+    
+    load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
+        
+    figureNumber = reviewQuickPlot( fdFileName, timeline);
+
+else
+    
+    figureNumber = reviewQuickPlot( fdFileName );
+
+end
 
 
-figureNumber = reviewQuickPlot( fdFileName );
 
 
 
