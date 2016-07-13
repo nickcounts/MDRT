@@ -1,4 +1,4 @@
-function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, config, varargin )
+function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
 % reviewQuickPlot( fdFileName, config )
 %
 %   Designed to be called by the Data Review Tool helper GUI,
@@ -100,6 +100,8 @@ end
         
         % an events structure was passed. Default to displaying only t0
         % Plot T=0 on top of data
+        
+        
         timeline = varargin{1};
 
 
