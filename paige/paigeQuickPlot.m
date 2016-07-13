@@ -1,5 +1,5 @@
-function [ figureHandle ] = paigeQuickPlot( fdFileName, config, varargin )
-% reviewQuickPlot( fdFileName, config )
+function [ figureHandle ] = paigeQuickPlot( fdFileName)
+% ---> REMOVED (config, varagin)^^ as inputs for testing purposes ^^
 %
 %   Designed to be called by the Data Review Tool helper GUI,
 %   reviewQuickPlot takes a data filename and the config structure as
@@ -28,9 +28,7 @@ function [ figureHandle ] = paigeQuickPlot( fdFileName, config, varargin )
     addToolButtonsToPlot(figureHandle);
     
    
-    
-    
-    
+   
     % Fix orientation for printing and .pdf generation
     orient('landscape');
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
@@ -40,13 +38,14 @@ function [ figureHandle ] = paigeQuickPlot( fdFileName, config, varargin )
 	axes(subPlotAxes);
 
 
-    dataPath = config.dataFolderPath;
+%     dataPath = config.dataFolderPath;
+      dataPath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
 
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
-    % load([dataPath fdFileName],'-mat');
+     load([dataPath fdFileName],'-mat');
     
     % ---> Try to load a dummy file to plot, not using graph config
-    load(['/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat']);
+    %load(['/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat']);
     
 
      

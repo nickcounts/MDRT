@@ -227,20 +227,20 @@ fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - OR
 % fdFileName = handles.activeList(index);
 fdFileName = '1014.mat';
 
- 
+figureNumber = paigeQuickPlot( fdFileName); 
 % If there is an events.mat file, then pass and plot t0
-if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
-    load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
-    
-    
-    
-    figureNumber = paigeQuickPlot( fdFileName, handles.configuration, timeline);
-
-else
-    
-    figureNumber = paigeQuickPlot( fdFileName, handles.configuration);
-
-end
+% if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
+%     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
+%     
+%     
+%     
+%     figureNumber = paigeQuickPlot( fdFileName, handles.configuration, timeline);
+% 
+% else
+%     
+%     
+% 
+% end
 guidata(hObject, handles);
 
 
