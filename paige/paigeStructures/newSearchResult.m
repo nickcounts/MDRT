@@ -1,4 +1,4 @@
-function newSearchResult
+function [searchResult] = newSearchResult(varagin)
 % a structure that is outputted from statenSearch, returns search result of
 % fd list, path to the data, and related metaData
 
