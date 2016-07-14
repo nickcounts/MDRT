@@ -7,7 +7,7 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   graph
 %   timeline
 %   metadata
-%   config      -   not implemented
+%   config
 %
 %   Will return an empty string if no match. Extra fields will not falsify
 %   the check. The prototype (makeStructure) fields must ALL be present.
@@ -41,13 +41,15 @@ fdPrototype         = newFD;
 graphPrototype      = newGraphStructure;
 timelinePrototype   = newTimelineStructure;
 metadataPrototype   = newMetaDataStructure;
+configPrototype     = newConfig;
 
 % Create a cell array where each row is {'structure name', {'field list'}}
 
 prototypes = {  'fd',       fieldnames(fdPrototype)';
                 'graph',    fieldnames(graphPrototype)';
                 'timeline', fieldnames(timelinePrototype)';
-                'metadata', fieldnames(metadataPrototype)'};
+                'metadata', fieldnames(metadataPrototype)'
+                'config',   fieldnames(configPrototype)};
             
             
 %% Check each structure type
@@ -96,6 +98,12 @@ prototypes = {  'fd',       fieldnames(fdPrototype)';
             case 'metadata'
                 if doesVariableHaveAllFields(testVariable, prototypes{n,2})
                     structureTypeString = 'metadata';
+                    break
+                end
+                
+            case 'config'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'config';
                     break
                 end
 

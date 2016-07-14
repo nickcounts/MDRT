@@ -102,6 +102,11 @@ end
     handles.graph = newGraphStructure;
     uiNewButton_ClickedCallback(hObject, eventdata, handles);
     handles.graph = returnGraphStructureFromGUI(handles);
+    
+    
+% Update the window title to reflect the working data set
+    handles.figure1.Name = makeDataSetTitleStringFromActiveConfig(config);
+    handles.figure1.NumberTitle = 'off';
 
 % Choose default command line output for makeGraphGUI
     handles.output = hObject;
