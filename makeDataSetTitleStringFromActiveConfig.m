@@ -100,7 +100,48 @@ function titleString = makeStringFromMetaData(metaData)
 
     titleString = '';
 
+    opString        = '';
+    opTypeString    = '';
+    dateString      = '';
     
+    if metaData.isOperation
+        if isempty(metaData.operationName)
+            % is op, but no name - make a default name
+            if     metaData.isVehicleOp
+                opString = 'Vehicle Support';
+                
+            elseif metaData.isMARSprocedure
+                opString = 'MARS Procedure';
+                
+            elseif metaData.isOperation
+                opString = 'Operation';
+                
+            end
+        else
+            % is op and has title
+            opString = metaData.operationName;
+        end
+    end
+    
+    if metaData.isVehicleOp
+        opTypeString = 'Vehicle Suport';
+    elseif metaData.isMARSprocedure
+        opTypeString = 'MARS Procedure';
+    else
+        opTypeString = 'Normal Standby Data';
+    end
+        
+    
+    % TODO: make smarter dateString depending on time interval, using the
+    % same month and year whenever possible
+    if ~isempty(metaData.timeSpan)
+        startStr = datestr(metaData.timeSpan(1), 'mmm dd, yyyy');
+        stopStr  = datestr(metaData.timeSpan(2), 'mmm dd, yyyy');
+        dateString = strjoin({startStr,'to', stopStr});
+    end
+    
+
+	titleString = strjoin({titleString, opString, opTypeString, '-', dateString});
     
     
 end
