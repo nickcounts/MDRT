@@ -8,6 +8,7 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   timeline
 %   metadata
 %   config
+%   searchResult
 %
 %   Will return an empty string if no match. Extra fields will not falsify
 %   the check. The prototype (makeStructure) fields must ALL be present.
@@ -42,6 +43,7 @@ graphPrototype      = newGraphStructure;
 timelinePrototype   = newTimelineStructure;
 metadataPrototype   = newMetaDataStructure;
 configPrototype     = newConfig;
+searchResultPrototype = newSearchResult;
 
 % Create a cell array where each row is {'structure name', {'field list'}}
 
