@@ -15,6 +15,12 @@ dbug = true;
 switch nargin
     case 1 % Caller passed either a config struct or a metadata struct
         
+        if ~ isstruct(varargin{1} )
+            % Not a structure!
+            % soft fail
+            return
+        end
+        
         switch checkStructureType( varargin{1} )
             case 'metadata'
                 % it was a metadata struct
