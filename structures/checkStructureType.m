@@ -30,7 +30,7 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   this test will continue to work.
 %
 %   Counts - 2016, VCSFA
-%   Pruce  - 2016, VCFSA
+%   Pruce  - 7-14-16, VCFSA
 
 
 %% Instantiate variables for use in the function
