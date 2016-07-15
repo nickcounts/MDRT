@@ -1,4 +1,4 @@
-function reviewPlotAllTimelineEvents ( varargin )
+function reviewPlotAllTimelineEvents ( varargin, handles )
 % Accepts the config structure
 
 % Updated to allow plotting without passing a config structure
@@ -11,9 +11,11 @@ elseif nargin == 1
 end
 
 path = config.dataFolderPath;
+% path = handles.searchResult.pathToData;
+% keyboard
 timelineFile = 'timeline.mat';
 
-load([path timelineFile]);
+load([path, filesep, timelineFile]);
 
     % Manual plotting of t0 in red...
     % TODO: Implement timezone conversion

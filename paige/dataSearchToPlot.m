@@ -233,7 +233,7 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % figureNumber = paigeQuickPlot( fdFileName); 
 
 
- fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.searchResult.matchingFDList(:,2)));
+fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.searchResult.matchingFDList(:,2)));
 
 
 figureNumber = reviewQuickPlot(fdFileNameWithPath); 

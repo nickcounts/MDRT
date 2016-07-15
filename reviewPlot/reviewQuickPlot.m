@@ -1,4 +1,4 @@
-function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
+function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handles )
 % reviewQuickPlot( fdFileName, config )
 %
 %   Designed to be called by the Data Review Tool helper GUI,
@@ -43,7 +43,7 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
 
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
     load(fdFileNameWithPath,'-mat');
-
+   
     
 switch upper(fd.Type)
     case {'DCVNC','DCVNO','PCVNC','PCVNO','RV','BV','FV'}   
@@ -92,7 +92,8 @@ end
 
 
     if nargin == 1
-        % nothing to do if no events passed
+        % nothing to do if no events 
+        reviewPlotAllTimelineEvents;
     else
         
         % TODO: Does this still need to exist?
