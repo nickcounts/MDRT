@@ -215,7 +215,7 @@ function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on button press in QuickPlot_pushbutton2.
-function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
+function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles, searchResult)
 % hObject    handle to QuickPlot_pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -232,11 +232,10 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 
 % figureNumber = paigeQuickPlot( fdFileName); 
 
+ fdFileNameWithPath = fullfile(searchResult.pathToData,filesep,searchResult.matchingFDList(:,2));
+ fdFileNameWithPathString = char(fdFileNameWithPath);
 
- fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.searchResult.matchingFDList(:,2)));
-
-
-figureNumber = reviewQuickPlot(fdFileNameWithPath); 
+figureNumber = paigeQuickPlot(fdFileNameWithPathString); 
 
 
 % If there is an events.mat file, then pass and plot t0
@@ -244,7 +243,7 @@ figureNumber = reviewQuickPlot(fdFileNameWithPath);
 %     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
 %     
 %     
-%        
+%     
 %     figureNumber  = paigeQuickPlot( fdFileName, handles.configuration, timeline);
 % 
 % else

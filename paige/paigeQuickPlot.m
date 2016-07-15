@@ -1,6 +1,8 @@
-function [ figureHandle ] = paigeQuickPlot( fdFileNameWithPath)
+function [ figureHandle ] = paigeQuickPlot( searchResult, handles)
 % ---> REMOVED (config, varagin)^^ as inputs for testing purposes ^^
 % ---> Replace with fdFileNameWithPath
+% ---> Replace with searchResult
+% -------> - Pruce 7/15/16 VCSFA
 %
 %   Designed to be called by the Data Review Tool helper GUI,
 %   reviewQuickPlot takes a data filename and the config structure as
@@ -40,10 +42,13 @@ function [ figureHandle ] = paigeQuickPlot( fdFileNameWithPath)
 
 
 %     dataPath = config.dataFolderPath;
-%       dataPath = 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/';
+%     dataPath = 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/';
 
-    % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
-     load(fdFileNameWithPath,'-mat');
+     fdFileNameWithPath = fullfile(searchResult.pathToData,filesep,searchResult.matchingFDList(:,2));
+     fdFileNameWithPathString = char(fdFileNameWithPath);
+     
+     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
+     load(fdFileNameWithPathString);
     
     % ---> Try to load a dummy file to plot, not using graph config
     %load(['/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat']);
@@ -85,8 +90,8 @@ end
     
 %     set(h_zoom,'Enable','on');
     
-
-
+    
+    
     % set(pan(ax), 'ActionPostCallback',@(x,y) reviewRedrawOnGraphLimitChange(ax));
 
     dynamicDateTicks;
@@ -97,11 +102,12 @@ end
     set(dcm_obj, 'UpdateFcn', @dataTipDateCallbackDecimal);
 
 
-    if nargin == 2
+    if nargin == 1
         % nothing to do if no events passed
     else
         % an events structure was passed. Default to displaying only t0
         % Plot T=0 on top of data
+        
         timeline = varargin{1};
 
 
