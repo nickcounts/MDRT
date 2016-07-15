@@ -4,7 +4,7 @@ function [searchResult] = newSearchResult(varagin)
 % metaData structure of selectd data.
 %           
 %
-%       searchResult:
+%       searchResult: 
 %
 %                 metaData: [1x1] struct of metaData
 %               pathToData: 'C:/Users/Paige/Documents/MATLAB/MDRT'
