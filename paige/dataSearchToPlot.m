@@ -345,7 +345,7 @@ handles.FDList_popupmenu.String = searchResult.matchingFDList(:,1);
 handles.searchResult = searchResult;
 
 handles.FDList = searchResult.matchingFDList(:,:);
-% keyboard
+
 end
 
 guidata(hObject, handles);

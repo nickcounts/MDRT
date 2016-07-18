@@ -10,7 +10,6 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handl
 %   Counts 2014, Spaceport Support Services
 %   Counts 2016, VCSFA - Updated
 
-
     % SET PLOT STYLE INFO FOR SAVING TO PDF
     
     %	Page setup for landscape US Letter
