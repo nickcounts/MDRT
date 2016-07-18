@@ -21,6 +21,12 @@ switch nargin
             return
         end
         
+        if isempty(checkStructureType)
+            % broke checkStructureType - soft fail by exiting and returning
+            % enpty string
+            return
+        end
+        
         switch checkStructureType( varargin{1} )
             case 'metadata'
                 % it was a metadata struct
