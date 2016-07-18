@@ -93,7 +93,7 @@ end
 
     if nargin == 1
         % nothing to do if no events 
-        reviewPlotAllTimelineEvents;
+    
     else
         
         % TODO: Does this still need to exist?
@@ -103,7 +103,7 @@ end
         % Plot T=0 on top of data
         
         
-        timeline = varargin{1};
+        timeline = varargin(1);
 
 
 
@@ -119,7 +119,7 @@ end
         vline(timeline.t0.time,'r-',t0string,0.5)
 
         % Cheat and plot everything the quick and dirty way
-        reviewPlotAllTimelineEvents;
+        reviewPlotAllTimelineEvents(handles);
 
 
 

@@ -7,11 +7,12 @@ function reviewPlotAllTimelineEvents ( varargin, handles )
 if nargin == 0
     config = getConfig;
 elseif nargin == 1
-    config = varargin{1};
+    config = varargin(1);
 end
 
-path = config.dataFolderPath;
-% path = handles.searchResult.pathToData;
+% path = config.dataFolderPath;
+
+path = char(fullfile(handles.searchResult.pathToData));
 % keyboard
 timelineFile = 'timeline.mat';
 

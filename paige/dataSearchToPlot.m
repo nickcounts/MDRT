@@ -18,7 +18,7 @@ function varargout = dataSearchToPlot(varargin)
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
-% See also: GUIDE, GUIDATA, GUIHANDLES
+% See also: GUIDE, GUIDATA, GUIHANDLES 
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
@@ -236,22 +236,24 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.searchResult.matchingFDList(:,2)));
 
 
-figureNumber = reviewQuickPlot(fdFileNameWithPath); 
-
-
 % If there is an events.mat file, then pass and plot t0
-% if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
-%     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
-%     
-%     
-%        
-%     figureNumber  = paigeQuickPlot( fdFileName, handles.configuration, timeline);
-% 
-% else
-%     
-%     
-% 
-% end
+if exist([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'file')
+    
+    load([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'-mat')
+        
+    figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
+
+else
+    
+    figureNumber = reviewQuickPlot( fdFileNameWithPath, handles );
+
+end
+
+
+
+% figureNumber = reviewQuickPlot(fdFileNameWithPath); 
+
+
 guidata(hObject, handles);
 
 
