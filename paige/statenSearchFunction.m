@@ -1,7 +1,7 @@
 function [searchResult] = statenSearchFunction( time, handles )
 %Dummy function to input a time array of 1 or 2 datenums and output an
 %array of structures containing FDs
-timeRange = time(2) - time(1);
+% timeRange = time(2) - time(1);
 
 % % Practice Displaying strings in drop down menu
 % if timeRange > 7
@@ -17,9 +17,9 @@ timeRange = time(2) - time(1);
 dummyData= 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data';
 dummyDataName = ('Orb-1 1014');
 dummyMetaData = load('C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/metadata.mat');
-dummyStringFileName = {'Orb-1 1014' , '1014.mat';...
-                       'Orb-1 1015' , '1015.mat';...
-                       'Orb-1 1016' , '1016.mat'};
+dummyStringFileName = {' 1014' , '1014.mat';...
+                       ' 1015' , '1015.mat';...
+                       ' 1016' , '1016.mat'};
 
 
 % FDList = {dummyDataName dummyData};
