@@ -232,9 +232,9 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 
 % figureNumber = paigeQuickPlot( fdFileName); 
 
-fdFile = get(handles.FDList_popupmenu,'Value');
+fdFile = get(handles.FDList_popupmenu,'String');
 % fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.searchResult.matchingFDList(:,2)));
-fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
+fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.FDList_popupmenu.'String'));
 
 % If there is an events.mat file, then pass and plot t0
 if exist([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'file')
@@ -344,8 +344,6 @@ else
 handles.FDList_popupmenu.String = searchResult.matchingFDList(:,1);
 handles.searchResult = searchResult;
 
-% handles.FDList = searchResult.matchingFDList(:,:);
-% keyboard
 end
 
 guidata(hObject, handles);

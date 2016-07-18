@@ -12,11 +12,13 @@ end
 
 % path = config.dataFolderPath;
 
-path = char(fullfile(handles.searchResult.pathToData));
+% path = char(fullfile(handles.searchResult.pathToData));
 % keyboard
-timelineFile = 'timeline.mat';
+% timelineFile = 'timeline.mat';
 
-load([path, filesep, timelineFile]);
+load([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'-mat')
+
+% load([path, filesep, timelineFile]);
 
     % Manual plotting of t0 in red...
     % TODO: Implement timezone conversion
@@ -47,6 +49,7 @@ load([path, filesep, timelineFile]);
         timezone = 'Local';
     end
     
+  
     if timeline.uset0
         
         % Plot events as T-minus times

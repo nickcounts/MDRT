@@ -40,7 +40,6 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handl
 	axes(subPlotAxes);
 
   
-
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
     load(fdFileNameWithPath,'-mat');
    
@@ -119,7 +118,7 @@ end
         vline(timeline.t0.time,'r-',t0string,0.5)
 
         % Cheat and plot everything the quick and dirty way
-        reviewPlotAllTimelineEvents(handles);
+        reviewPlotAllTimelineEvents(timeline,handles);
 
 
 

@@ -16,7 +16,9 @@ timeRange = time(2) - time(1);
 % dummyData= 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
 dummyData= 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data';
 dummyDataName = ('Orb-1 1014');
-dummyStringFileName = {'Orb-1 1014' , '1014.mat'};
+dummyStringFileName = {'Orb-1 1014' , '1014.mat';...
+                       'Orb-1 1015' , '1015.mat';...
+                       'Orb-1 1016' , '1016.mat'};
 
 % keyboard
 % FDList = {dummyDataName dummyData};
