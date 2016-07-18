@@ -8,21 +8,28 @@ function titleString = makeStringFromMetaData(searchResult)
     
     if searchResult.metaData.isOperation
         if isempty(searchResult.metaData.operationName)
-            % is op, but no name - make a default name
-%             if     searchResult.metaData.isVehicleOp
-%                 opString = 'Vehicle Support';
-%                 
-%             elseif searchResult.metaData.isMARSprocedure
-%                 opString = 'MARS Procedure';
-%                 
-%             elseif searchResult.metaData.isOperation
-%                 opString = 'Operation';
-%                 
-%             end
+            is op, but no name - make a default name
+            if     searchResult.metaData.isVehicleOp
+                opString = 'Vehicle Support';
+                
+            elseif searchResult.metaData.isMARSprocedure
+                opString = 'MARS Procedure';
+                
+            elseif searchResult.metaData.isOperation
+                opString = 'Operation';
+                
+            end
         else
             % is op and has title
             opString = searchResult.metaData.operationName;
-            titleString = strjoin({titleString, opString});
+            titleString = strjoin({titleString,' ', opString});
+        end
+    else
+        if ~isempty(searchResult.metaData.timeSpan)
+        startStr = datestr(searchResult.metaData.timeSpan(1), 'mmm dd, yyyy');
+        stopStr  = datestr(searchResult.metaData.timeSpan(2), 'mmm dd, yyyy');
+        dateString = strjoin({startStr,'to', stopStr});
+        titleString = strjoin({titleString, ' ', dateString});
         end
     end
     
@@ -40,6 +47,9 @@ function titleString = makeStringFromMetaData(searchResult)
     if ~isempty(searchResult.metaData.timeSpan)
         startStr = datestr(searchResult.metaData.timeSpan(1), 'mmm dd, yyyy');
         stopStr  = datestr(searchResult.metaData.timeSpan(2), 'mmm dd, yyyy');
+        % loop to see if they occur in same year
+        if strcomp(startStr,stopStr)
+            
         dateString = strjoin({startStr,'to', stopStr});
     end
     

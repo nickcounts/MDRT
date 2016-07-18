@@ -25,12 +25,20 @@ function titleString = makeStringFromMetaData(searchResult)
             titleString = strjoin({titleString,' ', opString});
         end
     else
-        if ~isempty(searchResult.metaData.timeSpan)
+         if ~isempty(searchResult.metaData.timeSpan)
         startStr = datestr(searchResult.metaData.timeSpan(1), 'mmm dd, yyyy');
         stopStr  = datestr(searchResult.metaData.timeSpan(2), 'mmm dd, yyyy');
-        dateString = strjoin({startStr,'to', stopStr});
-        titleString = strjoin({titleString, ' ', dateString});
+        % loop to see if they occur in same year
+        if strcmp(startStr,stopStr)
+            newStartStr = datestr(searchResult.metaData.timeSpan(1), 'mmm dd');
+            newStopStr  = datestr(searchResult.metaData.timeSpan(2), 'mmm dd');
+            
+            dateString = strjoin({newStartStr,'to', newStopStr});
+        else
+            dateString = strjoin({startStr,'to', stopStr}); 
         end
+        titleString = strjoin({titleString, dateString})
+    end
     end
     
     if searchResult.metaData.isVehicleOp
@@ -47,10 +55,17 @@ function titleString = makeStringFromMetaData(searchResult)
     if ~isempty(searchResult.metaData.timeSpan)
         startStr = datestr(searchResult.metaData.timeSpan(1), 'mmm dd, yyyy');
         stopStr  = datestr(searchResult.metaData.timeSpan(2), 'mmm dd, yyyy');
-        dateString = strjoin({startStr,'to', stopStr});
+        % loop to see if they occur in same year
+        if strcmp(startStr,stopStr)
+            newStartStr = datestr(searchResult.metaData.timeSpan(1), 'mmm dd');
+            newStopStr  = datestr(searchResult.metaData.timeSpan(2), 'mmm dd');
+            
+            dateString = strjoin({newStartStr,'to', newStopStr});
+        else
+            dateString = strjoin({startStr,'to', stopStr}); 
+        end
     end
-    
-
+   
 % 	titleString = strjoin({titleString, opString, opTypeString, '-', dateString});
     
     
