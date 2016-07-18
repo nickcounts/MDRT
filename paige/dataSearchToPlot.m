@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 13-Jul-2016 08:30:57
+% Last Modified by GUIDE v2.5 18-Jul-2016 12:24:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -223,8 +223,8 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % ---> Test the 'paigeQuickPlot' version of reviewQuickPlot with a
 % ---> preloaded dummy data file
 
-% index = get(handles.FDList_popupmenu,'Value');
-% fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index,2});
+index = get(handles.FDList_popupmenu,'Value');
+% fdFileName = fullfile(handles.configuration.dataFolderPath, handles.FDList{index,2});
 
 % fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
 % fdFileName = handles.activeList(index,2);
@@ -233,8 +233,8 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % figureNumber = paigeQuickPlot( fdFileName); 
 
 fdFile = get(handles.FDList_popupmenu,'Value');
-% fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,handles.searchResult.matchingFDList(:,2)));
-fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
+fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep, handles.FDList{index,2}));
+% fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
 
 % If there is an events.mat file, then pass and plot t0
 if exist([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'file')
@@ -325,15 +325,15 @@ function WDS_radiobutton_Callback(hObject, eventdata, handles)
 
 
 % --------------------> STATEN SEARCH FUNTION <----------------------- %
-% --- Executes on button press in dateSearch_pushbutton5.
-function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to dateSearch_pushbutton5 (see GCBO)
+% --- Executes on button press in Search_pushbutton.
+function Search_pushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to Search_pushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 time = [handles.startDateValue, handles.endDateValue];
 % Check to make sure dates are in correct order
-% ---> TAKE OUT COMMAND WINDOW WARNING
+
 if handles.startDateValue > handles.endDateValue 
     dateWarningDialog
     %--- STATEN TO DO : Automatically switch times - warning not needed
@@ -344,7 +344,7 @@ else
 handles.FDList_popupmenu.String = searchResult.matchingFDList(:,1);
 handles.searchResult = searchResult;
 
-% handles.FDList = searchResult.matchingFDList(:,:);
+handles.FDList = searchResult.matchingFDList(:,:);
 % keyboard
 end
 
