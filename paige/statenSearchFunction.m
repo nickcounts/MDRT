@@ -32,8 +32,14 @@ searchResult.metaData = dummyMetaData.metaData;
 searchResult.pathToData = dummyData;
 searchResult.matchingFDList = dummyStringFileName;
 
-
-
+%
+% TODO: ------------------------------------------------------------------ 
+% Create 2 structures, one from Orb-1 dataset and one from A230
+% WDR (or some other data set). Creat an array of 2 structures and output 3
+% files from each, and label accordingly. Use makeStringFromMetaData to
+% creat FD string names and store in popupmenu handles and FD list
+% structure.
+%    
 
 
 
