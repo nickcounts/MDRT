@@ -164,35 +164,84 @@ for i = 1:length(dataToSearch)
         case 1 % input is 1 value, iterate over 24 hour single day period
 
             timeStamp(2) = timeStamp(1) + 1; % creates a second timestamp input
-            
+%            keyboard
+
+            % if the input range of timestamps is entirely within the metadata timespan
             if timeStamp(1) >= dataToSearch(i).metaData.timeSpan(1) && timeStamp(2) <= dataToSearch(i).metaData.timeSpan(2)
 
                 % foundDataToSearch{length(foundDataToSearch)+1} = dataToSearch(i);
                
-                foundDataToSearch.metaData = dataToSearch(i).metaData;
-                foundDataToSearch.pathToData = dataToSearch(i).pathToData;
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+%                 display('if 1')
+
+            % else if the first input timestamp is outside of metadata
+            % timespan AND the second input timestamp is within the
+            % metadata timespan
+            elseif timeStamp(1) < dataToSearch(i).metaData.timeSpan(1) && ( timeStamp(2) >= dataToSearch(i).metaData.timeSpan(1) && timeStamp(2) <= dataToSearch(i).metaData.timeSpan(2) )
                 
-                i = i + 1;
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+%                 display('if 2')
+
+            % else if the second input timestamp is outside of metadata
+            % timespan AND the first input timestamp is within the
+            % metadata timespan
+            elseif timeStamp(2) > dataToSearch(i).metaData.timeSpan(2) && ( timeStamp(1) >= dataToSearch(i).metaData.timeSpan(1) && timeStamp(1) <= dataToSearch(i).metaData.timeSpan(2) )
                 
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+%                 display('if 3')
+
+            % else if the metadata timespan is within the input timestamp
+            elseif timeStamp(1) < dataToSearch(i).metaData.timeSpan(1) && timeStamp(2) > dataToSearch(i).metaData.timeSpan(2)
+                
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+            
+            else
+                disp('no matches')
+               
             end
 
         case 2 % input is 2 values, iterate over period between 2 days given
-            if timeStamp(1) >= dataToSearch(i).metaData.timeSpan(1)
-                foundDataToSearch.metaData = dataToSearch(i).metaData;
-                foundDataToSearch.pathToData = dataToSearch(i).pathToData;
-            elseif timeStamp(2) <= dataToSearch(i).metaData.timeSpan(2)
+          
+            if timeStamp(1) >= dataToSearch(i).metaData.timeSpan(1) && timeStamp(2) <= dataToSearch(i).metaData.timeSpan(2)
+
                 % foundDataToSearch{length(foundDataToSearch)+1} = dataToSearch(i);
-     
-                foundDataToSearch.metaData = dataToSearch(i).metaData;
-                foundDataToSearch.pathToData = dataToSearch(i).pathToData;
+               
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+%                 display('if 1')
+            elseif timeStamp(1) < dataToSearch(i).metaData.timeSpan(1) && ( timeStamp(2) >= dataToSearch(i).metaData.timeSpan(1) && timeStamp(2) <= dataToSearch(i).metaData.timeSpan(2) )
                 
-                i = i + 1;
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+%                 display('if 2')
+            elseif timeStamp(2) > dataToSearch(i).metaData.timeSpan(2) && ( timeStamp(1) >= dataToSearch(i).metaData.timeSpan(1) && timeStamp(1) <= dataToSearch(i).metaData.timeSpan(2) )
+                
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+%                 display('if 3')
+            elseif timeStamp(1) < dataToSearch(i).metaData.timeSpan(1) && timeStamp(2) > dataToSearch(i).metaData.timeSpan(2)
+                
+                foundDataToSearch(i).metaData = dataToSearch(i).metaData;
+                foundDataToSearch(i).pathToData = dataToSearch(i).pathToData;
+                
+            else
+                disp('no matches')
+               
             end
-           
+            
         otherwise 
             disp('not working....')
     end
+% indices = find(foundDataToSearch(i).pathToData==[]);
+% foundDataToSearch(indices,:) = [];    
+    
 end
+
+
 end
 
     
