@@ -355,6 +355,7 @@ else
 titleString = makeStringFromMetaData(searchResult);
 
 handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
+%handles.FDList_popupmenu.String = strcat(titleString(2),searchResult(2).matchingFDList(:,1));
 
 % handles.FDList_popupmenu.String = searchResult.matchingFDList(:,1);
 
