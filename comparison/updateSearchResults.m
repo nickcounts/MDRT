@@ -15,10 +15,30 @@ function updateSearchResults(hEdit, eventData, varargin)
     % TODO: Modify search to allow multiple search tokens in any order.
     % Break abart using whitespace and assemble indeces for each token?
    
-    ind = cellfun(@(x)( ~isempty(x) ), regexpi(masterList, searchString));
-   
+        searchToks = strsplit(searchString);
+
+        % searchToks = {'RP1';'Tur'};
+
+        % remove stray whitespace
+        searchToks = strtrim(searchToks);
+        searchToks(strcmp('',searchToks)) = [];
+
+        % start with empty match index variable
+        ind = [];
+
+        % create an index of matches for each token
+        for i = 1:numel(searchToks)
+
+            ind = [ind, cellfun(@(x)( ~isempty(x) ), regexpi(masterList, searchToks{i}))];
+
+        end
+
+        % combine matches (and searching, not or)
+        ind = boolean(prod(ind,2));
+
+ 
     
-   
+   length(searchString)
    
    if length(searchString)
        
@@ -26,7 +46,7 @@ function updateSearchResults(hEdit, eventData, varargin)
        if length(masterList(ind)) >= lsr.Value
            % selected an item in the new list
            % lsr.Value = length(masterList(ind));
-           lsr.String = masterList(ind);
+           % lsr.String = masterList(ind);
        elseif ~length(masterList(ind))
            % New results are empty!
            lsr.Value = 1;
