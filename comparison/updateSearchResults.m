@@ -15,9 +15,9 @@ function updateSearchResults(hEdit, eventData, varargin)
     % TODO: Modify search to allow multiple search tokens in any order.
     % Break abart using whitespace and assemble indeces for each token?
    
-    ind = cellfun(@(x)( ~isempty(x) ), regexp(masterList, searchString));
+    ind = cellfun(@(x)( ~isempty(x) ), regexpi(masterList, searchString));
    
-   
+    
    
    
    if length(searchString)
