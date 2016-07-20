@@ -1,55 +1,21 @@
 function updateSearchResults(hEdit, eventData, varargin)
  
-   mdrt = getappdata(hEdit.Parent);
-   
-   masterList = mdrt.fdMasterList;
-%    sbs = mdrt.searchBoxString;
+    mdrt = getappdata(hEdit.Parent);
 
-% 	java.lang.Thread.sleep(50)  % in mysec!
-    
-% if isequal(eventData.Key,'downarrow')
-% 
-%     import java.awt.Robot;
-%     import java.awt.event.KeyEvent;
-%     robot=Robot;
-%     robot.keyPress(KeyEvent.VK_ENTER);
-%     pause(0.01)
-%     robot.keyRelease(KeyEvent.VK_ENTER);
-%     disp(get(hEdit,'String'));
-% end
-   
-
-% if strcmp(eventData.Key,'backspace')
-%     sbs = sbs(1:end-1);
-% elseif isempty(eventData.Character)
-%     return
-% else
-%     sbs = [sbs eventData.Character];
-% end
-% 
-% setappdata(hEdit.Parent, 'searchBoxString', sbs);
-
-%     import java.awt.Robot
-%     import java.awt.event.*
-%     keys = Robot;
-%     keys.setAutoDelay(5);  
-%     keys.keyPress(java.awt.event.KeyEvent.VK_ENTER);keys.keyRelease(java.awt.event.KeyEvent.VK_ENTER);
+    masterList = mdrt.fdMasterList;
 
 
     lsr = findobj(hEdit.Parent.Children,'tag',          'listSearchResults');
     
-    % Toggle focus to update edit box contents?
-%     uicontrol(lsr);
-%     uicontrol(hEdit);
 
-
+    % Access the Java object to get the stupid text. Why, Matlab? Why?
+    ebh = findjobj(hEdit);
+    searchString =  char(ebh.getText);    
     
-    
-    searchString = hEdit.String;
-    
+    % TODO: Modify search to allow multiple search tokens in any order.
+    % Break abart using whitespace and assemble indeces for each token?
    
-   ind = cellfun(@(x)( ~isempty(x) ), regexp(masterList, searchString));
-   
+    ind = cellfun(@(x)( ~isempty(x) ), regexp(masterList, searchString));
    
    
    
