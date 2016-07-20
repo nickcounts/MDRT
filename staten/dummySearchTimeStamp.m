@@ -8,5 +8,5 @@ ORB32 = 735900.6;
 WDR = 736472;
 hotfire = 736481;
  
-thing = searchTimeStamp([ORB32 hotfire])
+thing = searchTimeStamp([735900])
 
