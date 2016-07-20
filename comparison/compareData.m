@@ -1,8 +1,21 @@
+
+
+%% Debugging Tasks - variable loading, etc...
+
+    load('dataIndex.mat');
+    
+    % TODO: appdata - how should I use this?
+        % setappdata(mdrt, 'dataIndex', dataIndex);
+
+%% Figure Creation (is this needed if called as a UI component?)
+
     hs.fig = figure;
         guiSize = [672 387];
         hs.fig.Position = [hs.fig.Position(1:2) guiSize];
         hs.fig.Name = 'Data Comparison Plotter';
         hs.fig.NumberTitle = 'off';
+        hs.fig.MenuBar = 'none';
+        hs.fig.ToolBar = 'none';
     
 %% Button Generation
 
@@ -64,7 +77,7 @@
             'String',       {'A230 Stage Test','A230 WDR'},...
             'Position',     [281 260 170 27]);    
 
-    hs.popup_dataSetOp1 =   uicontrol(hs.fig,...
+    hs.popup_dataSetOp2 =   uicontrol(hs.fig,...
             'Style',        'popupmenu',...
             'String',       {'A230 Stage Test','A230 WDR'},...
             'Position',     [481 260 170 27]); 
@@ -127,4 +140,31 @@
 
         
 
+%% Populate GUI with stuff from dataIndex
+
+allDataSetNames = {};
+matchingFDList = {};
+op1eventList = {};
+op2eventList = {};
+
+for i = 1:numel(dataIndex)
+    
+    allDataSetNames = vertcat(allDataSetNames, ...
+         makeDataSetTitleStringFromActiveConfig(dataIndex(i).metaData) );
+    
+    allDataSetNames = strtrim(allDataSetNames);
+    
+    
+    
+    
+    
+    
+end
+
+
+hs.popup_dataSetMain.String = allDataSetNames;
+hs.popup_dataSetOp1.String = allDataSetNames;
+hs.popup_dataSetOp2.String = allDataSetNames;
+
+hs.listSearchResults.String = dataIndex(1).FDList(:,1);
 
