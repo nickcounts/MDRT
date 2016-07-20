@@ -21,11 +21,14 @@ switch nargin
             return
         end
         
+        keyboard
+        
         switch checkStructureType( varargin{1} )
             case 'metadata'
                 % it was a metadata struct
                 
                 disp('passed a metadata struct')
+                metaData = varargin{1};
                 
                 
             case 'config'
