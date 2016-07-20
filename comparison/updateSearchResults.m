@@ -29,13 +29,18 @@ function updateSearchResults(hEdit, eventData, varargin)
 % 
 % setappdata(hEdit.Parent, 'searchBoxString', sbs);
 
+%     import java.awt.Robot
+%     import java.awt.event.*
+%     keys = Robot;
+%     keys.setAutoDelay(5);  
+%     keys.keyPress(java.awt.event.KeyEvent.VK_ENTER);keys.keyRelease(java.awt.event.KeyEvent.VK_ENTER);
 
 
     lsr = findobj(hEdit.Parent.Children,'tag',          'listSearchResults');
     
     % Toggle focus to update edit box contents?
-    uicontrol(lsr);
-    uicontrol(hEdit);
+%     uicontrol(lsr);
+%     uicontrol(hEdit);
 
 
     
@@ -58,7 +63,7 @@ function updateSearchResults(hEdit, eventData, varargin)
            lsr.String = masterList(ind);
        elseif ~length(masterList(ind))
            % New results are empty!
-           lsr.Value = 0;
+           lsr.Value = 1;
        else
            % Selection is outside new (nonzero)result list
            lsr.Value = length(masterList(ind));
