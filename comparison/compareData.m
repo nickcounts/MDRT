@@ -86,6 +86,10 @@
             'Style',        'popupmenu',...
             'String',       {'A230 Stage Test','A230 WDR'},...
             'Position',     [481 260 170 27]); 
+        
+        
+    hs.popup_dataSetOp1.Callback = {@updateDataSelectionPopup,hs.popup_dataSetMain, hs.popup_dataSetOp1, hs.popup_dataSetOp2};
+    hs.popup_dataSetOp2.Callback = {@updateDataSelectionPopup,hs.popup_dataSetMain, hs.popup_dataSetOp1, hs.popup_dataSetOp2};
 
 %% Popup Menus for Event Synchronization 
 
@@ -159,18 +163,17 @@ for i = 1:numel(dataIndex)
     
     allDataSetNames = strtrim(allDataSetNames);
     
-    
-    
-    
-    
-    
-    
 end
 
 
-hs.popup_dataSetMain.String = allDataSetNames;
 hs.popup_dataSetOp1.String = allDataSetNames;
 hs.popup_dataSetOp2.String = allDataSetNames;
+
+updateDataSelectionPopup([],[],hs.popup_dataSetMain, ...
+                            hs.popup_dataSetOp1, ...
+                            hs.popup_dataSetOp2 );
+                        
+% hs.popup_dataSetMain.String = allDataSetNames;
 
 hs.listSearchResults.String = dataIndex(1).FDList(:,1);
 setappdata(hs.fig, 'fdMasterList', dataIndex(1).FDList(:,1));
