@@ -50,7 +50,7 @@ function updateSearchResults(anyUIhandle, ~, varargin)
 
  
     
-   length(searchString)
+   length(searchString);
    
    if length(searchString)
        
