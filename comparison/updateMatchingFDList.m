@@ -23,11 +23,11 @@ mdrt = getappdata(dsl.Parent);
         case 1
             % Plot 1 Active. Even if both have the same selection
             setappdata(dsl.Parent,'targetOpFDList', findobj(dsl.Parent.Children,'tag', 'op1FDlist'));
-            disp('selected list 1')
+            debugout('selected list 1')
         case 2
             % Plot 2 active
             setappdata(dsl.Parent,'targetOpFDList', findobj(dsl.Parent.Children,'tag', 'op2FDlist'));
-            disp('selected list 2')
+            debugout('selected list 2')
     end
     
 
