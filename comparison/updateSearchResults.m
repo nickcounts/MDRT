@@ -1,15 +1,27 @@
-function updateSearchResults(hEdit, eventData, varargin)
+function updateSearchResults(anyUIhandle, ~, varargin)
+%updateSearchResults 
+%
+%   Accepts a handle to any uicontrol.
+%
+%   Expects one uieditbox with a tag 'searchBox'
+%   Expects one uilistbox with a tag 'listSearchResults'
+%   Expects appdata from the calling app/gui called 'fdMasterList'
+%
+%   Counts, VCSFA 2016
  
-    mdrt = getappdata(hEdit.Parent);
+    mdrt = getappdata(anyUIhandle.Parent);
 
     masterList = mdrt.fdMasterList;
 
-
-    lsr = findobj(hEdit.Parent.Children,'tag',          'listSearchResults');
+    % get handle to the list of search results
+    lsr = findobj(anyUIhandle.Parent.Children,'tag', 'listSearchResults');
+    
+    % get handle to the search box (for sure!)
+    hebox = findobj(anyUIhandle.Parent.Children, 'tag', 'searchBox');
     
 
     % Access the Java object to get the stupid text. Why, Matlab? Why?
-    ebh = findjobj(hEdit);
+    ebh = findjobj(hebox);
     searchString =  char(ebh.getText);    
     
     % TODO: Modify search to allow multiple search tokens in any order.
