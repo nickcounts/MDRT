@@ -1,4 +1,4 @@
-function titleString = makeStringFromMetaData(searchResult)
+ function titleString = makeStringFromMetaData(searchResult)
 
    titleString = '';
 

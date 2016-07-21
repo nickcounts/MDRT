@@ -19,26 +19,26 @@ FDfilnameAndPathArray = []
     
         titleString(i) = makeStringFromMetaData(searchResult(i));
 
-        tempFDListStringNames = strjoin({tempFDListStringNames , titleString(i)});
+        FDListStringNames = strjoin({tempFDListStringNames , titleString(i)});
           
     % Make file/path list for later
 
 %         pathString = is the path string for this search resiult/data set
           fdFileNameWithPath = char(fullfile(searchResult(i).pathToData,filesep, tempFDListStringNames {i,2})); % curly braces or parenthesis? IDK
-sta
-        temporaryFilenameAndPathString = makeAllthepaths
+
+          tempFilenameAndPathString = strjoin({tempFilenameAndPathString, fdFileNameWithPath(i)});
+%         tempFilenameAndPathString = makeAllthepaths
         
         
     % append temporary lists to final lists
-    FDListStringNames = []
+    FDListStringNames = strcat(FDListStringNames, tempFDListStringNames)
     FDfilnameAndPathArray = []
 
 
-end loop
+  end
 
 % 
 
-
-populate popup menu with strungs from above
+handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
 
 

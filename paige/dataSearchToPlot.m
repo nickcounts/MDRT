@@ -342,27 +342,19 @@ else
 % [FDList] = statenSearchFunction(time);
 [searchResult] = statenSearchFunction(time);
 
-% --- if loop to display metaData.operationName with file name? 
-%       if ~isempty (searchResult.metaData.operationName)
-%           handles.FDList_popupmenu.String = searchResult.matchingFDList(:,1);
-%       else
-%           handles.FDList_popupmenu.String = strcat(searchResult.metaData.operationName,searchResult.matchingFDList(:,1))
-%       end
-% --------------------------- * ------------------------------------
 
-% 
-    
-titleString = makeStringFromMetaData(searchResult);
+[FDListStringNames] = makeNameAndPathFromSearchResult(searchResult,handles);
+keyboard
+% titleString = makeStringFromMetaData(searchResult);
 
-handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
-%handles.FDList_popupmenu.String = strcat(titleString(2),searchResult(2).matchingFDList(:,1));
-
-% handles.FDList_popupmenu.String = searchResult.matchingFDList(:,1);
+% handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
+handles.FDList_popupmenu.String = FDListStringNames;
 
 handles.searchResult = searchResult;
 
 
-handles.FDList = searchResult.matchingFDList(:,:);
+% handles.FDList = searchResult.matchingFDList(:,:);
+
 
 end
 
