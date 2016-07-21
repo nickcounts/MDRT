@@ -1,12 +1,3 @@
-
-
-%% Debugging Tasks - variable loading, etc...
-
-    load('dataIndex.mat');
-    
-    % TODO: appdata - how should I use this?
-        % setappdata(mdrt, 'dataIndex', dataIndex);
-
 %% Figure Creation (is this needed if called as a UI component?)
 
     hs.fig = figure;
@@ -16,12 +7,22 @@
         hs.fig.NumberTitle = 'off';
         hs.fig.MenuBar = 'none';
         hs.fig.ToolBar = 'none';
+
+        
+    %% Debugging Tasks - variable loading, etc...
+
+    load('dataIndex.mat');
+    
+    setappdata(hs.fig, 'dataIndex', dataIndex);
+    
+    % TODO: appdata - how should I use this?
+        % setappdata(mdrt, 'dataIndex', dataIndex);
     
 %% Button Generation
 
     hs.button_graph =       uicontrol(hs.fig,...
             'String',       'Generate Plot',...
-            'Callback',     @runCalculations,...
+            'Callback',     @plotComparison,...
             'Tag',          'button',...
             'ToolTipString','Plot Data Comparison',...
             'Position',      [50 37 168 50]);
@@ -75,21 +76,27 @@
     hs.popup_dataSetMain =  uicontrol(hs.fig,...
             'Style',        'popupmenu',...
             'String',       {'A230 Stage Test','A230 WDR'},...
-            'Position',     [50 310 168 27]);
+            'Position',     [50 310 168 27],...
+            'Tag',          'selectDataList');
 
     hs.popup_dataSetOp1 =   uicontrol(hs.fig,...
             'Style',        'popupmenu',...
             'String',       {'A230 Stage Test','A230 WDR'},...
-            'Position',     [281 260 170 27]);    
+            'Position',     [281 260 170 27],...
+            'Tag',          'opList1');    
 
     hs.popup_dataSetOp2 =   uicontrol(hs.fig,...
             'Style',        'popupmenu',...
             'String',       {'A230 Stage Test','A230 WDR'},...
-            'Position',     [481 260 170 27]); 
+            'Position',     [481 260 170 27],...
+            'Tag',          'opList2'); 
         
         
-    hs.popup_dataSetOp1.Callback = {@updateDataSelectionPopup,hs.popup_dataSetMain, hs.popup_dataSetOp1, hs.popup_dataSetOp2};
-    hs.popup_dataSetOp2.Callback = {@updateDataSelectionPopup,hs.popup_dataSetMain, hs.popup_dataSetOp1, hs.popup_dataSetOp2};
+%     hs.popup_dataSetOp1.Callback = {@updateDataSelectionPopup,hs.popup_dataSetMain, hs.popup_dataSetOp1, hs.popup_dataSetOp2, hs};
+%     hs.popup_dataSetOp2.Callback = {@updateDataSelectionPopup,hs.popup_dataSetMain, hs.popup_dataSetOp1, hs.popup_dataSetOp2, hs};
+
+    hs.popup_dataSetOp1.Callback = @updateDataSelectionPopup;
+    hs.popup_dataSetOp2.Callback = @updateDataSelectionPopup;
 
 %% Popup Menus for Event Synchronization 
 
@@ -107,13 +114,18 @@
             'Style',        'popupmenu',...
             'String',       {'TEL Rapid Retract','T-0'},...
             'Units',        'normalized',...
-            'Position',     [.05 .1 .4 .8]);
+            'Position',     [.05 .1 .4 .8],...
+            'Tag',          'eventList1');
 
     hs.popup_eventSetOp2 =  uicontrol(hs.eventPanel,...
             'Style',        'popupmenu',...
             'String',       {'TEL Rapid Retract','T-0'},...
             'Units',        'normalized',...
-            'Position',     [.55 .1 .4 .8]);
+            'Position',     [.55 .1 .4 .8],...
+            'Tag',          'eventList2');
+        
+        
+    % hs.popup_eventSetOp1.Callback = {@update
 
 %% Text Label Generation
     
@@ -169,13 +181,12 @@ end
 hs.popup_dataSetOp1.String = allDataSetNames;
 hs.popup_dataSetOp2.String = allDataSetNames;
 
-updateDataSelectionPopup([],[],hs.popup_dataSetMain, ...
-                            hs.popup_dataSetOp1, ...
-                            hs.popup_dataSetOp2 );
+
+updateDataSelectionPopup(hs.popup_dataSetOp1, []);
                         
 % hs.popup_dataSetMain.String = allDataSetNames;
 
 hs.listSearchResults.String = dataIndex(1).FDList(:,1);
 setappdata(hs.fig, 'fdMasterList', dataIndex(1).FDList(:,1));
-setappdata(hs.fig, 'searchBoxString', hs.edit_searchField.String);
+% setappdata(hs.fig, 'searchBoxString', hs.edit_searchField.String);
 
