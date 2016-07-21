@@ -1,8 +1,12 @@
-function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, handles )
+function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult( searchResult, handles )
 
 % searchResultArray = statensFunction
 
 %% Build Pop-up/down menu contents
+
+%   if isempty(searchResult)
+%       return
+%   end
 
   FDListStringNames = [];
   FileNameWithPath = [];
@@ -21,7 +25,7 @@ function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, h
        listlen = length(searchResult(i).matchingFDList);
        
        tempFDList = cell(listlen,1);
-     
+           
        for k = 1:listlen
            
            
@@ -29,18 +33,19 @@ function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, h
            tempfdFileNameWithPath{k} = char(fullfile(searchResult(i).pathToData,filesep,searchResult(i).matchingFDList{k,2}));
            
        end
-       
+           tempfdFileNameWithPath = tempfdFileNameWithPath';
        % tempFDList now contains all assembled title strings
        
-       
         %Add the above array to master name list
-        keyboard
+      
         
 
-        FDListStringNames = vertcat({FDListStringNames , tempFDList});
-        FileNameWithPath = vertcat({FileNameWithPath, tempFileNameWithPath});
+        FDListStringNames = strcat({FDListStringNames , tempFDList});
+        FileNameWithPath = strcat({FileNameWithPath, tempfdFileNameWithPath});
+        
         
   end
+  
 end
   
 %         

@@ -1,11 +1,11 @@
-function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, handles )
+function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult( searchResult, handles )
 
 % searchResultArray = statensFunction
 
 %% Build Pop-up/down menu contents
 
   FDListStringNames = [];
-% FDfilnameAndPathArray = [];
+  FileNameWithPath = [];
 
 %This does not handle empty search results (probably)
 
@@ -21,7 +21,7 @@ function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, h
        listlen = length(searchResult(i).matchingFDList);
        
        tempFDList = cell(listlen,1);
-     
+           
        for k = 1:listlen
            
            
@@ -29,23 +29,27 @@ function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, h
            tempfdFileNameWithPath{k} = char(fullfile(searchResult(i).pathToData,filesep,searchResult(i).matchingFDList{k,2}));
            
        end
-       
+           tempfdFileNameWithPath = tempfdFileNameWithPath';
        % tempFDList now contains all assembled title strings
        
-       
         %Add the above array to master name list
-        keyboard
+      
         
 
-        FDListStringNames = vertcat({FDListStringNames , tempFDList});
-     
+        FDListStringNames = strcat({FDListStringNames , tempFDList});
+        FileNameWithPath = strcat({FileNameWithPath, tempfdFileNameWithPath});
+        keyboard
+        
+  end
+  
+end
   
 %         
 %     % Make file/path list for later
 % 
 % %         pathString = is the path string for this search resiult/data set
 % 
-          tempfdFileNameWithPath{i} = char(fullfile(handles.searchResult(i).pathToData,filesep,searchResult(i).matchingFDList(i,2))); % curly braces or parenthesis? IDK
+%           tempfdFileNameWithPath{i} = char(fullfile(handles.searchResult(i).pathToData,filesep,searchResult(i).matchingFDList(i,2))); % curly braces or parenthesis? IDK
 %           
 %           FilenNameWithPath = strcat({FilenNameWithPath, tempfdFileNameWithPath{i}});
 %           
@@ -57,10 +61,10 @@ function [ FDListStringNames] = makeNameAndPathFromSearchResult( searchResult, h
 % %     FDfilnameAndPathArray = []
 
 
- end
+
  
 
 % handles.FDList_popupmenu.String = strcat(FDListStringNames,searchResult.matchingFDList(:,1));
 % handles.FDList_popupmenu.String = strcat(FDListStringNames);
-end
+
 

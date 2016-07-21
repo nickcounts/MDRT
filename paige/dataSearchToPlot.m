@@ -343,7 +343,7 @@ else
 [searchResult] = statenSearchFunction(time);
 
 
-[FDListStringNames] = makeNameAndPathFromSearchResult(searchResult,handles);
+[FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult(searchResult,handles);
 keyboard
 % titleString = makeStringFromMetaData(searchResult);
 
