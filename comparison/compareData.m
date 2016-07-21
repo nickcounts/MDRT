@@ -47,13 +47,17 @@
         
     hs.listOp1FDs =         uicontrol(hs.fig,...
             'Style',        'listbox',...
-            'String',       'Op 1 FDs Here',...
-            'Position',     [281 97 170 140]);
+            'String',       {},...
+            'Position',     [281 97 170 140],...
+            'callback',     @fdListClickCallback,...
+            'tag',          'op1FDlist');
     
     hs.listOp2FDs =         uicontrol(hs.fig,...
             'Style',        'listbox',...
-            'String',       'Op 2 FDs Here',...
-            'Position',     [481 97 170 140]);
+            'String',       {},...
+            'Position',     [481 97 170 140],...
+            'callback',     @fdListClickCallback,...
+            'tag',          'op2FDlist');
         
 %% Edit Box Generation
     % TODO: callback for search field
@@ -63,7 +67,8 @@
             'String',       '',...
             'HorizontalAlignment' , 'left',...
             'KeyReleaseFcn',@updateSearchResults,...
-            'Position',     [50 265 168 22]);
+            'Position',     [50 265 168 22],...
+            'tag',          'searchBox');
         
     hs.edit_plotTitle =     uicontrol(hs.fig,...
             'Style',        'edit',...
@@ -97,6 +102,8 @@
 
     hs.popup_dataSetOp1.Callback = @updateDataSelectionPopup;
     hs.popup_dataSetOp2.Callback = @updateDataSelectionPopup;
+    
+    hs.popup_dataSetMain.Callback = @updateMatchingFDList;
 
 %% Popup Menus for Event Synchronization 
 
@@ -173,20 +180,26 @@ for i = 1:numel(dataIndex)
     allDataSetNames = vertcat(allDataSetNames, ...
          makeDataSetTitleStringFromActiveConfig(dataIndex(i).metaData) );
     
-    allDataSetNames = strtrim(allDataSetNames);
+    allDataSetNames = strtrim(allDataSetNames); 
     
 end
 
+% Set appdata
+    setappdata(hs.fig, 'dataSetNames', allDataSetNames)
+    setappdata(hs.fig, 'fdMasterList', dataIndex(1).FDList(:,1));
+    setappdata(hs.fig, 'targetOpFDList', hs.listOp1FDs);
 
-hs.popup_dataSetOp1.String = allDataSetNames;
-hs.popup_dataSetOp2.String = allDataSetNames;
+% Populate Data Set selection popups    
+    hs.popup_dataSetOp1.String = allDataSetNames;
+    hs.popup_dataSetOp2.String = allDataSetNames;
 
-
-updateDataSelectionPopup(hs.popup_dataSetOp1, []);
+    updateDataSelectionPopup(hs.popup_dataSetOp1, []);
                         
-% hs.popup_dataSetMain.String = allDataSetNames;
+% Populate fd list
 
-hs.listSearchResults.String = dataIndex(1).FDList(:,1);
-setappdata(hs.fig, 'fdMasterList', dataIndex(1).FDList(:,1));
-% setappdata(hs.fig, 'searchBoxString', hs.edit_searchField.String);
+    updateSearchResults(hs.edit_searchField);
+    
+    
+    
+    
 
