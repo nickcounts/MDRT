@@ -11,10 +11,23 @@ function debugout( somethingToPrintToConsole )
 %
 %   Counts, VCSFA 2016
 
+[st, ~] = dbstack;
+
+if numel(st) > 1
+    callingFunction = st(2).name;
+    S = fprintf( '%s: ', callingFunction);
+else
+    S = '';
+end
+        
 
 switch getenv('debugOutput')
     case 'true'
-        disp( somethingToPrintToConsole )
+
+        % disp( somethingToPrintToConsole )
+        DB = evalc('disp(somethingToPrintToConsole)');
+        fprintf('%s%s',S, DB);
+
     otherwise
 end
 
