@@ -15,10 +15,13 @@ fh = gcf;
 
 UserData = get(fh, 'UserData');
 
-
+% Find handle to supertitle object and extract string
+sth = findobj(fh,'Tag','suptitle');
+graphTitle = sth.Children.String;
 
 % clean up unhappy reserved filename characters
-    defaultName = regexprep(UserData.graph.name,'^[!@$^&*~?.|/[]<>\`";#()]','');
+%     defaultName = regexprep(UserData.graph.name,'^[!@$^&*~?.|/[]<>\`";#()]','');
+    defaultName = regexprep(graphTitle,'^[!@$^&*~?.|/[]<>\`";#()]','');
     defaultName = regexprep(defaultName, '[:]','-');
     
     if iscell(defaultName)

@@ -26,6 +26,8 @@ timelines(2) = CG.botTimeline;
 timeShift(1) = 0;
 timeShift(2) = CG.bottomTimeShift;
 
+graph = struct;
+graph.name = CG.Title;
 
 % temporary hack for non-timeline plots
     useTimeline = true;
@@ -73,29 +75,12 @@ timeShift(2) = CG.bottomTimeShift;
         lineStyle = {'-','--',':'};
         isColorOverride = false;
 
-%	Data path (*.mat)
-%         dataPath = '/Users/nick/Documents/MATLAB/ORB-D1/Data Files/';
-        dataPath = config.dataFolderPath;
-        
-        eventFile = 'events.mat';
-
-% %   TODO: Implement start/stop time passing through getPlotParameters()
-%         timeToPlot = struct('start',735495.296704555, ...
-%                             'stop',735496.029342311);
-%         t0 = datenum('September 18, 2013 14:58');
-
-% if useTimeline
-%     t0 = timeline.t0.time;
-% else
-%     % Should I do something here?
-% end
-
 
 
 % Put filename/paths into streams struct array for plotting
-streams = struct;
-streams(1).toPlot = CG.topPlot;
-streams(2).toPlot = CG.botPlot;
+    streams = struct;
+    streams(1).toPlot = CG.topPlot;
+    streams(2).toPlot = CG.botPlot;
 
 
 % -------------------------------------------------------------------------
@@ -125,6 +110,7 @@ streams(2).toPlot = CG.botPlot;
     %     graphName = parseGraphTitle(graph(graphNumber).name);                      
                             
     ST_h = suptitle(CG.Title);
+    
 
     
     % Reset axes label variables
@@ -335,11 +321,11 @@ streams(2).toPlot = CG.botPlot;
                     if subPlotNumber == numberOfSubplots
                         % on last subplot, so add date string
                         tlabel('WhichAxes', 'last')
-                        disp('last tlabel call')
+                        debugout('last tlabel call')
                         
                     else
                         tlabel('Reference', 'none')
-                        disp('regular tlabel call')
+                        debugout('regular tlabel call')
                         
                     end
                     

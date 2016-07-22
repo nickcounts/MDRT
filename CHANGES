@@ -1,3 +1,136 @@
+Version 0.4.3:
+ - Merge branch 'feature-Comparison' into develop Initial release of data comparison tool. Uses environment variable to look for the data repository root path. Features include live FD searching, time synch to selected FDs, error-checking FDs in plot lists to make sure they match the selected data set. Automatic subplot titling.
+ - Added 3 small testing files
+ - "updated - looks for a dataIndex file in environment variables"
+ - "initial commit - dataRepositoryPath environment variable getter/setter"
+ - ""
+ - ""
+ - ""
+ - ""
+ - "GUI interface for comparison graphs. Updated, still a script and not a function for debugging purposes"
+ - "updated to allow passing a particular timeline structure and a deltaT (can be 0)"
+ - "modification of reviewPlotFromGUI - chanegd to accept a comparisonGraph struct and to handle events"
+ - "callback for plot button. Creates comparisonGraph structure"
+ - "structure prototype"
+ - "added bold function names for readability"
+ - "updated to include name of calling function, if applicable"
+ - "new helper function to toggle debugmode for debugout"
+ - "updated disp lines to debugout"
+ - new debug function to allow silencing of debugging console output by means of environment variable 'debugOutput' which is set to 'true' or 'false'
+ - "working - changes appdata to point to active fd list"
+ - "added documentation"
+ - "updated list default strings to fix empty-list/value bug ( now {} instead of {''} )"
+ - "added deletion for lists tagged 'op1FDlist' or 'op2FDlist'. added documentation. fixed indentation for readability."
+ - "can be passed any uicontrol handle, allows updating search results when dataset changes. added documentation"
+ - "updated widget tags and callback functions"
+ - "now updates the events list and stores event times in appdata"
+ - "Initial commit - function that takes an uicontrol handle and returns a list of times to be stored in appdata"
+ - "added callbacks for top/bottom graph data set popups"
+ - "basic callback to update the main data browser selection popup with the selections of two other popups"
+ - "searching multiple tokens works. No more whitespace issues. No more order issues. All tokens are required. Maybe add option for OR in the future?"
+ - "search is now case insensitive"
+ - "Yair's latest function. Added as-is from the Mathwork's File Exchange"
+ - "Fixed \"search as you type\" by using matlab's underlying java object. Needed Yair Altman's findjobj() function"
+ - ""
+ - "Fixed zero-results bug with listbox value"
+ - "Added appdata for FD masterList of currently selected data set"
+ - "initial commit - loads appdata, filters on current \"masterList\". Bug with matlab not updating \"string\" contents until focus change or return"
+ - "started empty double-click handling function for listbox callbacks"
+ - "added double-click listener to listSearchResults listbox"
+ - "populating data set popups and initial list of matching FDs"
+ - "fixed bug when user passes a metadata structure"
+ - "fixed bug in case when user passes a metadata structure"
+ - "Programmatically generate comparison GUI"
+ - "Moved structure prototype to structures folder"
+ - Merge branch 'develop' of https://github.com/nickcounts/MDRT into develop
+ - Merge branch 'feature-searchResultStructure' into develop Working 'make blank searchResult structure' feature
+ - Working develop branch with label visibility bug fix
+ - Feature branch working
+ - "added smart hiding/showing of event labels to handle cases where labels are off the x-limits"
+ - "changed toolbar handles to visible"
+ - Updated checkStructureType to include searchResult
+ - Fixed spelling errors in newSearchResult
+ - Added function to create blank searchResult structure
+ - "fixed bug if pass non-structure variable!"
+ - Merge branch 'feature-windowPlotTitle' into develop Added plot-setup window title to identify the active data set. Some more testing could be done with live metadata structures Not added to review figure and no hook for swapping data sets from within plot-setup gui
+ - "added dataSetString to the opening function (before figure is made visible) No provision currently for dynamic switching"
+ - "generating valid strings. Date strings can be optimized/improved"
+ - "now loads metadata structures with error checking and calls the stringMaking function"
+ - "now with test for config structures!"
+ - "updated to use newConfig. populateMissingConfigFields needs updating still"
+ - "broke newConfig out into its own function for checkStructureType and for consistancy"
+ - "started makeDataSetTitleString function. Sketched outline"
+ - Merge branch 'develop' of https://github.com/nickcounts/MDRT into develop
+ - Merge branch 'feature-toggleEventVisibility' into develop incorporated new toolbar icons from feature branch
+ - initial commit - toolbar icons
+ - Merge branch 'feature-toggleEventVisibility' into develop Incorporating event visibility toggle and misc. toolbar icon fixes
+ - Finished show/hide event markers toggle buttons for all plots Fixed tooltip strings for all toolbar buttons
+ - Resolved conflict
+ - Added structures folder. Also modified paigeQuickPlot
+ - "fixed timeline passing issue"
+ - "updated to pass full filename to quickPlot and handle events/timelines"
+ - "changed to accept a full filename and path instead of filename and config structure
+ - "changed quickplot button callback to pass a full filename and path to reviewQuickPlot"
+ - "changed so can be called without passing a config structure"
+ - fixing paigeQuickPlot
+ - Trying paigeQuickPlot to plot an FD
+ - adding file path
+ - Start of day pull/refresh
+ - Merge branch 'hotfix-0.4.2' into develop Incorporating eventEditor bugfix into develop branch
+ - "added calback function for the \"load timeline\" toolbar button Tested loading and saving, both working."
+ - "updated toolbar tooltips and callback functions removed non-functioning \"Save Timeline\" button changed callback for \"new timeline\" toolbar button to an empty value as temporary fix"
+ - "Initial commit in hotfix-0.4.2 branch. Pulled from develop branch to help fix bugs in eventEditor.m"
+ - "removed old debugging commands"
+ - "Fixed GUI updating issue after event is added or removed"
+ - "initial commit - added function to duplicate financial toolbox \"month.m\""
+ - "fixed \"remove\" event button functionality"
+ - "fixed broken \"Add Event\" function"
+ - "updated custom LO2 comparison plot scripts"
+ - Merge branch 'develop' of https://github.com/nickcounts/MDRT into develop
+ - Display message when select RP1 radio button
+ - Ammended dropdown menu output options
+ - Testing dropdown menu functionality with search function
+ - New functions started
+ - added dataIndexer.m function
+ - Revert "Initial commit"
+ - Initial commit
+ - "removed debugging output"
+ - "fixed bug in the path"
+ - Qdded toolbar functionality for quick access to timeline rescaling
+ - "converted script to function"
+ - "Added toolbar shortcuts for rescaleTimelineLabels and rescaleTimelineEvents"
+ - "Added shortcut toolbar buttons for timeline refresh and label size toggling"
+ - "converted from script to function reorganized into reviewPlot subdirectory"
+ - "converted from script to function"
+ - Added warning dialog when choosing dates
+ - "Added example to function help"
+ - Merge branch 'develop' of https://github.com/nickcounts/MDRT into develop
+ - fixed hline and vline file locations. updated lo2plots script
+ - "added comments/documentation. Skip checks if variable isn't a structure"
+ - "Initial commit. Function to return string with structure type"
+ - Merge branch 'develop' of https://github.com/nickcounts/MDRT into develop merging with develop branch
+ - Added in helper functions for date selection
+ - "Added bugfix for ._ files"
+ - "Fixed issue opening ._ files ending in .mat Added TODO: error handing for non-binary .mat files"
+ - "Finished LO2 Plot #2 - Storage Tank Pressurization"
+ - "Added LO2 Tank Pressurization and fixed proportional valve plotting"
+ - "Completed a good LO2 Tanking plot"
+ - "Added variable definition to script so I can clear local variables between uses"
+ - Added dataSearchToPlot fig and .m files
+ - script for lo2 hot fire/WDR comparisons
+ - Added Testinng folder for test files
+ - Added test2
+ - Merge branch 'master' into develop pulled in development space for intern work. Messed up and committed to master
+ - Incorporate 0.4.1 bug fix into develop branch Merge branch 'hotfix-0.4.1' into develop
+ - tried to remove configuration files from configuration management.
+ - test ignore
+ - Fixed typo in heading
+ - Formatted section headings
+ - "updated help section"
+ - Added information about version control files to the readme.txt Merge branch 'testfeature' into develop
+ - "Added note about version control files"
+ - Merge branch 'release-0.4' into develop Continue development from v0.4, the latest stable release
+
 Version 0.4.2:
  - Added folders for intern development
  - release of v0.4.1 - bugfix for refresh timeline Merge branch 'hotfix-0.4.1'
