@@ -10,8 +10,20 @@
 
         
     %% Debugging Tasks - variable loading, etc...
-
-    load('dataIndex.mat');
+    dataIndexName = 'dataIndex.mat';
+    dataIndexPath = dataRepositoryPath('get');
+    
+    
+    % Load the data index using the environment variable and the specified
+    % filename.
+    if exist(fullfile(dataIndexPath, dataIndexName), 'file')
+        load(fullfile(dataIndexPath, dataIndexName) );
+    else
+        warning(['Data Repository Index file not found.' ,...
+                 'Check MDRTdataRepositoryPath environment variable. ', ...
+                 'Verify there is a ' dataIndexName ' file.']);
+        return
+    end
     
     setappdata(hs.fig, 'dataIndex', dataIndex);
     setappdata(hs.fig, 'topPlot', {} );
