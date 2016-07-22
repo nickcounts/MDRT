@@ -16,10 +16,18 @@ htarget = findobj(pUp.Parent, 'Tag', 'selectDataList');
     % Remove duplicate if both have been selected
     dataSetSelections = unique(dataSetSelections);
     if htarget.Value > numel(dataSetSelections)
-        htarget.Value  = 1;
+        newValue  = 1;
+    elseif htarget.Value == 1
+        newValue = 1;
+        debugout('The top string was selected')
+    elseif htarget.Value == 2
+        newValue = 2;
+        debugout('The bottom string was selected')
     end
 
+    htarget.Value = 1;
     htarget.String = dataSetSelections;
+    htarget.Value = newValue;
     
     
     % update the contents of event popups on data set selection
