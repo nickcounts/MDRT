@@ -24,7 +24,7 @@ switch nargin
         switch checkStructureType( varargin{1} )
             case 'metadata'
                 % it was a metadata struct
-                
+                metaData = varargin{1};
                 disp('passed a metadata struct')
                 
                 
