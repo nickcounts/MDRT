@@ -11,7 +11,7 @@ function updateSearchResults(anyUIhandle, ~, varargin)
  
     mdrt = getappdata(anyUIhandle.Parent);
 
-    masterList = mdrt.fdMasterList;
+    masterList = mdrt.fdMasterList(:,1);
 
     % get handle to the list of search results
     lsr = findobj(anyUIhandle.Parent.Children,'tag', 'listSearchResults');
