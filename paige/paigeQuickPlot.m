@@ -1,5 +1,6 @@
-function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
-% reviewQuickPlot( fdFileName, config )
+function [ figureHandle ] = paigeQuickPlot( fdFileNameWithPath)
+% ---> REMOVED (config, varagin)^^ as inputs for testing purposes ^^
+% ---> Replace with fdFileNameWithPath
 %
 %   Designed to be called by the Data Review Tool helper GUI,
 %   reviewQuickPlot takes a data filename and the config structure as
@@ -28,9 +29,7 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
     addToolButtonsToPlot(figureHandle);
     
    
-    
-    
-    
+   
     % Fix orientation for printing and .pdf generation
     orient('landscape');
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
@@ -39,11 +38,18 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
     % Set plotting axes!!
 	axes(subPlotAxes);
 
-  
+
+%     dataPath = config.dataFolderPath;
+%       dataPath = 'C:/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/';
 
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
-    load(fdFileNameWithPath,'-mat');
+     load(fdFileNameWithPath,'-mat');
+    
+    % ---> Try to load a dummy file to plot, not using graph config
+    %load(['/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat']);
+    
 
+     
     
 switch upper(fd.Type)
     case {'DCVNC','DCVNO','PCVNC','PCVNO','RV','BV','FV'}   
@@ -91,17 +97,11 @@ end
     set(dcm_obj, 'UpdateFcn', @dataTipDateCallbackDecimal);
 
 
-    if nargin == 1
+    if nargin == 2
         % nothing to do if no events passed
     else
-        
-        % TODO: Does this still need to exist?
-        % -----------------------------------------------------------------
-        
         % an events structure was passed. Default to displaying only t0
         % Plot T=0 on top of data
-        
-        
         timeline = varargin{1};
 
 
@@ -118,7 +118,7 @@ end
         vline(timeline.t0.time,'r-',t0string,0.5)
 
         % Cheat and plot everything the quick and dirty way
-        reviewPlotAllTimelineEvents;
+        reviewPlotAllTimelineEvents(config);
 
 
 

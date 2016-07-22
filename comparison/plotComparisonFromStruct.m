@@ -1,16 +1,33 @@
-function varargout = plotGraphFromGUI(graph, options)
+function varargout = plotComparisonFromStruct(CG, options)
 %% plotGraphFromGUI is a function for the MARS data tool GUI
 %
-%   takes a graph structure and an options structure
+%   takes a comparison graph structure and an options structure (not
+%   implemented)
 %
 %   runs the MARS data plotting engine for the given graph structure with
 %   the passed options structure. if options is left blank, uses default
 %   values to be defined leter
 %
 % Counts, 10-7-14 - Spaceport Support Services
+% Counts, 7-22-16 - VCSFA - Updated for comparison
 
 % Read in the plot info
 % TODO: implement error checking?
+
+%% TEMPORARY HACK TO TEST STRUCTURES
+% load('comparison/CG.mat');
+
+subTitles(1) = {makeDataSetTitleStringFromActiveConfig(CG.topMetaData)};
+subTitles(2) = {makeDataSetTitleStringFromActiveConfig(CG.botMetaData)};
+
+timelines(1) = CG.topTimeline;
+timelines(2) = CG.botTimeline;
+
+timeShift(1) = 0;
+timeShift(2) = CG.bottomTimeShift;
+
+graph = struct;
+graph.name = CG.Title;
 
 % temporary hack for non-timeline plots
     useTimeline = true;
@@ -28,17 +45,17 @@ function varargout = plotGraphFromGUI(graph, options)
 
 % Loads event data files. If missing, procedes with events disabled.
 % -------------------------------------------------------------------------
-    if useTimeline
-        if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
-            load(fullfile(config.dataFolderPath, 'timeline.mat'));
-            disp('using timeline markers')
-        else
-            if ~supressWarningDialogs
-                warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
-            end
-            useTimeline = false;
-        end
-    end
+%     if useTimeline
+%         if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
+%             load(fullfile(config.dataFolderPath, 'timeline.mat'));
+%             disp('using timeline markers')
+%         else
+%             if ~supressWarningDialogs
+%                 warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
+%             end
+%             useTimeline = false;
+%         end
+%     end
 
 
 % -------------------------------------------------------------------------
@@ -58,46 +75,26 @@ function varargout = plotGraphFromGUI(graph, options)
         lineStyle = {'-','--',':'};
         isColorOverride = false;
 
-%	Data path (*.mat)
-%         dataPath = '/Users/nick/Documents/MATLAB/ORB-D1/Data Files/';
-        dataPath = config.dataFolderPath;
-        
-        eventFile = 'events.mat';
-
-% %   TODO: Implement start/stop time passing through getPlotParameters()
-%         timeToPlot = struct('start',735495.296704555, ...
-%                             'stop',735496.029342311);
-%         t0 = datenum('September 18, 2013 14:58');
-
-if useTimeline
-    t0 = timeline.t0.time;
-else
-    % Should I do something here?
-end
 
 
+% Put filename/paths into streams struct array for plotting
+    streams = struct;
+    streams(1).toPlot = CG.topPlot;
+    streams(2).toPlot = CG.botPlot;
 
-% Setup multi plot loop variables from plot parameters
-numberOfGraphs = length(graph);
 
-
-
-for graphNumber = 1:numberOfGraphs
 % -------------------------------------------------------------------------
 % Create a new graph
 % -------------------------------------------------------------------------
-    numberOfSubplots = length(graph(graphNumber).subplots);
-    numberOfSubplots
+    numberOfSubplots = 2;
     
 % -------------------------------------------------------------------------
 % Generate new figure and handle. Set up for priting
 % -------------------------------------------------------------------------
-    figureHandle(graphNumber) = figure();
+    figureHandle = figure();
     
-    UserData.graph = graph;
-    saveButtonHandle = findall(figureHandle(graphNumber),'ToolTipString','Save Figure');
+    saveButtonHandle = findall(figureHandle,'ToolTipString','Save Figure');
     
-    set(figureHandle(graphNumber), 'UserData', UserData);
     set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
     
     % Add label size toggle and timeline refresh buttons
@@ -112,7 +109,8 @@ for graphNumber = 1:numberOfGraphs
     % TODO: Insert code to parse graph title meta tags!
     %     graphName = parseGraphTitle(graph(graphNumber).name);                      
                             
-    ST_h = suptitle(graph(graphNumber).name);
+    ST_h = suptitle(CG.Title);
+    
 
     
     % Reset axes label variables
@@ -122,11 +120,11 @@ for graphNumber = 1:numberOfGraphs
     for subPlotNumber = 1:numberOfSubplots
         
         % Plot the actual data here
-        toPlot = graph(graphNumber).streams(subPlotNumber).toPlot;
+        toPlot = streams(subPlotNumber).toPlot;
         
         % Load data sets to be plotted into array of structs
         for i = 1:length(toPlot)
-            s(i) = load([dataPath toPlot{i} '.mat'],'fd');
+            s(i) = load(toPlot{i});
         end
         
         % Build the list of variable types for axes label generation
@@ -152,6 +150,8 @@ for graphNumber = 1:numberOfGraphs
             axes(subPlotAxes(subPlotNumber));
             for i = 1:length(toPlot)
                 
+                timeVect = s(i).fd.ts.Time + timeShift(subPlotNumber);
+                
                 % Valve thing to do for the plot
                     if(any(strcmp('isValve',fieldnames(s(i).fd))))
                         
@@ -161,16 +161,18 @@ for graphNumber = 1:numberOfGraphs
                             %TODO: Implement selective plotting for
                             %proportional valves
                             
+                            timeVect = s(i).fd.position.Time + timeShift(subPlotNumber);
+                            
                             
                             if useReducePlot
                                 
-                                hDataPlot(graphNumber,subPlotNumber,i) = reduce_plot(s(i).fd.position.Time, ...
+                                hDataPlot(subPlotNumber,i) = reduce_plot(timeVect, ...
                                                   s(i).fd.position.Data, ...
                                                   'displayname', ...
                                                   [s(i).fd.Type '-' s(i).fd.ID]);
                             else
                             
-                                hDataPlot(graphNumber,subPlotNumber,i) = plot(s(i).fd.position.Time, ...
+                                hDataPlot(subPlotNumber,i) = plot(timeVect, ...
                                                       s(i).fd.position.Data, ...
                                                       'displayname', ...
                                                       [s(i).fd.Type '-' s(i).fd.ID]);
@@ -180,14 +182,14 @@ for graphNumber = 1:numberOfGraphs
                             
                             if useReducePlot
                                 
-                                hDataPlot(graphNumber,subPlotNumber,i) = stairs(s(i).fd.ts.Time, ...
+                                hDataPlot(subPlotNumber,i) = stairs(timeVect, ...
                                                   s(i).fd.ts.Data, ...
                                                   'displayname', ...
                                                   [s(i).fd.Type '-' s(i).fd.ID]);
                                               
                             else
 
-                                hDataPlot(graphNumber,subPlotNumber,i) = stairs(s(i).fd.ts.Time, ...
+                                hDataPlot(subPlotNumber,i) = stairs(timeVect, ...
                                                       s(i).fd.ts.Data, ...
                                                       'displayname', ...
                                                       [s(i).fd.Type '-' s(i).fd.ID]);
@@ -196,7 +198,7 @@ for graphNumber = 1:numberOfGraphs
                         end
                     elseif(any(strcmp('isLimit',fieldnames(s(i).fd))))
 
-                        hDataPlot(graphNumber,subPlotNumber,i) = stairs(s(i).fd.ts.Time, ...
+                        hDataPlot(subPlotNumber,i) = stairs(timeVect, ...
                                               s(i).fd.ts.Data, ...
                                               'displayname', ...
                                               [s(i).fd.Type '-' s(i).fd.ID]);
@@ -206,13 +208,13 @@ for graphNumber = 1:numberOfGraphs
                         
                         if useReducePlot
                             
-                            hDataPlot(graphNumber,subPlotNumber,i) = reduce_plot(s(i).fd.ts, ...
+                            hDataPlot(subPlotNumber,i) = reduce_plot(timeVect,s(i).fd.ts.Data, ...
                                             'displayname', ...
                                             [s(i).fd.Type '-' s(i).fd.ID]);
                                         
                         else
                                     
-                            hDataPlot(graphNumber,subPlotNumber,i) = plot(s(i).fd.ts, ...
+                            hDataPlot(subPlotNumber,i) = plot(timeVect,s(i).fd.ts.Data, ...
                                             'displayname', ...
                                             [s(i).fd.Type '-' s(i).fd.ID]);
                         end
@@ -220,13 +222,13 @@ for graphNumber = 1:numberOfGraphs
                                 
                 % Apply the appropriate color
                 if (isColorOverride)
-                    set(hDataPlot(graphNumber,subPlotNumber,i),'Color',overrideColor);
+                    set(hDataPlot(subPlotNumber,i),'Color',overrideColor);
                     isColorOverride = false;
                 else
-                    set(hDataPlot(graphNumber,subPlotNumber,i),'Color',colors{iColor})
+                    set(hDataPlot(subPlotNumber,i),'Color',colors{iColor})
                 end
-                set(hDataPlot(graphNumber,subPlotNumber,i),'LineStyle',lineStyle{iStyle});
-                set(hDataPlot(graphNumber,subPlotNumber,i),'LineWidth',lineWeight);
+                set(hDataPlot(subPlotNumber,i),'LineStyle',lineStyle{iStyle});
+                set(hDataPlot(subPlotNumber,i),'LineWidth',lineWeight);
                 hold on;
 
                 % Increment Styles as needed
@@ -262,9 +264,9 @@ for graphNumber = 1:numberOfGraphs
                 
                 
                     
-            
+%% Subplot Titles!!!!!!!            
                 % Set subplot title and draw T:0
-                    title(subPlotAxes(subPlotNumber),graph(graphNumber).subplots(subPlotNumber));
+                    title(subPlotAxes(subPlotNumber), subTitles(subPlotNumber));
                     
                 % Set(subPlotAxes(1), 'fontSize', [6]);
                
@@ -281,7 +283,7 @@ for graphNumber = 1:numberOfGraphs
 
                             % Crappy workaround to still have timeline events
                             if useTimeline
-                                reviewPlotAllTimelineEvents(config);
+                                reviewPlotAllTimelineEvents( timelines(subPlotNumber), timeShift(subPlotNumber) );
                             end
 
 
@@ -319,11 +321,11 @@ for graphNumber = 1:numberOfGraphs
                     if subPlotNumber == numberOfSubplots
                         % on last subplot, so add date string
                         tlabel('WhichAxes', 'last')
-                        disp('last tlabel call')
+                        debugout('last tlabel call')
                         
                     else
                         tlabel('Reference', 'none')
-                        disp('regular tlabel call')
+                        debugout('regular tlabel call')
                         
                     end
                     
@@ -335,50 +337,50 @@ for graphNumber = 1:numberOfGraphs
         
     % Automatic X axis scaling:
     % --------------------------------------------------------------------- 
-        timeLimits = get(subPlotAxes(subPlotNumber),'XLim');
-        
-        if ~graph(graphNumber).time.isStartTimeAuto
-            switch graph(graphNumber).time.isStartTimeUTC
-                case true
-                    % absolute timestamp
-                    timeLimits(1) = graph(graphNumber).time.startTime;
-                case false
-                    % T- timestamp
-                    % Added if/end block to accomodate non-timeline plots
-                    if useTimeline
-                        timeLimits(1) = t0 + graph(graphNumber).time.startTime;
-                    end
-            end
-        end
-        
-        if ~graph(graphNumber).time.isStopTimeAuto
-            switch graph(graphNumber).time.isStopTimeUTC
-                case true
-                    % absolute timestamp
-                    timeLimits(2) = graph(graphNumber).time.stopTime;
-                    disp('Using UTC time!!! Hooray')
-                case false
-                    % T- timestamp
-                    % Added if/end block to accomodate non-timeline plots
-                    if useTimeline
-                        timeLimits(2) = t0 + graph(graphNumber).time.stopTime;
-                    end
-            end
-        end
-        
-        
-        set(subPlotAxes(subPlotNumber),'XLim',timeLimits);
+% %         timeLimits = get(subPlotAxes(subPlotNumber),'XLim');
+% %         
+% %         if ~graph(graphNumber).time.isStartTimeAuto
+% %             switch graph(graphNumber).time.isStartTimeUTC
+% %                 case true
+% %                     % absolute timestamp
+% %                     timeLimits(1) = graph(graphNumber).time.startTime;
+% %                 case false
+% %                     % T- timestamp
+% %                     % Added if/end block to accomodate non-timeline plots
+% %                     if useTimeline
+% %                         timeLimits(1) = t0 + graph(graphNumber).time.startTime;
+% %                     end
+% %             end
+% %         end
+% %         
+% %         if ~graph(graphNumber).time.isStopTimeAuto
+% %             switch graph(graphNumber).time.isStopTimeUTC
+% %                 case true
+% %                     % absolute timestamp
+% %                     timeLimits(2) = graph(graphNumber).time.stopTime;
+% %                     disp('Using UTC time!!! Hooray')
+% %                 case false
+% %                     % T- timestamp
+% %                     % Added if/end block to accomodate non-timeline plots
+% %                     if useTimeline
+% %                         timeLimits(2) = t0 + graph(graphNumber).time.stopTime;
+% %                     end
+% %             end
+% %         end
+% %         
+% %         
+% %         set(subPlotAxes(subPlotNumber),'XLim',timeLimits);
 
 
     % Fix paper orientation for saving
-        orient(figureHandle(graphNumber), 'landscape');
+        orient(figureHandle, 'landscape');
 
     % Pause execution to allow user to adjust plot prior to saving?makeRe
     
     % Call a redraw to correct the grid bug
-    refresh(figureHandle(graphNumber))
+    refresh(figureHandle)
     
-end % Graph Loop
+
 
 
 

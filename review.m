@@ -28,7 +28,7 @@ function varargout = review(varargin)
 
 % Edit the above text to modify the response to help review
 
-% Last Modified by GUIDE v2.5 07-Jul-2016 18:38:22
+% Last Modified by GUIDE v2.5 22-Jul-2016 04:00:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -317,22 +317,24 @@ function uiButton_quickPlotFD_Callback(hObject, eventdata, handles)
 
 
 index = get(handles.uiPopup_FDList,'Value');
-fdFileName = handles.quickPlotFDs{index, 2};
+fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
 
+% TODO: Does you even need this, brah?
 
 % If there is an events.mat file, then pass and plot t0
 if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
+    
     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
-    
-    
-    
-    figureNumber = reviewQuickPlot( fdFileName, handles.configuration, timeline);
+        
+    figureNumber = reviewQuickPlot( fdFileName, timeline);
 
 else
     
-    figureNumber = reviewQuickPlot( fdFileName, handles.configuration);
+    figureNumber = reviewQuickPlot( fdFileName );
 
 end
+
+
 
 
 
@@ -587,3 +589,12 @@ function ui_newDataButton_Callback(hObject, eventdata, handles)
     uiButton_updateFDList_Callback(hObject, eventdata, handles);
     
     guidata(hObject, handles);
+
+
+% --- Executes on button press in compareDataButton.
+function compareDataButton_Callback(hObject, eventdata, handles)
+% hObject    handle to compareDataButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+compareData

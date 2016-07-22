@@ -1,12 +1,37 @@
-function reviewPlotAllTimelineEvents ( config )
+function reviewPlotAllTimelineEvents ( varargin )
 % Accepts the config structure
 
+% Updated to allow plotting without passing a config structure
+% If nothing is passed, calls getConfig
+% Can also pass timelineStruct, deltaT (for shifting times if desired)
+%
+%   Updated: Counts, 2016 - VCSFA
+
+deltaT = 0;
+
+if nargin == 0
+    config = getConfig;
+    
+    path = config.dataFolderPath;
+    timelineFile = 'timeline.mat';
+
+    load([path timelineFile]);
+    
+    
+elseif nargin == 1
+    config = varargin{1};
+    
+    path = config.dataFolderPath;
+    timelineFile = 'timeline.mat';
+
+    load([path timelineFile]);
+    
+elseif nargin == 2
+    timeline = varargin{1};
+    deltaT = varargin{2};
+end
 
 
-path = config.dataFolderPath;
-timelineFile = 'timeline.mat';
-
-load([path timelineFile]);
 
     % Manual plotting of t0 in red...
     % TODO: Implement timezone conversion
@@ -40,10 +65,13 @@ load([path timelineFile]);
     if timeline.uset0
         
         % Plot events as T-minus times
-    
+        
+        
+        % Plot the T-0 time in red
         t0string = [timeline.t0.name, ': ', datestr(timeline.t0.time,'HH:MM.SS'), ' ' timezone];
-        vline(timeline.t0.time,'r-',t0string,0.5)
-
+        vline(timeline.t0.time + deltaT,'r-',t0string,0.5)
+        
+        % Plot all other milestones in black
         for i = 1:length(timeline.milestone)
             dt = timeline.milestone(i).Time - timeline.t0.time;
             if dt < 0
@@ -56,7 +84,7 @@ load([path timelineFile]);
 
             eventString = sprintf('T%s%s %s', timeModifier, datestr(abs(dt), 'HH:MM:SS'),timeline.milestone(i).String);
 
-            vline(timeline.milestone(i).Time,  '-k' , eventString,  [0.05,-1]);
+            vline(timeline.milestone(i).Time + deltaT,  '-k' , eventString,  [0.05,-1]);
 
         end
         
@@ -69,7 +97,7 @@ load([path timelineFile]);
 
             eventString = sprintf('%s %s', datestr(eventTime, 'HH:MM:SS'),timeline.milestone(i).String);
 
-            vline(timeline.milestone(i).Time,  '-k' , eventString,  [0.05,-1]);
+            vline(timeline.milestone(i).Time + deltaT,  '-k' , eventString,  [0.05,-1]);
 
         end
         

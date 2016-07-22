@@ -1,4 +1,6 @@
-% reviewRescaleAllTimelineLabels
+function reviewRescaleAllTimelineLabels( varargin )
+% reviewRescaleAllTimelineLabels toggles event label text size for viewing
+% or printing
 %
 % reviewRescaleAllTimelineLabels is a script that toggles all text labels
 % and legend text between a screen viewable size and the correct size for
@@ -15,8 +17,27 @@ legendPrintFontSize = 8;
 eventTextLargeFontSize = 12;
 eventTextPrintFontSize = 6;
 
-% Parent object for finding objects. 0 is the root object
+% Default parent object for finding objects. 0 is the root object
 parentObject = 0;
+
+
+switch nargin
+    case 1
+        % Assume we were passed a figure number/handle directly
+        parentObject = varargin{1};
+    case 2
+        if strcmpi(class(varargin{2}), 'matlab.ui.eventdata.ActionData')
+            % We were passed an ActionData object
+            
+            % Extract figure number
+            parentObject = varargin{2}.Source.Parent.Parent.Number;
+        end
+        
+    otherwise
+        % Other things I want to do? Not sure right now
+        
+end
+
 
 
 %% Find all event labels in parentObject

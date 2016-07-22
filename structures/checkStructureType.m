@@ -7,7 +7,8 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   graph
 %   timeline
 %   metadata
-%   config      -   not implemented
+%   config
+%   searchResult
 %
 %   Will return an empty string if no match. Extra fields will not falsify
 %   the check. The prototype (makeStructure) fields must ALL be present.
@@ -29,6 +30,7 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   this test will continue to work.
 %
 %   Counts - 2016, VCSFA
+%   Pruce  - 7-14-16, VCFSA
 
 
 %% Instantiate variables for use in the function
@@ -37,17 +39,21 @@ structureTypeString = [];
 
 
 
-fdPrototype         = newFD;
-graphPrototype      = newGraphStructure;
-timelinePrototype   = newTimelineStructure;
-metadataPrototype   = newMetaDataStructure;
+fdPrototype             = newFD;
+graphPrototype          = newGraphStructure;
+timelinePrototype       = newTimelineStructure;
+metadataPrototype       = newMetaDataStructure;
+configPrototype         = newConfig;
+searchResultPrototype   = newSearchResult;
 
 % Create a cell array where each row is {'structure name', {'field list'}}
 
-prototypes = {  'fd',       fieldnames(fdPrototype)';
-                'graph',    fieldnames(graphPrototype)';
-                'timeline', fieldnames(timelinePrototype)';
-                'metadata', fieldnames(metadataPrototype)'};
+prototypes = {  'fd',           fieldnames(fdPrototype)';
+                'graph',        fieldnames(graphPrototype)';
+                'timeline',     fieldnames(timelinePrototype)';
+                'metadata',     fieldnames(metadataPrototype)';
+                'config',       fieldnames(configPrototype)';
+                'searchResult', fieldnames(searchResultPrototype)'};
             
             
 %% Check each structure type
@@ -96,6 +102,18 @@ prototypes = {  'fd',       fieldnames(fdPrototype)';
             case 'metadata'
                 if doesVariableHaveAllFields(testVariable, prototypes{n,2})
                     structureTypeString = 'metadata';
+                    break
+                end
+                
+            case 'config'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'config';
+                    break
+                end
+                
+            case 'searchResult'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'searchResult';
                     break
                 end
 

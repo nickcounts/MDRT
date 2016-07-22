@@ -30,7 +30,7 @@ dataMetaData.isVehicleOp        = false;
 dataMetaData.isMARSprocedure    = false;
 dataMetaData.MARSprocedureName  = '';
 dataMetaData.hasMARSuid         = false;
-dataMetaDate.MARSuid            = '';
+dataMetaData.MARSuid            = '';
 
 
 

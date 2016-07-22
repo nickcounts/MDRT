@@ -4,6 +4,7 @@ function [ timeline ] = newTimelineStructure( varargin )
 %
 %   newGraphStructure('GraphName')
 %
+%   VCSFA 2016
 
 %% Handle passed arguments
 

@@ -37,17 +37,24 @@ function [ availFDs ] = listAvailableFDs( path, fileType )
         availFDs {N,2} = '';
 
         for i = 1:N
-            % disp(sprintf('%s ',filesOfType(i).name));
+            
+            if ~ strcmpi(filesOfType(i).name(1:2), '._') % Ignore weird system files hopefully
+                % disp(sprintf('%s ',filesOfType(i).name));
 
-            F = load([path filesOfType(i).name],'-mat');
-            % disp(sprintf('%s',[fd.Type '-' fd.ID]))
+                % TODO: Fix error case where file is named *.mat but is NOT 
+                % a -mat file. Loader quits with an error
 
-            if isfield(F, 'fd')
+                F = load([path filesOfType(i).name],'-mat');
+                % disp(sprintf('%s',[fd.Type '-' fd.ID]))
 
-    %             availFDs{i,1} = sprintf('%s     %s-%s',F.fd.ID,F.fd.Type,F.fd.ID);
-                availFDs{i,1} = sprintf('%s     %s',F.fd.ID, F.fd.FullString);
-                availFDs{i,2} = filesOfType(i).name;
+                if isfield(F, 'fd')
 
+        %             availFDs{i,1} = sprintf('%s     %s-%s',F.fd.ID,F.fd.Type,F.fd.ID);
+                    availFDs{i,1} = sprintf('%s     %s',F.fd.ID, F.fd.FullString);
+                    availFDs{i,2} = filesOfType(i).name;
+
+                end
+                
             end
 
             progressbar(i/N);
