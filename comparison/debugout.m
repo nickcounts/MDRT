@@ -15,9 +15,13 @@ function debugout( somethingToPrintToConsole )
 
 if numel(st) > 1
     callingFunction = st(2).name;
-    S = fprintf( '%s: ', callingFunction);
+    S = fprintf( '<strong> %s: </strong>', callingFunction);
+    % Needed to fix a strange extra character from displaying after
+    % <strong> text
+    reverseStr = repmat(sprintf('\b'), 1, 1);
 else
     S = '';
+    reverseStr = '';
 end
         
 
@@ -26,7 +30,8 @@ switch getenv('debugOutput')
 
         % disp( somethingToPrintToConsole )
         DB = evalc('disp(somethingToPrintToConsole)');
-        fprintf('%s%s',S, DB);
+        fprintf([S, reverseStr, DB]);
+        % fprintf('%s%s',S, DB);
 
     otherwise
 end
