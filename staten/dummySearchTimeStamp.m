@@ -8,11 +8,13 @@ ORB32 = 735900.6;
 WDR = 736472;
 hotfire = 736481;
  
-thing = searchTimeStamp([ORB1 hotfire])
+thing = searchTimeStamp([ORB1 hotfire]);
 foundDataToSearch = newSearchTimeStamp([ORB1 hotfire]);
 foundFDList = foundDataToSearch.fdList;
 
-metadataoutput = searchMetaDataFlag( 'isMARSprocedure', false )
+metadataoutput = searchMetaDataFlag( 'isMARSprocedure', false );
 
 
-thing2 = searchfdListByCommodity( foundFDList, 'LO2' )
+thing2 = searchfdListByCommodity( foundFDList, 'RP1' )
+
+% mainthing = searchFunctionMain([ORB1 hotfire], 'isMARSprocedure', false)

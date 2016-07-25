@@ -312,7 +312,7 @@ for i = 1:length(dataToSearch)
             
             if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
                 
-                foundDataToSearch = appendNewSearchResult( dataToSearch )
+                foundDataToSearch = appendNewSearchResult( dataToSearch );
           
 %             % create temporary searchResult structure:
 %                 
