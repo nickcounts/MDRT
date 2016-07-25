@@ -1,4 +1,4 @@
-function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
+function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handles )
 % reviewQuickPlot( fdFileName, config )
 %
 %   Designed to be called by the Data Review Tool helper GUI,
@@ -9,7 +9,6 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
 %
 %   Counts 2014, Spaceport Support Services
 %   Counts 2016, VCSFA - Updated
-
 
     % SET PLOT STYLE INFO FOR SAVING TO PDF
     
@@ -40,10 +39,9 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin )
 	axes(subPlotAxes);
 
   
-
     % load(['/Users/nick/Documents/MATLAB/ORB-D1/Data Files/' fdName '.mat']);
     load(fdFileNameWithPath,'-mat');
-
+   
     
 switch upper(fd.Type)
     case {'DCVNC','DCVNO','PCVNC','PCVNO','RV','BV','FV'}   
@@ -102,7 +100,7 @@ end
         % Plot T=0 on top of data
         
         
-        timeline = varargin{1};
+        timeline = varargin(1);
 
 
 
@@ -118,7 +116,7 @@ end
         vline(timeline.t0.time,'r-',t0string,0.5)
 
         % Cheat and plot everything the quick and dirty way
-        reviewPlotAllTimelineEvents;
+        reviewPlotAllTimelineEvents(timeline,handles);
 
 
 

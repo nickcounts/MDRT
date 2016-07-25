@@ -65,7 +65,16 @@ prototypes = {  'fd',           fieldnames(fdPrototype)';
     
     % Only test if testVariable is a structure (this method is actually
     % robust to non-structure variables being passed. This is not required)
+%     
+%     switch nargin
+%         case 0 
+%             return
+%             
     
+    if nargin == 0
+        return
+    end
+
     if ~isstruct(testVariable)
         return
     end
@@ -145,4 +154,5 @@ function allFieldsMatch = doesVariableHaveAllFields(testVar, fieldList)
     end
 
 end
+
 
