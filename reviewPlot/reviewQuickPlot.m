@@ -100,7 +100,7 @@ end
         % Plot T=0 on top of data
         
         
-        timeline = varargin{1};
+        timeline = varargin(1);
 
 
 
