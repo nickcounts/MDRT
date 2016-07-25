@@ -65,6 +65,7 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % Load the project configuration (paths to data, plots and raw data)
     config = getConfig;
     dataInfo = getDataIndex;
+   
  
 % Store configuration in handles structure    
     handles.configuration = config;
