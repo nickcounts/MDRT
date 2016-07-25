@@ -233,17 +233,20 @@ index = get(handles.FDList_popupmenu,'Value');
 % figureNumber = paigeQuickPlot( fdFileName); 
 
 fdFile = get(handles.FDList_popupmenu,'Value');
-fdFileNameWithPath = char(handles.FDPathsWithName{index});
+fdFileNameWithPath = char(handles.FDPaths{index});
 
 % fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep, handles.FDList{index,2}));
 % fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
 
 % If there is an events.mat file, then pass and plot t0
 
+for i= 1:length(handles.searchResult) 
+    
+    if strcomp({handles.searchResult(i).pathToData,fdFileNameWithPath})
+    
+        if exist([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'file')
 
-        if exist([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'file')
-
-            load([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'-mat')
+            load([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'-mat')
 
             figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
 
@@ -252,21 +255,11 @@ fdFileNameWithPath = char(handles.FDPathsWithName{index});
             figureNumber = reviewQuickPlot( fdFileNameWithPath, handles );
 
         end
+    else
         
-    
-%         if exist([fullfile(handles.searchResult(i).pathToData,filesep,'timeline.mat')],'file')
-% 
-%             load([fullfile(handles.searchResult(i).pathToData,filesep,'timeline.mat')],'-mat')
-% 
-%             figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
-% 
-%         else
-% 
-%             figureNumber = reviewQuickPlot( fdFileNameWithPath, handles );
-% 
-%         end
-%         
-   
+    end
+
+end
 
 
 
@@ -362,7 +355,7 @@ else
 [searchResult] = statenSearchFunction(time);
 
 
-[FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
+[FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult(searchResult,handles);
 
 % titleString = makeStringFromMetaData(searchResult);
 
@@ -373,9 +366,7 @@ handles.searchResult = searchResult;
 
 
 handles.FDList = FDListStringNames;
-handles.FDPathsWithName = FileNameWithPath;
-handles.FDPathsToFolder = FDPathToDataFolder;
-
+handles.FDPaths = FileNameWithPath;
 
 
 end

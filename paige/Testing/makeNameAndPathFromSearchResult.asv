@@ -1,16 +1,29 @@
-function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult( searchResult, handles )
+function [ FDListStringNames,FDFileNameWithPath] = makeNameAndPathFromSearchResult( searchResult, handles )
 
 % searchResultArray = statensFunction
 
 %% Build Pop-up/down menu contents
 
-  FDListStringNames = [];
-  FileNameWithPath = [];
 
-%This does not handle empty search results (probably)
+% Need to find length of each FDList and add together to preallocate length
+% of final FDList array
+% arraylength = length of final FDListStringNames array and
+% FDFileNameWithPath array
 
-%loop through all searchResult structures in array for i = 1:(numel(searchResult)
+arraylength = 0;
+oldlistlen = [];
 
+for i=1:length(searchResult)
+    fdlength = length(searchResult(i).matchingFDList);
+    arraylength = arraylength + fdlength;
+end
+
+
+FDListStringNames = cell(arraylength,1);
+FDFileNameWithPath = cell(arraylength,1);
+
+
+    %loop through all searchResult structures in array for i = 1:(numel(searchResult)
     % Make FD strings for menu
   for i=1:length(searchResult)
       
@@ -21,7 +34,8 @@ function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult
        listlen = length(searchResult(i).matchingFDList);
        
        tempFDList = cell(listlen,1);
-           
+       tempfdFileNameWithPath =  cell(listlen,1);
+      
        for k = 1:listlen
            
            
@@ -29,16 +43,26 @@ function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult
            tempfdFileNameWithPath{k} = char(fullfile(searchResult(i).pathToData,filesep,searchResult(i).matchingFDList{k,2}));
            
        end
-           tempfdFileNameWithPath = tempfdFileNameWithPath';
+%            tempfdFileNameWithPath = tempfdFileNameWithPath';
        % tempFDList now contains all assembled title strings
-       
-        %Add the above array to master name list
       
+        %Add the above array to master name list
+     
         
+       FDListStringNames(i:listlen) =(tempFDList);
+       keyboard
+       FDFileNameWithPath(i:listlen) = (tempfdFileNameWithPath);
+        
+     
 
-        FDListStringNames = strcat({FDListStringNames , tempFDList});
-        FileNameWithPath = strcat({FileNameWithPath, tempfdFileNameWithPath});
-        keyboard
+%         FDListStringNames = strcat({FDListStringNames , tempFDList});
+%         keyboard
+% %       FDListStringNames(cellfun('isempty',FDListStringNames)) = 
+%         FDListStringNames = FDListStringNames(~cellfun('isempty',FDListStringNames));
+%         keyboard
+%         FDFileNameWithPath = strcat({FDFileNameWithPath, tempfdFileNameWithPath});
+%         FDFileNameWithPath(cellfun('isempty',FDFileNameWithPath)) = [];
+        
         
   end
   

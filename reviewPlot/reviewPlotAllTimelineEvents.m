@@ -15,8 +15,9 @@ end
 % path = char(fullfile(handles.searchResult.pathToData));
 % keyboard
 % timelineFile = 'timeline.mat';
+index = get(handles.FDList_popupmenu,'Value');
 
-load([fullfile(handles.searchResult.pathToData,filesep,'timeline.mat')],'-mat')
+load([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'-mat')
 
 % load([path, filesep, timelineFile]);
 

@@ -1,20 +1,28 @@
-function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult( searchResult, handles )
+function [ FDListStringNames,FDFileNameWithPath, FDPathToDataFolder] = makeNameAndPathFromSearchResult( searchResult, handles )
 
 % searchResultArray = statensFunction
 
 %% Build Pop-up/down menu contents
 
-%   if isempty(searchResult)
-%       return
-%   end
 
-  FDListStringNames = [];
-  FileNameWithPath = [];
+% Need to find length of each FDList and add together to preallocate length
+% of final FDList array
+% arraylength = length of final FDListStringNames array and
+% FDFileNameWithPath array
 
-%This does not handle empty search results (probably)
+arraylength = 0;
 
-%loop through all searchResult structures in array for i = 1:(numel(searchResult)
+FDListStringNames = [];
+FDFileNameWithPath = [];
+FDPathToDataFolder = [];
 
+for i=1:length(searchResult)
+    fdlength = length(searchResult(i).matchingFDList);
+    arraylength = arraylength + fdlength;
+end
+
+
+    %loop through all searchResult structures in array for i = 1:(numel(searchResult)
     % Make FD strings for menu
   for i=1:length(searchResult)
       
@@ -25,26 +33,33 @@ function [ FDListStringNames,FileNameWithPath] = makeNameAndPathFromSearchResult
        listlen = length(searchResult(i).matchingFDList);
        
        tempFDList = cell(listlen,1);
-           
+       tempfdFileNameWithPath =  cell(listlen,1);
+       tempFDPathToDataFolder =  cell(listlen,1);
+      
        for k = 1:listlen
            
            
            tempFDList{k} = strtrim(strjoin( { opString, searchResult(i).matchingFDList{k,1} } ));  
            tempfdFileNameWithPath{k} = char(fullfile(searchResult(i).pathToData,filesep,searchResult(i).matchingFDList{k,2}));
-           
+           tempFDPathToDataFolder{k} = char(searchResult(i).pathToData);
        end
-           tempfdFileNameWithPath = tempfdFileNameWithPath';
+%            tempfdFileNameWithPath = tempfdFileNameWithPath';
        % tempFDList now contains all assembled title strings
-       
-        %Add the above array to master name list
       
-        
+        %Add the above array to master name list
 
-        FDListStringNames = strcat({FDListStringNames , tempFDList});
-        FileNameWithPath = strcat({FileNameWithPath, tempfdFileNameWithPath});
+        FDListStringNames = cat(1,FDListStringNames , tempFDList);
+        FDListStringNames = FDListStringNames(~cellfun('isempty',FDListStringNames));
+        
+        FDFileNameWithPath = cat(1,FDFileNameWithPath, tempfdFileNameWithPath);
+        FDFileNameWithPath(cellfun('isempty',FDFileNameWithPath)) = [];
+        
+        FDPathToDataFolder = cat(1,FDPathToDataFolder, tempFDPathToDataFolder);
+        FDPathToDataFolder(cellfun('isempty',FDPathToDataFolder)) = [];
         
         
   end
+ 
   
 end
   
