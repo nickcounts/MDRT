@@ -18,11 +18,11 @@ function varargout = dataSearchToPlot(varargin)
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
-% See also: GUIDE, GUIDATA, GUIHANDLES
+% See also: GUIDE, GUIDATA, GUIHANDLES 
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 13-Jul-2016 08:30:57
+% Last Modified by GUIDE v2.5 18-Jul-2016 12:24:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -74,6 +74,7 @@ handles.output = hObject;
 % Add custum handles
 handles.startDateValue = [];
 handles.endDateValue = [];
+handles.searchResult = [];
 
 % Update handles structure
 guidata(hObject, handles);
@@ -221,26 +222,57 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 
 % ---> Test the 'paigeQuickPlot' version of reviewQuickPlot with a
 % ---> preloaded dummy data file
+
 index = get(handles.FDList_popupmenu,'Value');
-fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index,2});
+% fdFileName = fullfile(handles.configuration.dataFolderPath, handles.FDList{index,2});
+
 % fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
 % fdFileName = handles.activeList(index,2);
 % fdFileName = '1014.mat';
 
-figureNumber = paigeQuickPlot( fdFileName); 
+% figureNumber = paigeQuickPlot( fdFileName); 
+
+fdFile = get(handles.FDList_popupmenu,'Value');
+fdFileNameWithPath = char(handles.FDPathsWithName{index});
+
+% fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep, handles.FDList{index,2}));
+% fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
+
 % If there is an events.mat file, then pass and plot t0
-% if exist([handles.configuration.dataFolderPath 'timeline.mat'],'file')
-%     load([handles.configuration.dataFolderPath 'timeline.mat'],'-mat')
-%     
-%     
-%     
-%     figureNumber  = paigeQuickPlot( fdFileName, handles.configuration, timeline);
+
+
+        if exist([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'file')
+
+            load([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'-mat')
+
+            figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
+
+        else
+
+            figureNumber = reviewQuickPlot( fdFileNameWithPath, handles );
+
+        end
+        
+    
+%         if exist([fullfile(handles.searchResult(i).pathToData,filesep,'timeline.mat')],'file')
 % 
-% else
-%     
-%     
+%             load([fullfile(handles.searchResult(i).pathToData,filesep,'timeline.mat')],'-mat')
 % 
-% end
+%             figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
+% 
+%         else
+% 
+%             figureNumber = reviewQuickPlot( fdFileNameWithPath, handles );
+% 
+%         end
+%         
+   
+
+
+
+% figureNumber = reviewQuickPlot(fdFileNameWithPath); 
+
+
 guidata(hObject, handles);
 
 
@@ -312,25 +344,44 @@ function WDS_radiobutton_Callback(hObject, eventdata, handles)
 
 
 % --------------------> STATEN SEARCH FUNTION <----------------------- %
-% --- Executes on button press in dateSearch_pushbutton5.
-function dateSearch_pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to dateSearch_pushbutton5 (see GCBO)
+% --- Executes on button press in Search_pushbutton.
+function Search_pushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to Search_pushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 time = [handles.startDateValue, handles.endDateValue];
 % Check to make sure dates are in correct order
-% ---> TAKE OUT COMMAND WINDOW WARNING
+
 if handles.startDateValue > handles.endDateValue 
     display('Warning! Your start date is after your end date. That is not how time works!')
     dateWarningDialog
     %--- STATEN TO DO : Automatically switch times - warning not needed
 else
 % --- Staten's search function
-[FDList] = statenSearchFunction(time);
-handles.FDList_popupmenu.String = FDList(:,1);
+% [FDList] = statenSearchFunction(time);
+[searchResult] = statenSearchFunction(time);
+
+
+[FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
+
+% titleString = makeStringFromMetaData(searchResult);
+
+% handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
+handles.FDList_popupmenu.String = FDListStringNames;
+
+handles.searchResult = searchResult;
+
+
+handles.FDList = FDListStringNames;
+handles.FDPathsWithName = FileNameWithPath;
+handles.FDPathsToFolder = FDPathToDataFolder;
+
+
+
 end
 
+guidata(hObject, handles);
 
 
 
