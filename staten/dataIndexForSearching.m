@@ -13,9 +13,11 @@ function [dataToSearch] = dataIndexForSearching(filenames, filepaths)
 
 % HARDCODED: set this up as a file path to be passed as input from the GUI
 % (in the future)
-dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository';
+% dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository';
+dataRepositoryDirectory = 'C:\Users\Paige\Documents\MARS Matlab\Data Repository';
 
-[filenames, filepaths] = dataIndexer(dataRepositoryDirectory, 'metadata')
+[filenames, filepaths] = dataIndexer(dataRepositoryDirectory, 'metadata');
+
 
 %% load each file found by dataIndexer
 % for index from 1 to the total number of filepaths in array

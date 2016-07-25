@@ -1,6 +1,7 @@
 function [ dataMetaData ] = newMetaDataStructure( input_args )
 %% newMetaDataStructure()
-%
+%%%% CHANGE BY PAIGE -- replaced MARSuid with fdList
+
 %   returns a default dataMetaData structure for MARS Review Tool.
 %
 %   The structure defaults to an empty set with isUTC = true.
@@ -17,7 +18,8 @@ function [ dataMetaData ] = newMetaDataStructure( input_args )
 %           isMARSprocedure: 0
 %         MARSprocedureName: ''
 %                hasMARSuid: ''
-%                   MARSuid: ''
+%                   MARSuid: '' <--- DELETED
+%                    fdList: ''
 %
 % Counts 6-10-16, Virginia Commercial Spaceflight Authority
 
@@ -30,7 +32,7 @@ dataMetaData.isVehicleOp        = false;
 dataMetaData.isMARSprocedure    = false;
 dataMetaData.MARSprocedureName  = '';
 dataMetaData.hasMARSuid         = false;
-dataMetaData.MARSuid            = '';
+dataMetaData.fdList             = '';
 
 
 

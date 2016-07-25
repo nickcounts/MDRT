@@ -267,7 +267,10 @@ function [foundDataToSearch] = searchTimeStamp( timeStamp )
 
 %% Using subfunctions
 
-dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository'; % set file path
+% dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository'; % set file path
+% load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') ); % load variables from dataToSearch
+
+dataRepositoryDirectory = 'C:\Users\Paige\Documents\MARS Matlab\Data Repository'; % set file path
 
 load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') ); % load variables from dataToSearch
 
@@ -300,7 +303,7 @@ for i = 1:length(dataToSearch)
                 % TODO: populate matchingFDlist field (right now this is
                 % only taking the fdList from the existing metadata
                 % structure - redundant)
-                tempFoundDataToSearch.fdList = dataToSearch(i).metaData.fdList;
+                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
                 
                 % append temporary searchResult structure to searchResults
                 foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
@@ -309,24 +312,23 @@ for i = 1:length(dataToSearch)
             
         case 2 % input is 2 values, iterate over period between 2 days given
             
-            
             if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
                 
-                foundDataToSearch = appendNewSearchResult( dataToSearch );
+%                 foundDataToSearch = appendNewSearchResult( dataToSearch );
           
 %             % create temporary searchResult structure:
-%                 
-%                 % populate metaData field
-%                 tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
-%                 
-%                 % populate pathToData field
-%                 tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
-%                 
-%                 % TODO: populate matchingFDlist field
-%                 
-%                 
-%                 % append temporary searchResult structure to searchResults
-%                 foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
+                
+                % populate metaData field
+                tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+                
+                % populate pathToData field
+                tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
+                
+                % TODO: populate matchingFDlist field
+                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
+                
+                % append temporary searchResult structure to searchResults
+                foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
 %     
             end
             

@@ -360,9 +360,11 @@ if handles.startDateValue > handles.endDateValue
 else
 % --- Staten's search function
 % [FDList] = statenSearchFunction(time);
-[searchResult] = statenSearchFunction(time);
+% [searchResult] = statenSearchFunction(time);
 
+[searchResult] = searchTimeStamp(time);
 
+keyboard
 [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
 
 % titleString = makeStringFromMetaData(searchResult);
