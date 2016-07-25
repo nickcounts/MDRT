@@ -15,7 +15,7 @@ function [searchResult] = newSearchResult(varagin)
 
 searchResult = struct;
 
-searchResult.metaData = []; % [1x1] struct of metaData
+searchResult.metaData = []; % [1x0] struct of metaData
 searchResult.pathToData = []; % string containing path to data
 searchResult.matchingFDList = []; % cell array of strings containing
                                   % ('file string', 'filename.ext')

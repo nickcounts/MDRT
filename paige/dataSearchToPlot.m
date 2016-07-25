@@ -327,7 +327,6 @@ if handles.startDateValue > handles.endDateValue
     %--- STATEN TO DO : Automatically switch times - warning not needed
 else
 % --- Staten's search function
-% [FDList] = statenSearchFunction(time);
 [FDList] = statenSearchFunction(time);
 handles.FDList_popupmenu.String = FDList(:,1);
 end

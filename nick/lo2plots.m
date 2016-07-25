@@ -38,7 +38,7 @@
 
 %% LO2 Plot #2
 
-%     filenames = {'2913' '2916' 'LO2 Flow Control Max SP' '2069' '2059' '4168'};
+%     filenames = {'2913' '2916' 'LOLS Storage Tank Pressure Set Point' '2069' '2059' '4168'};
 %     path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
 % 
 % hold on;
@@ -52,7 +52,9 @@
 
 %% LO2 Plot #3
 
-    filenames = {'2015' '2016' 'LOLS Storage Tank Pressure Set Point' 'LO2 Flow Control Min'};
+hold on;
+
+    filenames = {'2015' '2016' 'LO2 Flow Control Max SP' 'LO2 Flow Control Min'};
     path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
     
     i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
