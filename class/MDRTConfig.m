@@ -198,6 +198,57 @@ classdef MDRTConfig
         end
         
         
+        function graphConfigFolderPath = get.graphConfigFolderPath(this)
+            
+            tryPath = getenv('MDRT_GRAPH_CONFIG_PATH');
+            
+            if strcmp(tryPath, this.graphConfigFolderPath)
+                % matching, so no worries
+                graphConfigFolderPath = tryPath;
+            else
+                % there is a mismatch - 
+                % Just use the one from the object and set the envvar?
+                warning('Mismatch between envvar and MDRTConfig object property value. Defaulting to envvar');
+                graphConfigFolderPath = getenv('MDRT_GRAPH_CONFIG_PATH');
+            end
+            
+        end
+
+        
+        function userSavePath = get.userSavePath(this)
+            
+            tryPath = getenv('MDRT_USER_OUTPUT_PATH');
+            
+            if strcmp(tryPath, this.userSavePath)
+                % matching, so no worries
+                userSavePath = tryPath;
+            else
+                % there is a mismatch - 
+                % Just use the one from the object and set the envvar?
+                warning('Mismatch between envvar and MDRTConfig object property value. Defaulting to envvar');
+                userSavePath = getenv('MDRT_USER_OUTPUT_PATH');
+            end
+            
+        end
+        
+        
+        function userWorkingPath = get.userWorkingPath(this)
+            
+            tryPath = getenv('MDRT_WORKING_PATH');
+            
+            if strcmp(tryPath, this.userWorkingPath)
+                % matching, so no worries
+                userWorkingPath = tryPath;
+            else
+                % there is a mismatch - 
+                % Just use the one from the object and set the envvar?
+                warning('Mismatch between envvar and MDRTConfig object property value. Defaulting to envvar');
+                userWorkingPath = getenv('MDRT_WORKING_PATH');
+            end
+            
+        end
+       
+        
         
     %% Get Methods for Dependent Properties
         function workingDataPath = get.workingDataPath(this)
