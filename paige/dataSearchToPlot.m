@@ -213,6 +213,12 @@ function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Calls GUI to plot multiple FD's on multiple subplots
+makeGraphGUI(handles)
+
+guidata(hObject,handles);
+
+
 
 % --- Executes on button press in QuickPlot_pushbutton2.
 function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
@@ -440,7 +446,6 @@ handles.searchResult = searchResult;
 handles.FDList = FDListStringNames;
 handles.FDPathsWithName = FileNameWithPath;
 handles.FDPathsToFolder = FDPathToDataFolder;
-
 
 
 end

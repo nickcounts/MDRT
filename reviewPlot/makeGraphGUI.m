@@ -25,14 +25,15 @@ function varargout = makeGraphGUI(varargin)
 % Last Modified by GUIDE v2.5 09-Oct-2014 18:46:24
 
 % Begin initialization code - DO NOT EDIT
+
+
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
                    'gui_OpeningFcn', @makeGraphGUI_OpeningFcn, ...
                    'gui_OutputFcn',  @makeGraphGUI_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
-if nargin && ischar(varargin{1})
+                   'gui_Callback',   []);if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
 
@@ -64,7 +65,7 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Load the project configuration (paths to data, plots and raw data)
     config = getConfig;
-    dataInfo = getDataIndex;
+%     dataInfo = getDataIndex; % Do i need this if data already indexed? 
    
  
 % Store configuration in handles structure    
@@ -73,24 +74,15 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % Instantiate internal variables:
     handles.activeList = 1;
     
-    
+% --Want to change to passing FdStringNames and Paths instead of from config    
 % Display the available data streams in the dropdown
-if exist(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'file')
-   
-    load(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'-mat');
-    
-    % Add the loaded list to the GUI handles structure
-    handles.quickPlotFDs = FDList;
-    
-    % add the list to the GUI menu
-    set(handles.ui_dropdown_dataStreamList, 'String', FDList(:,1));
-    
-else
-    
-    % TODO: Should this do something if the file isn't there... maybe do
-    % the initial parsing? That might be bad for the user experience...
 
-end
+keyboard
+FDList = handles.FDList_popupmenu.String;
+keyboard
+set(handles.ui_dropdown_dataStreamList, 'String', FDList);
+
+
 
 
 

@@ -332,7 +332,10 @@ for i = 1:length(dataToSearch)
 %     
             end
             
-        otherwise 
+        otherwise
+            
+            dataToSearch.matchingFDList = dataToSearch.metaData.fdList;
+            
             foundDataToSearch = dataToSearch;
                
             
@@ -341,11 +344,17 @@ for i = 1:length(dataToSearch)
     
 end
 
+if isempty(foundDataToSearch)
+    
+        dateWarningDialog
+        
+end
+
 
 end
-    
-    
-%% subfunctions?
+
+
+ %% subfunctions?
 % returns 1/0 (true/false)value for each timespan check
 
 % timeStampIsWithinRange returns boolean value (true or false)
@@ -379,6 +388,20 @@ else
 end
 
 
+end
+
+function dateWarningDialog
+    d = dialog('Position',[300 300 250 150],'Name','WARNING');
+
+    txt = uicontrol('Parent',d,...
+               'Style','text',...
+               'Position',[20 80 210 40],...
+               'String','No data found within this time range');
+
+    btn = uicontrol('Parent',d,...
+               'Position',[85 20 70 25],...
+               'String','Close',...
+               'Callback','delete(gcf)');
 end
 
 
