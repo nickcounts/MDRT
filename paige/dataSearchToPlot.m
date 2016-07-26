@@ -284,7 +284,16 @@ function RP1_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of RP1_radiobutton
-display('So you wanna filter by RP-1 eh?')
+RP1 = 'RP1';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,RP1);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
+
 
 
 % --- Executes on button press in LO2_radiobutton.
@@ -294,6 +303,15 @@ function LO2_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of LO2_radiobutton
+LO2 = 'LO2';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,LO2);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
 
 
 % --- Executes on button press in LN2_radiobutton.
@@ -303,6 +321,15 @@ function LN2_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of LN2_radiobutton
+LN2 = 'LN2';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,LN2);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
 
 
 % --- Executes on button press in GN2_radiobutton.
@@ -312,6 +339,15 @@ function GN2_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of GN2_radiobutton
+GN2 = 'GN2';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,GN2);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
 
 
 % --- Executes on button press in GHE_radiobutton.
@@ -321,6 +357,15 @@ function GHE_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of GHE_radiobutton
+GHE = 'GHE';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,GHE);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
 
 
 % --- Executes on button press in AIR_radiobutton.
@@ -330,6 +375,15 @@ function AIR_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of AIR_radiobutton
+AIR = 'AIR';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,AIR);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
 
 
 
@@ -340,6 +394,15 @@ function WDS_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of WDS_radiobutton
+WDS = 'WDS';
+fdFile = handles.FDList_popupmenu.String;
+commodityFDList = searchfdListByCommodity(fdFile,WDS);
+
+% handles.FDList_popupmenu.String = {commodityFDList};
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+guidata(hObject, handles);
 
 
 
@@ -364,7 +427,6 @@ else
 
 [searchResult] = searchTimeStamp(time);
 
-keyboard
 [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
 
 % titleString = makeStringFromMetaData(searchResult);
@@ -445,3 +507,4 @@ function dateWarningDialog
                'Position',[85 20 70 25],...
                'String','Close',...
                'Callback','delete(gcf)');
+
