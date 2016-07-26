@@ -1,20 +1,28 @@
-function hs = makeDataComparisonGUI(targetParentHandle)
+function hs = makeDataComparisonGUI(varargin)
 
 % Commented out - trying to create GUI inside a parent object
-%     hs.fig = figure;
-%         guiSize = [672 387];
-%         hs.fig.Position = [hs.fig.Position(1:2) guiSize];
-%         hs.fig.Name = 'Data Comparison Plotter';
-%         hs.fig.NumberTitle = 'off';
-%         hs.fig.MenuBar = 'none';
-%         hs.fig.ToolBar = 'none';
+
+    if nargin == 0
         
-    hs.fig = targetParentHandle;
+        hs.fig = figure;
+            guiSize = [672 387];
+            hs.fig.Position = [hs.fig.Position(1:2) guiSize];
+            hs.fig.Name = 'Data Comparison Plotter';
+            hs.fig.NumberTitle = 'off';
+            hs.fig.MenuBar = 'none';
+            hs.fig.ToolBar = 'none';
+            
+    elseif nargin == 1
+        hs.fig = varargin{1};
+        
+    end
+    
+    config = MDRTConfig;
 
         
     %% Debugging Tasks - variable loading, etc...
     dataIndexName = 'dataIndex.mat';
-    dataIndexPath = dataRepositoryPath('get');
+    dataIndexPath = config.dataArchivePath;
     
     
     % Load the data index using the environment variable and the specified
