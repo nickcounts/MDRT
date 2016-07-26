@@ -32,9 +32,10 @@ for i = 1:length(foundDataToSearchFDList)
 
         case 'RP1'
             
+
             % ignores any character between RP1 (i.e. RP-1, RP/1, RP*1) and
             % is case insensitive
-            % replacementRP1 = regexprep( foundDataToSearchFDList{i,1}, 'RP(\w+)1', 'RP1', 'ignorecase' )
+            replacementRP1 = regexprep( foundDataToSearchFDList{i,1}, 'RP(\W+)1', 'RP1', 'ignorecase' )
 
             % if the fd list contains RP1 or is 1000 level (there are two
             % rando WDS 1000 level results..can prob fix that with hard coding but yea)
@@ -46,9 +47,9 @@ for i = 1:length(foundDataToSearchFDList)
 %                 || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'FLS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'FLS') )...
 %                % || ~isempty( regexpi( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
 %            
-           
-           if ~isempty(regexpi( regexprep( foundDataToSearchFDList{i,1}, 'RP(\w+)1', 'RP1', 'ignorecase' ) , 'RP1') ) || ~isempty(regexpi( regexprep( foundDataToSearchFDList{i,2}, 'RP(\w+)1', 'RP1', 'ignorecase' ) , 'RP1') ) ...
-                || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'FLS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'FLS') )...
+          
+           if ~isempty(regexpi( replacementRP1 , 'RP1' ) ) ... %|| ~isempty(regexpi( regexprep( foundDataToSearchFDList{i,2}, 'RP(\w+)1', 'RP1', 'ignorecase' ) , 'RP1') ) ...
+                || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'FLS') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'FLS') )...
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);
                 
@@ -59,8 +60,8 @@ for i = 1:length(foundDataToSearchFDList)
 
         case 'LO2'
             
-            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LO2') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LO2') ) ...
-                || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LOLS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LOLS') )
+            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LO2') ) ... % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LO2') ) ...
+                || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LOLS') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LOLS') )
                 % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);
@@ -72,8 +73,8 @@ for i = 1:length(foundDataToSearchFDList)
             
         case 'LN2'
             
-            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LN2') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LN2') ) ...
-                || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LNSS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LNSS') )
+            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LN2') ) ... % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LN2') ) ...
+                || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'LNSS') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'LNSS') )
                 % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);
@@ -84,7 +85,7 @@ for i = 1:length(foundDataToSearchFDList)
             
         case 'GN2'
             
-            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'GN2') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'GN2') )
+            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'GN2') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'GN2') )
                 % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);
@@ -96,7 +97,7 @@ for i = 1:length(foundDataToSearchFDList)
             
         case 'GHe'
             
-            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'GHe') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'GHe') )
+            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'GHe') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'GHe') )
                 % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);
@@ -108,8 +109,8 @@ for i = 1:length(foundDataToSearchFDList)
             
         case 'ECS'
             
-            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'ECS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'ECS') ) ...
-               || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'AIR') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'AIR') ) 
+            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'ECS') ) ... % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'ECS') ) ...
+               || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'AIR') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'AIR') ) 
            % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);
@@ -121,7 +122,7 @@ for i = 1:length(foundDataToSearchFDList)
             
         case 'WDS'
             
-            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'WDS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'WDS') )
+            if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'WDS') ) % || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'WDS') )
                 % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^0\w*' ) ) 
 
                 tempcommodityFDList = foundDataToSearchFDList(i,:);

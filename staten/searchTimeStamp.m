@@ -300,10 +300,11 @@ for i = 1:length(dataToSearch)
                 % TODO: populate matchingFDlist field (right now this is
                 % only taking the fdList from the existing metadata
                 % structure - redundant)
-                tempFoundDataToSearch.fdList = dataToSearch(i).metaData.fdList;
+                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
                 
                 % append temporary searchResult structure to searchResults
                 foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
+                
                 
             end
             
@@ -312,34 +313,44 @@ for i = 1:length(dataToSearch)
             
             if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
                 
-                foundDataToSearch = appendNewSearchResult( dataToSearch );
+                % foundDataToSearch = appendNewSearchResult( dataToSearch );
           
-%             % create temporary searchResult structure:
-%                 
-%                 % populate metaData field
-%                 tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
-%                 
-%                 % populate pathToData field
-%                 tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
-%                 
-%                 % TODO: populate matchingFDlist field
-%                 
-%                 
-%                 % append temporary searchResult structure to searchResults
-%                 foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
-%     
+            % create temporary searchResult structure:
+                
+                % populate metaData field
+                tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+                
+                % populate pathToData field
+                tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
+                
+                % TODO: populate matchingFDlist field
+                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
+                
+                % append temporary searchResult structure to searchResults
+                foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
+                
+    
             end
             
         otherwise 
+            
+            dataToSearch.matchingFDList = dataToSearch.metaData.fdList;
+            
             foundDataToSearch = dataToSearch;
                
             
     end
- 
     
 end
 
 
+if isempty(foundDataToSearch)
+    
+    dateWarningDialog
+    
+end
+
+    
 end
     
     
@@ -376,11 +387,26 @@ else
     
 end
 
+end
+
+
+function dateWarningDialog
+    d = dialog('Position',[300 300 250 150],'Name','WARNING');
+
+    txt = uicontrol('Parent',d,...
+               'Style','text',...
+               'Position',[20 80 210 40],...
+               'String','No data found within this time range');
+
+    btn = uicontrol('Parent',d,...
+               'Position',[85 20 70 25],...
+               'String','Close',...
+               'Callback','delete(gcf)');
+
 
 end
 
 
-    
     
     
 
