@@ -66,6 +66,15 @@ classdef MDRTConfig
                thisMDRTConfig.userWorkingPath = getenv('MDRT_WORKING_PATH');
            end
             
+           %% User Save Path
+           if isempty( getenv('MDRT_USER_OUTPUT_PATH') )
+               % No working path is available
+               warning('No user working path was found. Please set a valid path to the MDRT data archive root directory');
+           else
+               % load the valid path
+               thisMDRTConfig.userSavePath = getenv('MDRT_USER_OUTPUT_PATH');
+           end
+
         end
         
     %% Set Methods
