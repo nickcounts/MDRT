@@ -8,7 +8,7 @@ ORB32 = 735900.6;
 WDR = 736472;
 hotfire = 736481;
  
-thing = searchTimeStamp([now]);
+thing = searchTimeStamp([hotfire])
 foundDataToSearch = newSearchTimeStamp([ORB1 hotfire]);
 % foundFDList = foundDataToSearch.fdList
 
@@ -36,4 +36,4 @@ isempty(fieldnames(struct));
 % return the list of field names as a cell array of strings
 metaDataFlagFieldsToFilterBy = fieldnames(searchQuery);
 
-diditwork = searchMetaDataFlag(searchQuery)
+diditwork = searchMetaDataFlag(searchQuery);

@@ -272,12 +272,11 @@ dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository'; % set file 
 load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') ); % load variables from dataToSearch
 
 
+
 timeSpanInput = length( timeStamp ); % is input 1 or 2 values?
 
 foundDataToSearch = []; % empty cell array of structures from Paige - will hold list
 
-% 
-%keyboard
 
 for i = 1:length(dataToSearch)
 
@@ -287,49 +286,64 @@ for i = 1:length(dataToSearch)
 
             timeStamp(2) = timeStamp(1) + 1; % creates a second timestamp input
 
-            if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
+            if ~isempty( dataToSearch(i).metaData.timeSpan )
                 
-                % create temporary searchResult structure:
+                if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
                 
-                % populate metaData field
-                tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+                    % create temporary searchResult structure:
+
+                    % populate metaData field
+                    tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+
+                    % populate pathToData field
+                    tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
+
+                    % TODO: populate matchingFDlist field (right now this is
+                    % only taking the fdList from the existing metadata
+                    % structure - redundant)
+                    tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
+
+                    % append temporary searchResult structure to searchResults
+                    foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
+                    
+                end
                 
-                % populate pathToData field
-                tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
                 
-                % TODO: populate matchingFDlist field (right now this is
-                % only taking the fdList from the existing metadata
-                % structure - redundant)
-                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
+            else
+                metaDataWarningDialog
                 
-                % append temporary searchResult structure to searchResults
-                foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
-                
-                
+     
             end
             
         case 2 % input is 2 values, iterate over period between 2 days given
             
             
-            if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
+            if ~isempty( dataToSearch(i).metaData.timeSpan )
                 
-                % foundDataToSearch = appendNewSearchResult( dataToSearch );
-          
-            % create temporary searchResult structure:
+                if isTimeStampWithinRange( dataToSearch(i).metaData.timeSpan, timeStamp )
                 
-                % populate metaData field
-                tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+                    % create temporary searchResult structure:
+
+                    % populate metaData field
+                    tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+
+                    % populate pathToData field
+                    tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
+
+                    % TODO: populate matchingFDlist field (right now this is
+                    % only taking the fdList from the existing metadata
+                    % structure - redundant)
+                    tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
+
+                    % append temporary searchResult structure to searchResults
+                    foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
+                end
+                  
                 
-                % populate pathToData field
-                tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
+            else
+                metaDataWarningDialog
+               
                 
-                % TODO: populate matchingFDlist field
-                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
-                
-                % append temporary searchResult structure to searchResults
-                foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
-                
-    
             end
             
         otherwise 
@@ -407,6 +421,21 @@ function dateWarningDialog
 end
 
 
+function metaDataWarningDialog
+    d = dialog('Position',[300 300 250 150],'Name','WARNING');
+
+    txt = uicontrol('Parent',d,...
+               'Style','text',...
+               'Position',[20 80 210 40],...
+               'String','No time span found to compare with input.');
+
+    btn = uicontrol('Parent',d,...
+               'Position',[85 20 70 25],...
+               'String','Close',...
+               'Callback','delete(gcf)');
+
+
+end
     
     
 

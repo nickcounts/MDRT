@@ -135,8 +135,8 @@ for i = 1:length(dataToSearch)
         
 %     end
     
+                end
 end
-
 end
 
 
