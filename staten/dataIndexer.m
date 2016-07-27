@@ -1,5 +1,170 @@
+function [foundFilenames, foundFilePaths] = dataIndexer(currentPath, searchExpression)
+%% dataIndexer()
+
+% Purpose: Provides a means of indexing through a folder for a specific
+% expression in the name of each file by running a recursive search.
+
+% Function output [foundFilenames, foundFilePaths] creates a two cell
+% arrays of string values including the matching filenames and paths to
+% those files where the actual data lives.
+
+% Subfunctions:
+%     fileIsOK - checks filename string input for '._' characters, returns logical value
+%     directoryIsSearchable - checks if the item in the current directory is searchable, returns logical value
+%     isTheFileWeWant - checks if the item is not a directory and contains, returns logical value
+
+% Supporting functions:
+%     dataIndexForSearching - creates dataToSearch file of all metadata files found to place in data repository
+    
+% Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
 
 
+% search current directory and put results in structures
+currentDirectoryList = dir(currentPath); 
+
+foundFilenames = {}; % empty cell array of strings - will hold list
+foundFilePaths = {}; % empty cell array of strings - will hold list
+
+% for loop to iterate over entire length of current directory
+for i = 1:length(currentDirectoryList);
+    
+    % call subfunction: isValidFilename to check if filename is useable (does not contain ._ characters)
+    % if the dataRepositoryStructure at this index does NOT have ._ then continue loop
+    if isValidFilename( currentDirectoryList(i).name )
+    
+        % call subfunction: isTheFileWeWant
+        % if index in repository structure is NOT in current directory/ NOT a folder,
+        % AND if regular expression string (dataRepositoryStructure(i).name) does NOT match searchExpression 'metadata'
+        if isTheFileWeWant( currentDirectoryList(i) , searchExpression)
+            
+            % We found a file we want to remember:
+           
+            % adds new filename to list of found filenames
+            foundFilenames{length(foundFilenames)+1} = currentDirectoryList(i).name; 
+            
+            % add new filepath to list of filepaths
+            foundFilePaths{length(foundFilePaths)+1} = fullfile(currentPath,currentDirectoryList(i).name);
+           
+        % call subfunction: isDirectoryToSearch    
+        % elseif index in repository structure is in directory/ is a folder
+        % AND string comparison is NOT in current folder or folder above
+        elseif isDirectoryToSearch( currentDirectoryList(i) )
+            
+            % RECURSION CALL: main function calling itself (*magic*)
+            
+            % creates full file name for metadata file
+            placeWeWantToLook = fullfile(currentPath,currentDirectoryList(i).name);
+            
+            % runs dataIndexer function for each metadata full file name and search expression 'meta data'
+            [magicFilenames magicFilePaths] = dataIndexer(placeWeWantToLook,searchExpression); 
+ 
+                % append all filenames found before and after recursion call
+                foundFilenames = vertcat(foundFilenames, magicFilenames);
+                
+                % append all filepaths found before and after recursion call
+                foundFilePaths = vertcat(foundFilePaths, magicFilePaths);
+            
+        end % end if loop isTheFileWe Want
+        
+    end % end if loop isValidFilename
+    
+end % end for loop iterating over current directory
+
+end % end function dataIndexer
+
+
+
+%% Subfunctions:
+
+% -------------------------------------------------------------------------
+% Function:
+    % isValidFilename checks filename string input for '._' characters 
+    % (hidden files) and returns logical value true/1 or false/0
+    
+% Input:
+    % filenameString input takes a filename string to check for '._' characters
+    
+% Output: 
+    % fileIsOK returns logical value true/1 if file is useable
+    % or false/0 if file is not useable
+
+function fileIsOK = isValidFilename(filenameString)    
+
+% Use strfind to look for weird characters: if empty, then not found
+% and filename is good!
+
+    fileIsOK = isempty( strfind( filenameString, '._') );
+
+end % end subfunction isValidFilename
+
+% -------------------------------------------------------------------------
+% Function:
+    % isDirectoryToSearch checks if the item in the current directory is 
+    % searchable and returns logical value true/1 or false/0
+    
+% Input:
+    % directoryItem input takes a current directory path to check whether
+    % or not input is actually a directory and whether or not the filename
+    % is in the current directory or the directory above
+    
+% Output: 
+    % directoryIsSearchable returns logical value true/1 if directory item 
+    % is searchable or false/0 if directory item is not searchable
+    
+function directoryIsSearchable = isDirectoryToSearch( directoryItem )
+
+directoryIsSearchable = true;
+
+% checks if the item is in a directory
+directoryIsSearchable = directoryIsSearchable * directoryItem.isdir;
+
+% checks if filename is in current directory '.' or a directory above '..'
+directoryIsSearchable = directoryIsSearchable * ~strcmp(directoryItem.name, '.');
+directoryIsSearchable = directoryIsSearchable * ~strcmp(directoryItem.name, '..');
+
+end % end subfunction isDirectoryToSearch
+    
+% -------------------------------------------------------------------------
+% Function:
+    % isTheFileWeWant checks if the item in the current directory is 
+    % not a directory and contains a match to the search expression
+    % and returns logical value true/1 or false/0
+    
+% Input:
+    % directoryItem input takes a current directory path to check whether
+    % or not input is actually a directory and whether or not the directory
+    % item name contains a match to the search expression
+    % searchString input takes a search expression to compare to the
+    % directoryItem input name
+    
+% Output: 
+    % foundFile returns logical value true/1 if directory item is not a 
+    % directory and contains a match, or false/0 if directory item is a
+    % directory or does not contain a match
+    
+function foundFile = isTheFileWeWant( directoryItem, searchString )
+    
+    foundFile = true;
+    
+    % checks if directory item is not a directory
+    foundFile = foundFile * ~directoryItem.isdir; 
+    
+    % look for a match that isn't a directory
+    foundFile = foundFile * ~isempty(regexp(directoryItem.name,searchString,'match'));
+
+end % end subfunction isTheFileWeWant       
+% -------------------------------------------------------------------------    
+
+
+% ========================================================================
+% garbage
+
+
+    
+%% dataIndexForSearching will use this function to take each metaData file and compile into new list < array of structures >
+%% search functions will need to look only within dataIndexForSearching with given search parameters and point to the location of file where desired data lives
+
+    
 % {ignore this stuff:
 
 %% looks at metaDataStructure to step through existing metadata and return 
@@ -18,7 +183,6 @@
 % dataIndexer runs recursive search for search expression (which will be 
 % set to metadata) through the base directory (which will be set to the data repository)
 
-function [foundFilenames, foundFilePaths] = dataIndexer(currentPath, searchExpression)
 
 %% go into each folder in data repository
 
@@ -27,44 +191,11 @@ function [foundFilenames, foundFilePaths] = dataIndexer(currentPath, searchExpre
 
 % search expression will be set to string value 'metadata'
 
-currentDirectoryList = dir(currentPath); % searches current directory and puts results in structures
 
-foundFilenames = {}; % empty < array of structures > to compile metadata files into
-foundFilePaths = {}; % empty cell array of strings - will hold list
-
-for i = 1:length(currentDirectoryList); % for loop to iterate over entire length of current directory
-    
-    % If the dataRepositoryStructure at this index does NOT have ._ then do
-    % the normal work
-    % sub function to check if filename is useable (does not contain ._
-    % characters)
-    if isValidFilename( currentDirectoryList(i).name )
-    
-        % if index in repository structure is NOT in current directory/ NOT a folder, and if regular expression string (dataRepositoryStructure(i).name) and searchExpression 'metadata' do NOT match
-        if isTheFileWeWant( currentDirectoryList(i) , searchExpression)
-            
-            % We found a file we want to remember
-            
-            % Add to file name list
-            % Add to file path list
-            
-            
-            % adds new file to list of found files
-            foundFilenames{length(foundFilenames)+1} = currentDirectoryList(i).name; 
-            
-            % TODO: Add to file path list
-            foundFilePaths{length(foundFilePaths)+1} = fullfile(currentPath,currentDirectoryList(i).name);
-           
-            
-        % elseif index in repository structure is in directory/ is a folder and string comparison is not in current folder or folder above
-        elseif isDirectoryToSearch( currentDirectoryList(i) )
-            
-            % RECURSION CALL
-            placeWeWantToLook = fullfile(currentPath,currentDirectoryList(i).name); % creates full file name for metadata file
-            [magicFilenames magicFilePaths] = dataIndexer(placeWeWantToLook,searchExpression); % runs dataIndexer function for each metadata full file name and search expression 'meta data'
-        
-            % if temporary metadata structures file is NOT empty
-            
+% ?????????????????????????????????????????????????????????????????????????            
+%            YO NICK is all this necessary anymore??
+%            if temporary metadata structures file is NOT empty
+%             
 %             %% CHANGE THIS IF STATEMENT TO BE A FUNCTION CALL TO NICK'S CHECKSTRUCTURETYPE
 %             if ~isempty(metaDataStructuresTemp) 
 %                 
@@ -85,66 +216,4 @@ for i = 1:length(currentDirectoryList); % for loop to iterate over entire length
 %                 names
 %                 foundFilePaths((length(foundFilePaths)+1):(length(foundFilePaths)+length(foundFilePaths))) = foundFilePaths
 %                 
-                foundFilenames = vertcat(foundFilenames, magicFilenames); % appends all file names found
-                foundFilePaths = vertcat(foundFilePaths, magicFilePaths); % appends all file paths found 
-            
-        end
-    end
-end
-%foundFilenames = foundFilenames';
-%foundFilePaths;
-end
-
-
-
-%% Sub functions
-
-function fileIsOK = isValidFilename(filenameString)    
-
-% Use strfind to look for weird characters: if empty, then not found
-% and filename is good!
-
-    fileIsOK = isempty( strfind( filenameString, '._') );
-
-end
-    
-    
-function directoryIsSearchable = isDirectoryToSearch( directoryItem )
-
-directoryIsSearchable = true;
-
-% Is the item a directory?
-directoryIsSearchable = directoryIsSearchable * directoryItem.isdir;
-
-% Is the filename . or .. ?
-directoryIsSearchable = directoryIsSearchable * ~strcmp(directoryItem.name, '.');
-directoryIsSearchable = directoryIsSearchable * ~strcmp(directoryItem.name, '..');
-
-end
-    
-
-function foundFile = isTheFileWeWant( directoryItem, searchString )
-    
-    foundFile = true;
-    
-    foundFile = foundFile * ~directoryItem.isdir;
-    
-    foundFile = foundFile * ~isempty(regexp(directoryItem.name,searchString,'match'));  % look for a match that isn't a directory
-
-end
-       
-    
-
-% how do I have matlab point to the data repository folder and search expression for meta data (by string?)
-
-
-%% within each individual data set folder, find metaData file
-
-
-
-
-
-
-%% dataIndexForSearching will use this function to take each metaData file and compile into new list < array of structures >
-%% search functions will need to look only within dataIndexForSearching with given search parameters and point to the location of file where desired data lives
-
+% ?????????????????????????????????????????????????????????????????????????  
