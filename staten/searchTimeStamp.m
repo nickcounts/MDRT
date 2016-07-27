@@ -128,11 +128,23 @@ for i = 1:length(dataToSearch)
             
         otherwise % otherwise no input was given
             
-            % populate matchingFDlist field
-            dataToSearch.matchingFDList = dataToSearch.metaData.fdList;
+            % return all dataToSearch with fd list
             
-            % return all dataToSearch structures
-            foundDataToSearch = dataToSearch;
+            % create temporary searchResult structure:
+
+                % populate metaData field
+                tempFoundDataToSearch.metaData = dataToSearch(i).metaData;
+
+                % populate pathToData field
+                tempFoundDataToSearch.pathToData = dataToSearch(i).pathToData;
+
+                % TODO: populate matchingFDlist field (right now this is
+                % only taking the fdList from the existing metadata
+                % structure; this may later contain only the fds within the time search)
+                tempFoundDataToSearch.matchingFDList = dataToSearch(i).metaData.fdList;
+
+                % append temporary searchResult structure to searchResults
+                foundDataToSearch = vertcat(foundDataToSearch, tempFoundDataToSearch);
      
     end % end timeSpanInput switch/case statement
     

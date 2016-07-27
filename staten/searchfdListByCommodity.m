@@ -34,7 +34,7 @@ for i = 1:length(foundDataToSearchFDList)
         case 'RP1' % commodityFDList = fd list with matches for 'RP1'
             
             % ignores any character between RP1 (i.e. RP-1, RP/1, RP*1) and is case insensitive
-            replacementRP1 = regexprep( foundDataToSearchFDList{i,1}, 'RP(\W+)1', 'RP1', 'ignorecase' )
+            replacementRP1 = regexprep( foundDataToSearchFDList{i,1}, 'RP(\W+)1', 'RP1', 'ignorecase' );
 
             % if input fd list contains 'RP1' or 'FLS' string matches (case insensitive)
             if ~isempty(regexpi( replacementRP1 , 'RP1' ) ) || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'FLS') )
