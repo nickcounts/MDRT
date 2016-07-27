@@ -36,6 +36,8 @@ function hs = makeDataComparisonGUI(varargin)
         return
     end
     
+    debugout(dataIndex)
+    
     setappdata(hs.fig, 'dataIndex', dataIndex);
     setappdata(hs.fig, 'topPlot', {} );
     setappdata(hs.fig, 'botPlot', {} );
@@ -214,6 +216,8 @@ for i = 1:numel(dataIndex)
     
 end
 
+debugout(allDataSetNames)
+
 % Set appdata
     setappdata(hs.fig, 'dataSetNames', allDataSetNames)
     setappdata(hs.fig, 'fdMasterList', dataIndex(1).FDList(:,1));
@@ -234,8 +238,8 @@ end
 % Populate fd list
 
     updateSearchResults(hs.edit_searchField);
-    
-    
-    
-    
+
+
+
+
 
