@@ -15,7 +15,7 @@ for i = 1:length( dataToSearch )
     % TODO: populate matchingFDlist field (right now this is
     % only taking the fdList from the existing metadata
     % structure - redundant)
-    tempFinalSearchResults.fdList = dataToSearch(i).metaData.fdList;
+    tempFinalSearchResults.matchingFDList = dataToSearch(i).metaData.fdList;
 
 
     % append temporary searchResult structure to searchResults

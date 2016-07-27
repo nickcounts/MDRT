@@ -1,136 +1,151 @@
-%% metaData flags
-% check boolean values of flags for isOperation, isVehicleOp,
-% isMARSprocedure, hasMARSuid
+function [metaDataFlagSearchResults] = searchMetaDataFlag( foundDataToSearch, metaDataFlagFieldAndBooleanInputStructure )
+%% searchMetaDataFlag()
 
-% input is given from GUI
-% if true, output dataToSearch structure for that true value
+% Purpose: Provide a means of AND searching through dataToSearch file by 
+% metadata flag inputs.
 
-% switch case statement for each flag?
+% Function input (foundDataToSearch, metaDataFlagFieldAndBooleanInputStructure)
+% takes a set of dataToSearch structures and a structure of metadata flags
+% and their boolean values from the user.
 
-% searchMetaDataFlag
+% Function output metaDataFlagSearchResults creates a new list of
+% dataToSearch structures for structures with all matching metadata flags
+% (AND searching).
 
-%% NICKKKKKKKK
-% possibility: adding elseif statement to return search results for false
-% input?
+% Example output:
+%           metaDataFlagSearchResults =
 
-% how to get these to work in combination with each other?
-% i.e. multiple inputs (isOperation == 1 and isMARSuid == 1)
+%                           metaData: [1x1 struct]
+%                         pathToData: 'C:\Users\Staten\Deskt…'
+%                     matchingFDList: {289x2 cell}
 
-% possible better way to do this: there are 4 metadata flags, can I run
-% search based on every combination of true/false values for these 4 flags
+% Supporting functions: 
+%    searchTimeStamp - narrows search results by time parameters
 
-% varargin: pair of metadata flag input and boolean value
-function [metaDataFlagSearchResults] = searchMetaDataFlag( metaDataFlagInput, metaDataFlagBooleanInput )
+% Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
 
-dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository'; % set file path
 
-load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') ); % load variables from dataToSearch
-
+% empty cell array of structures - will hold found data matches
 metaDataFlagSearchResults = [];
 
+% create cell array of strings of fieldnames in input structure
+metaDataFlagFieldsToFilterBy = fieldnames(metaDataFlagFieldAndBooleanInputStructure);
 
-for i = 1:length(dataToSearch)
+% index over each structure in foundDataToSearch
+for i = 1:length(foundDataToSearch)
+    
+    % index over each metadata flag fieldnames
+    for j = 1:numel(metaDataFlagFieldsToFilterBy)
+    
+        % switch/case statement to accomodate searching through every metadata flag fieldname
+        switch metaDataFlagFieldsToFilterBy{j}
+        
+        % if strcmp(metaDataFlagFieldsToFilterBy{j}, 'isOperation')
+ 
+            case 'isOperation' % metadata flag input = 'isOperation'
 
-    switch metaDataFlagInput
+                % if the metadata flag value in dataToSearch matches the metadata flap input value
+                if foundDataToSearch(i).metaData.isOperation == metaDataFlagFieldAndBooleanInputStructure.isOperation
 
-        case 'isOperation'
-            
-            if metaDataFlagBooleanInput == true && dataToSearch(i).metaData.isOperation == 1
-                
-                    % populate metaData field
-                    tempMetaDataFlagSearchResults.metaData = dataToSearch(i).metaData;
+                    % create a temporary boolean value to set to true
+                    tempBoolean = true;
 
-                    % populate pathToData field
-                    tempMetaDataFlagSearchResults.pathToData = dataToSearch(i).pathToData;
+                end % end if loop checking for match
+          
+         % elseif strcmp(metaDataFlagFieldsToFilterBy{j}, 'isVehicleOp')
+         
+            case 'isVehicleOp' % metadata flag input = 'isVehicleOp'
 
-                    % TODO: populate matchingFDlist field
+                % if the metadata flag value in dataToSearch matches the metadata flap input value
+                if foundDataToSearch(i).metaData.isVehicleOp == metaDataFlagFieldAndBooleanInputStructure.isVehicleOp
 
+                    % keep tempBoolean true
+                    tempBoolean = tempBoolean * true;
 
-                    % append temporary searchResult structure to searchResults
-                    metaDataFlagSearchResults = vertcat(metaDataFlagSearchResults, tempMetaDataFlagSearchResults);
-            
-%             % or just else?
-%             % do we actually want this to happen?
-%             elseif metaDataFlagBooleanInput == false && dataToSearch(i).metaData.isVehicleOp == 0
-%                 
-%                     % populate metaData field
-%                     tempMetaDataFlagSearchResults.metaData = dataToSearch(i).metaData;
-% 
-%                     % populate pathToData field
-%                     tempMetaDataFlagSearchResults.pathToData = dataToSearch(i).pathToData;
-% 
-%                     % TODO: populate matchingFDlist field
-% 
-% 
-%                     % append temporary searchResult structure to searchResults
-%                     metaDataFlagSearchResults = vertcat(metaDataFlagSearchResults, tempMetaDataFlagSearchResults);
-%                
-%                     
-            end
-            
-            
-        case 'isVehicleOp'
-            
-            if metaDataFlagBooleanInput == true && dataToSearch(i).metaData.isVehicleOp == 1
-                
-                    % populate metaData field
-                    tempMetaDataFlagSearchResults.metaData = dataToSearch(i).metaData;
-
-                    % populate pathToData field
-                    tempMetaDataFlagSearchResults.pathToData = dataToSearch(i).pathToData;
-
-                    % TODO: populate matchingFDlist field
-
-
-                    % append temporary searchResult structure to searchResults
-                    metaDataFlagSearchResults = vertcat(metaDataFlagSearchResults, tempMetaDataFlagSearchResults);
-       
+                else % no match
                     
-            end
-         
-            
-        case 'isMARSprocedure'
-            
-            if metaDataFlagBooleanInput == true && dataToSearch(i).metaData.isMARSprocedure == 1
+                    % set tempBoolean to false
+                    tempBoolean = tempBoolean * false;
+
+                end % end if loop checking for match
                 
-                    % populate metaData field
-                    tempMetaDataFlagSearchResults.metaData = dataToSearch(i).metaData;
+        % elseif strcmp(metaDataFlagFieldsToFilterBy{j}, 'isMARSprocedure')
+        
+            case 'isMARSprocedure' % metadata flag input = 'isMARSprocedure'
 
-                    % populate pathToData field
-                    tempMetaDataFlagSearchResults.pathToData = dataToSearch(i).pathToData;
+                % if the metadata flag value in dataToSearch matches the metadata flap input value
+                if foundDataToSearch(i).metaData.isMARSprocedure == metaDataFlagFieldAndBooleanInputStructure.isMARSprocedure
 
-                    % TODO: populate matchingFDlist field
-
-
-                    % append temporary searchResult structure to searchResults
-                    metaDataFlagSearchResults = vertcat(metaDataFlagSearchResults, tempMetaDataFlagSearchResults);
-         
-            end
-            
-            
-        case 'hasMARSuid'
-            
-            if metaDataFlagBooleanInput == true && dataToSearch(i).metaData.hasMARSuid == 1
+                    % keep tempBoolean true
+                	tempBoolean = tempBoolean * true;
+                        
+                else % no match
+                    
+                    % set tempBoolean to false
+                    tempBoolean = tempBoolean * false;
                 
-                    % populate metaData field
-                    tempMetaDataFlagSearchResults.metaData = dataToSearch(i).metaData;
+                end % end if loop checking for match
+                
+        % elseif strcmp(metaDataFlagFieldsToFilterBy{j}, 'hasMARSuid')
+        
+            case 'hasMARSuid' % metadata flag input = 'hasMARSuid'
 
-                    % populate pathToData field
-                    tempMetaDataFlagSearchResults.pathToData = dataToSearch(i).pathToData;
+                % if the metadata flag value in dataToSearch matches the metadata flap input value
+                if foundDataToSearch(i).metaData.hasMARSuid == metaDataFlagFieldAndBooleanInputStructure.hasMARSuid
+                    
+                    % keep tempBoolean true
+                    tempBoolean = tempBoolean * true;
+                        
+                else % no match
+                    
+                    % set tempBoolean to false
+                    tempBoolean = tempBoolean * false;
+                
+                end % end if loop checking for match
+                
+            otherwise % no metadata flag input
+                
+                % return all dataToSearch
+                metaDataFlagSearchResults = foundDataToSearch;
+                
+        end % end switch/case statement
+        
+    end % end for loop iterating over fieldnames
 
-                    % TODO: populate matchingFDlist field
+    
+    % if tempBoolean value returns true (1)
+    if tempBoolean
+
+        % populate metaData field
+        tempMetaDataFlagSearchResults.metaData = foundDataToSearch(i).metaData;
+
+        % populate pathToData field
+        tempMetaDataFlagSearchResults.pathToData = foundDataToSearch(i).pathToData;
+
+        % TODO: populate matchingFDlist field
+        tempMetaDataFlagSearchResults.matchingFDList = foundDataToSearch(i).metaData.fdList;
+
+        % append temporary searchResult structure to searchResults
+        metaDataFlagSearchResults = vertcat(metaDataFlagSearchResults, tempMetaDataFlagSearchResults);
+        
+    else % no metadata flag matches
+        
+        metaDataFlagSearchResults = 'No data found that matches all search criteria input. Please try again.'
+        
+
+    end % end if loop checking tempBoolean
+
+         
+end % end for loop iterating over dataToSearch structures
+
+end % endFunctionMetaDataFlag
+
+% =========================================================================
+% garbage
 
 
-                    % append temporary searchResult structure to searchResults
-                    metaDataFlagSearchResults = vertcat(metaDataFlagSearchResults, tempMetaDataFlagSearchResults);
-            
-            end
-            
-        otherwise
-            
-            foundDataToSearch = dataToSearch;
-            
-            
-    end
-end
-end
+% what if: set up 4x1 structure of each flag as empty cell to be filled with true/false
+% input from Paige and compared to true/false values in metadata
+% iterate over each possible combination of these 4 values 
+% if all 4 are false, return all output
+% return based on all different combinations of output?
