@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 18-Jul-2016 12:24:44
+% Last Modified by GUIDE v2.5 27-Jul-2016 09:13:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -259,22 +259,6 @@ fdFileNameWithPath = char(handles.FDPathsWithName{index});
 
         end
         
-    
-%         if exist([fullfile(handles.searchResult(i).pathToData,filesep,'timeline.mat')],'file')
-% 
-%             load([fullfile(handles.searchResult(i).pathToData,filesep,'timeline.mat')],'-mat')
-% 
-%             figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
-% 
-%         else
-% 
-%             figureNumber = reviewQuickPlot( fdFileNameWithPath, handles );
-% 
-%         end
-%         
-   
-
-
 
 % figureNumber = reviewQuickPlot(fdFileNameWithPath); 
 
@@ -294,9 +278,17 @@ RP1 = 'RP1';
 fdFile = handles.FDList_popupmenu.String;
 commodityFDList = searchfdListByCommodity(fdFile,RP1);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,RP1);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
+
 
 guidata(hObject, handles);
 
@@ -313,9 +305,16 @@ LO2 = 'LO2';
 fdFile = handles.FDList_popupmenu.String;
 commodityFDList = searchfdListByCommodity(fdFile,LO2);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,LO2);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
+
 
 guidata(hObject, handles);
 
@@ -331,9 +330,16 @@ LN2 = 'LN2';
 fdFile = handles.FDList_popupmenu.String;
 commodityFDList = searchfdListByCommodity(fdFile,LN2);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,LN2);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
+
 
 guidata(hObject, handles);
 
@@ -349,9 +355,16 @@ GN2 = 'GN2';
 fdFile = handles.FDList_popupmenu.String;
 commodityFDList = searchfdListByCommodity(fdFile,GN2);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,GN2);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
+
 
 guidata(hObject, handles);
 
@@ -367,9 +380,15 @@ GHE = 'GHE';
 fdFile = handles.FDList_popupmenu.String;
 commodityFDList = searchfdListByCommodity(fdFile,GHE);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,GHE);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
 
 guidata(hObject, handles);
 
@@ -381,13 +400,19 @@ function AIR_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of AIR_radiobutton
-AIR = 'AIR';
+ECS = 'ECS';
 fdFile = handles.FDList_popupmenu.String;
-commodityFDList = searchfdListByCommodity(fdFile,AIR);
+commodityFDList = searchfdListByCommodity(fdFile,ECS);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,ECS);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
 
 guidata(hObject, handles);
 
@@ -404,9 +429,15 @@ WDS = 'WDS';
 fdFile = handles.FDList_popupmenu.String;
 commodityFDList = searchfdListByCommodity(fdFile,WDS);
 
-% handles.FDList_popupmenu.String = {commodityFDList};
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', commodityFDList);
+if ~isempty(commodityFDList)
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+else
+    fdFile = handles.FDList;
+    commodityFDList = searchfdListByCommodity(fdFile,WDS);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', commodityFDList);
+end
 
 guidata(hObject, handles);
 
@@ -446,7 +477,7 @@ handles.searchResult = searchResult;
 handles.FDList = FDListStringNames;
 handles.FDPathsWithName = FileNameWithPath;
 handles.FDPathsToFolder = FDPathToDataFolder;
-
+handles.metaDataFlags = newMetaDataFlags;
 
 end
 
@@ -513,3 +544,83 @@ function dateWarningDialog
                'String','Close',...
                'Callback','delete(gcf)');
 
+
+
+% --- Executes on button press in isOperation_checkbox.
+function isOperation_checkbox_Callback(hObject, eventdata, handles)
+% hObject    handle to isOperation_checkbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of isOperation_checkbox
+
+state = get(hObject,'Value');
+
+handles.metaDataFlags.isOperation = state;
+
+
+guidata(hObject, handles);
+
+
+
+% --- Executes on button press in hasMARSUID_checkbox.
+function hasMARSUID_checkbox_Callback(hObject, eventdata, handles)
+% hObject    handle to hasMARSUID_checkbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of hasMARSUID_checkbox
+state = get(hObject,'Value');
+
+handles.metaDataFlags.hasMARSUID = state;
+
+
+guidata(hObject, handles);
+
+
+% --- Executes on button press in isProcedure_checkbox.
+function isProcedure_checkbox_Callback(hObject, eventdata, handles)
+% hObject    handle to isProcedure_checkbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of isProcedure_checkbox
+state = get(hObject,'Value');
+
+handles.metaDataFlags.isProcedure = state;
+
+
+guidata(hObject, handles);
+
+
+% --- Executes on button press in isVehicleOp_checkbox.
+function isVehicleOp_checkbox_Callback(hObject, eventdata, handles)
+% hObject    handle to isVehicleOp_checkbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of isVehicleOp_checkbox
+state = get(hObject,'Value');
+
+handles.metaDataFlags.isVehicleOp = state;
+
+
+guidata(hObject, handles);
+
+
+% --- Executes on button press in OpFilter_button.
+function OpFilter_button_Callback(hObject, eventdata, handles)
+% hObject    handle to OpFilter_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% [operationFDList] = searchMetaDataFlag (handles.metaDataFlags)
+[operationFDList] = newNewSearchMetaDataFlag(handles.metaDataFlags, handles );
+
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', operationFDList);
+
+keyboard
+
+guidata(hObject, handles);
+    

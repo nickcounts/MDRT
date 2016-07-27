@@ -94,7 +94,7 @@ for i = 1:length(foundDataToSearchFDList)
             end
             
             
-        case 'GHe'
+        case 'GHE'
             
             if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'GHe') ) %|| ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'GHe') )
                 % || ~isempty( regexp( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 

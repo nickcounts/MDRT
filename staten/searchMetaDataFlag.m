@@ -21,10 +21,10 @@
 
 % varargin: pair of metadata flag input and boolean value
 function [metaDataFlagSearchResults] = searchMetaDataFlag( metaDataFlagInput, metaDataFlagBooleanInput )
-
-dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository'; % set file path
-
-load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') ); % load variables from dataToSearch
+% 
+% dataRepositoryDirectory = 'C:\Users\Paige\Desktop\Data Repository'; % set file path
+% 
+% load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') ); % load variables from dataToSearch
 
 metaDataFlagSearchResults = [];
 

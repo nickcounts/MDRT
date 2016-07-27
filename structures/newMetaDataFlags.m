@@ -12,10 +12,10 @@ function [ metaDataFlags ] = newMetaDataFlags( input_args )
 %
 % Pruce 7-27-16, Virginia Commercial Spaceflight Authority
 
-    metaDataFlags.isOperation = []
-    metaDataFlags.isVehicleOp = []
-    metaDataFlags.isProcedure = []
-     metaDataFlags.hasMARSUID = []
+    metaDataFlags.isOperation = 0;
+    metaDataFlags.isVehicleOp = 0;
+    metaDataFlags.isProcedure = 0;
+     metaDataFlags.hasMARSUID = 0;
 
 
 end

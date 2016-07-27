@@ -74,13 +74,14 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % Instantiate internal variables:
     handles.activeList = 1;
     
+    
 % --Want to change to passing FdStringNames and Paths instead of from config    
 % Display the available data streams in the dropdown
 
-keyboard
-FDList = handles.FDList_popupmenu.String;
-keyboard
-set(handles.ui_dropdown_dataStreamList, 'String', FDList);
+
+% FDList = handles.FDList_popupmenu.String;
+% keyboard
+% set(handles.ui_dropdown_dataStreamList, 'String', FDList);
 
 
 
