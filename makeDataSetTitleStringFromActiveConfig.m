@@ -8,8 +8,6 @@ function [ titleString ] = makeDataSetTitleStringFromActiveConfig( varargin )
 
 titleString = '';
 
-dbug = true;
-
 
 
 switch nargin
@@ -21,7 +19,7 @@ switch nargin
             return
         end
         
-        if isempty(checkStructureType)
+        if isempty(checkStructureType( varargin{1} ) )
             % broke checkStructureType - soft fail by exiting and returning
             % enpty string
             return
