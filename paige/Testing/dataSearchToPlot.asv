@@ -571,7 +571,7 @@ function hasMARSUID_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of hasMARSUID_checkbox
 state = get(hObject,'Value');
 
-handles.metaDataFlags.hasMARSUID = state;
+handles.metaDataFlags.hasMARSuid = state;
 
 
 guidata(hObject, handles);
@@ -586,7 +586,7 @@ function isProcedure_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of isProcedure_checkbox
 state = get(hObject,'Value');
 
-handles.metaDataFlags.isProcedure = state;
+handles.metaDataFlags.isMARSprocedure = state;
 
 
 guidata(hObject, handles);
@@ -603,8 +603,8 @@ state = get(hObject,'Value');
 
 handles.metaDataFlags.isVehicleOp = state;
 
-
 guidata(hObject, handles);
+
 
 
 % --- Executes on button press in OpFilter_button.
@@ -614,9 +614,19 @@ function OpFilter_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-[operationFDList] = searchMetaDataFlag (handles.metaDataFlags)
-[metaDataFlagSearchResults] = searchMetaDataFlag( metaDataFlagFieldAndBooleanInputStructure )
+% [operationFDList] = searchMetaDataFlag (handles.metaDataFlags)
+keyboard
+[matchingOperationSearchResult] = newNewSearchMetaDataFlag(handles.searchResult, handles.metaDataFlags);
+keyboard
 
+if checkstr
+[opFDListStringNames,opFileNameWithPath,opFDPathToDataFolder] = makeNameAndPathFromSearchResult(matchingOperationSearchResult,handles);
+
+keyboard
+set(handles.FDList_popupmenu,'Value',1); 
+set(handles.FDList_popupmenu, 'String', opFDListStringNames);
+
+keyboard
 
 guidata(hObject, handles);
     

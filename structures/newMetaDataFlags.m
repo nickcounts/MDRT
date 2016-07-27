@@ -14,8 +14,8 @@ function [ metaDataFlags ] = newMetaDataFlags( input_args )
 
     metaDataFlags.isOperation = 0;
     metaDataFlags.isVehicleOp = 0;
-    metaDataFlags.isProcedure = 0;
-     metaDataFlags.hasMARSUID = 0;
+    metaDataFlags.isMARSprocedure = 0;
+     metaDataFlags.hasMARSuid = 0;
 
 
 end

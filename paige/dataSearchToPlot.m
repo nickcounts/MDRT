@@ -76,6 +76,9 @@ handles.startDateValue = [];
 handles.endDateValue = [];
 handles.searchResult = [];
 
+axes(handles.axes1);
+imshow('C:\Users\Paige\Documents\MATLAB\MDRT\reviewPlot\images\MARS-logo.png')
+
 % Update handles structure
 guidata(hObject, handles);
 % UIWAIT makes dataSearchToPlot wait for user response (see UIRESUME)
@@ -571,7 +574,7 @@ function hasMARSUID_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of hasMARSUID_checkbox
 state = get(hObject,'Value');
 
-handles.metaDataFlags.hasMARSUID = state;
+handles.metaDataFlags.hasMARSuid = state;
 
 
 guidata(hObject, handles);
@@ -586,7 +589,7 @@ function isProcedure_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of isProcedure_checkbox
 state = get(hObject,'Value');
 
-handles.metaDataFlags.isProcedure = state;
+handles.metaDataFlags.isMARSprocedure = state;
 
 
 guidata(hObject, handles);
@@ -603,8 +606,8 @@ state = get(hObject,'Value');
 
 handles.metaDataFlags.isVehicleOp = state;
 
-
 guidata(hObject, handles);
+
 
 
 % --- Executes on button press in OpFilter_button.
@@ -615,10 +618,19 @@ function OpFilter_button_Callback(hObject, eventdata, handles)
 
 
 % [operationFDList] = searchMetaDataFlag (handles.metaDataFlags)
-[operationFDList] = newNewSearchMetaDataFlag(handles.metaDataFlags, handles );
+keyboard
+[matchingOperationSearchResult] = newNewSearchMetaDataFlag(handles.searchResult, handles.metaDataFlags);
+keyboard
 
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', operationFDList);
+if isstruct(matchingOperationSearchResult) 
+    [opFDListStringNames,opFileNameWithPath,opFDPathToDataFolder] = makeNameAndPathFromSearchResult(matchingOperationSearchResult,handles);
+
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', opFDListStringNames);
+else
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', matchingOperationSearchResult);
+end
 
 keyboard
 
