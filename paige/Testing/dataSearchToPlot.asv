@@ -76,6 +76,9 @@ handles.startDateValue = [];
 handles.endDateValue = [];
 handles.searchResult = [];
 
+axes(handles.axes1);
+imshow('C:\Users\Paige\Documents\MATLAB\MDRT\reviewPlot\images\MARS-logo.png')
+
 % Update handles structure
 guidata(hObject, handles);
 % UIWAIT makes dataSearchToPlot wait for user response (see UIRESUME)
@@ -619,14 +622,57 @@ keyboard
 [matchingOperationSearchResult] = newNewSearchMetaDataFlag(handles.searchResult, handles.metaDataFlags);
 keyboard
 
-if checkstr
-[opFDListStringNames,opFileNameWithPath,opFDPathToDataFolder] = makeNameAndPathFromSearchResult(matchingOperationSearchResult,handles);
+if isstruct(matchingOperationSearchResult) 
+    [opFDListStringNames,opFileNameWithPath,opFDPathToDataFolder] = makeNameAndPathFromSearchResult(matchingOperationSearchResult,handles);
 
-keyboard
-set(handles.FDList_popupmenu,'Value',1); 
-set(handles.FDList_popupmenu, 'String', opFDListStringNames);
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', opFDListStringNames);
+else
+    set(handles.FDList_popupmenu,'Value',1); 
+    set(handles.FDList_popupmenu, 'String', matchingOperationSearchResult);
+end
 
 keyboard
 
 guidata(hObject, handles);
+
+function uiSaveButton_ClickedCallback(hObject, eventdata, handles)
+
+    
+
+    % Retrieve graph structure to be saved from GUI elements
+    graph = returnGraphStructureFromGUI(handles);
+    
+    % Generate default filename from graph structure
+    defaultName = graph.name;
+
+        % clean up unhappy reserved filename characters
+        defaultName = regexprep(defaultName,'^[!@$^&*~?.|/[]<>\`";#()]','');
+        defaultName = regexprep(defaultName, '[:]','-');
+        
+        % Guarantee defaultName is a string
+        if iscell(defaultName)
+            defaultName = defaultName{1};
+        end
+        
+        
+    % Attempt to autopopulate the path
+    if isfield(handles.configuration, 'graphConfigFolderPath')
+        % Loads path from configuration
+        lookInPath = handles.configuration.graphConfigFolderPath;
+        disp(lookInPath)
+    else
+        % Set default path... to graph
+        lookInPath = handles.configuration.dataFolderPath;
+    end    
+    
+    % Open UI for save name and path
+    [file,path] = uiputfile('*.gcf','Save Graph Configuration as:',fullfile(lookInPath, defaultName));
+
+    % Check the user didn't "cancel"
+    if file ~= 0
+        save(fullfile(path, file), 'graph', '-mat');
+    else
+        % Cancelled... not sure what the best behavior is... return to GUI
+    end
     

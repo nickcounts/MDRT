@@ -168,12 +168,13 @@ function [ availQPs QPTitle ] = listAvailableQPs( )
 %listAvailableFDs 
 
 
-availQPs = findall(0,'Tag','quickPlot');clc
+availQPs = findall(0,'Tag','quickPlot');%clc
 
 QPTitle = cell(0);
 
 for QP = 1:length(availQPs)
-    QPTitle{QP,1} = get(get(get(QP,'Children'),'Title'),'String');
+    QPTitle{QP,1} = get(get(get(QP,'Children'),'Name'),'String');
+%       QPTitle{QP,1} = QP.name.string;
 %     QPTitle{QP,2} = availQPs(QP);
 end
 

@@ -635,4 +635,61 @@ end
 keyboard
 
 guidata(hObject, handles);
+
+
+
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%                                                                   %%%%
+%%%%                  Callbacks for Toolbar Buttons                    %%%%
+%%%%                                                                   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%                                                                   %%%%
+%%%%            Save Graph Configuration Button Callback               %%%%
+%%%%                                                                   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function uiSaveButton_ClickedCallback(hObject, eventdata, handles)
+
+    
+
+    % Retrieve graph structure to be saved from GUI elements
+    graph = returnGraphStructureFromGUI(handles);
+    
+    % Generate default filename from graph structure
+    defaultName = graph.name;
+
+        % clean up unhappy reserved filename characters
+        defaultName = regexprep(defaultName,'^[!@$^&*~?.|/[]<>\`";#()]','');
+        defaultName = regexprep(defaultName, '[:]','-');
+        
+        % Guarantee defaultName is a string
+        if iscell(defaultName)
+            defaultName = defaultName{1};
+        end
+        
+        
+    % Attempt to autopopulate the path
+    if isfield(handles.configuration, 'graphConfigFolderPath')
+        % Loads path from configuration
+        lookInPath = handles.configuration.graphConfigFolderPath;
+        disp(lookInPath)
+    else
+        % Set default path... to graph
+        lookInPath = handles.configuration.dataFolderPath;
+    end    
+    
+    % Open UI for save name and path
+    [file,path] = uiputfile('*.gcf','Save Graph Configuration as:',fullfile(lookInPath, defaultName));
+
+    % Check the user didn't "cancel"
+    if file ~= 0
+        save(fullfile(path, file), 'graph', '-mat');
+    else
+        % Cancelled... not sure what the best behavior is... return to GUI
+    end
     

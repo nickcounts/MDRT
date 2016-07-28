@@ -126,7 +126,7 @@ end
 
 function mypostcallback(varargin)
 
-disp('A zoom is Just to occurred.');
+disp('A zoom has just occurred.');
 newLim = get(evd.Axes,'XLim');
 msgbox(sprintf('The new X-Limits are [%.2f %.2f].',newLim));
 
