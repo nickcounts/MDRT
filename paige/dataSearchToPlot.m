@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 27-Jul-2016 09:13:32
+% Last Modified by GUIDE v2.5 29-Jul-2016 08:02:07
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -693,3 +693,72 @@ function uiSaveButton_ClickedCallback(hObject, eventdata, handles)
         % Cancelled... not sure what the best behavior is... return to GUI
     end
     
+
+
+
+function operationNameSearch_editbox_Callback(hObject, eventdata, handles)
+% hObject    handle to operationNameSearch_editbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of operationNameSearch_editbox as text
+%        str2double(get(hObject,'String')) returns contents of operationNameSearch_editbox as a double
+
+
+handles.opNameInput = get(hObject,'String');
+
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function operationNameSearch_editbox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to operationNameSearch_editbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in searchName_button.
+function searchName_button_Callback(hObject, eventdata, handles)
+% hObject    handle to searchName_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+[searchResult] = searchOperationName(handles.opNameInput);
+
+if ~isempty(searchResult)
+    
+    [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
+
+    handles.FDList_popupmenu.String = FDListStringNames;
+
+    handles.searchResult = searchResult;
+
+
+    handles.FDList = FDListStringNames;
+    handles.FDPathsWithName = FileNameWithPath;
+    handles.FDPathsToFolder = FDPathToDataFolder;
+    handles.metaDataFlags = newMetaDataFlags;
+
+else
+    handles.FDList_popupmenu.String = 'No Data Found Matching Search Criteria';
+end
+
+guidata(hObject, handles);
+
+% function operationNameSearch_editbox_ButtonDownFcn(hObject, eventdata, handles)
+% % hObject    handle to axes1 (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% set(handles.operationNameSearch.String,' ');
+% 
+% guidata(hObject,handles);
+
+

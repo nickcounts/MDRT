@@ -19,7 +19,7 @@ function updateSearchResults(anyUIhandle, ~, varargin)
     % get handle to the search box (for sure!)
     hebox = findobj(anyUIhandle.Parent.Children, 'tag', 'searchBox');
     
-
+    
     % Access the Java object to get the stupid text. Why, Matlab? Why?
     ebh = findjobj(hebox);
     searchString =  char(ebh.getText);    
