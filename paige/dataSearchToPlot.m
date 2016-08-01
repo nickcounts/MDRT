@@ -217,7 +217,7 @@ function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Calls GUI to plot multiple FD's on multiple subplots
-makeGraphGUI(handles)
+keyboard
 
 guidata(hObject,handles);
 
@@ -233,6 +233,7 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % ---> preloaded dummy data file
 
 index = get(handles.FDList_popupmenu,'Value');
+keyboard
 % fdFileName = fullfile(handles.configuration.dataFolderPath, handles.FDList{index,2});
 
 % fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
@@ -472,15 +473,35 @@ else
 % titleString = makeStringFromMetaData(searchResult);
 
 % handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
-handles.FDList_popupmenu.String = FDListStringNames;
+
 
 handles.searchResult = searchResult;
 
 
-handles.FDList = FDListStringNames;
-handles.FDPathsWithName = FileNameWithPath;
-handles.FDPathsToFolder = FDPathToDataFolder;
+handles.FDList = FDListStringNames; % Are these still needed??
+handles.FDPathsWithName = FileNameWithPath; % ??
+handles.FDPathsToFolder = FDPathToDataFolder; % ??
 handles.metaDataFlags = newMetaDataFlags;
+
+% -- creating structure to hold Names, File Paths with Names, and path to
+% --   data folders together instead of in 3 seperate arrays
+% -- Would make above ^^^^^^^^^^ unnessecary, should delte if this works
+
+handles.masterFDList.names = FDListStringNames;
+handles.masterFDList.paths = FileNameWithPath;
+handles.masterFDList.folderPaths = FDPathToDataFolder;
+
+% -- DO i need a temp master list to display in popup menu? i.e. master
+% list is always entire list returned from search function but new list is
+% updated and displayed in popup based on selected filter?
+
+handles.newMasterFDList.names = handles.masterFDList.names;
+handles.newMasterFDList.paths = handles.masterFDList.paths;
+handles.newMasterFDList.folderpaths = handles.masterFDList.folderpaths;
+
+% -- Pick ONE and display in popupmenu
+handles.FDList_popupmenu.String = FDListStringNames;
+% handles.FDList_popupmenu.String = newMasterList.names;
 
 end
 
@@ -723,34 +744,34 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in searchName_button.
-function searchName_button_Callback(hObject, eventdata, handles)
-% hObject    handle to searchName_button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-[searchResult] = searchOperationName(handles.opNameInput);
-
-if ~isempty(searchResult)
-    
-    [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
-
-    handles.FDList_popupmenu.String = FDListStringNames;
-
-    handles.searchResult = searchResult;
-
-
-    handles.FDList = FDListStringNames;
-    handles.FDPathsWithName = FileNameWithPath;
-    handles.FDPathsToFolder = FDPathToDataFolder;
-    handles.metaDataFlags = newMetaDataFlags;
-
-else
-    handles.FDList_popupmenu.String = 'No Data Found Matching Search Criteria';
-end
-
-guidata(hObject, handles);
+% % --- Executes on button press in searchName_button.
+% function searchName_button_Callback(hObject, eventdata, handles)
+% % hObject    handle to searchName_button (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% 
+% [searchResult] = searchOperationName(handles.opNameInput);
+% 
+% if ~isempty(searchResult)
+%     
+%     [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
+% 
+%     handles.FDList_popupmenu.String = FDListStringNames;
+% 
+%     handles.searchResult = searchResult;
+% 
+% 
+%     handles.FDList = FDListStringNames;
+%     handles.FDPathsWithName = FileNameWithPath;
+%     handles.FDPathsToFolder = FDPathToDataFolder;
+%     handles.metaDataFlags = newMetaDataFlags;
+% 
+% else
+%     handles.FDList_popupmenu.String = 'No Data Found Matching Search Criteria';
+% end
+% 
+% guidata(hObject, handles);
 
 % function operationNameSearch_editbox_ButtonDownFcn(hObject, eventdata, handles)
 % % hObject    handle to axes1 (see GCBO)

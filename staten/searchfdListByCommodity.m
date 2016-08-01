@@ -44,7 +44,8 @@ for i = 1:length(foundDataToSearchFDList)
             % if fd list contains sting 'RP1' in first or second column
 %             if ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'RP1') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'RP1') ) ...
 %                 || ~isempty(regexpi( foundDataToSearchFDList{i,1}, 'FLS') ) || ~isempty(regexpi( foundDataToSearchFDList{i,2}, 'FLS') )...
-%                % || ~isempty( regexpi( foundDataToSearchFDList{i,2}, '^1\w*' ) ) 
+%                % || ~isempty( regexpi( foundDataToSearchFDList{i,2},
+%                '^1\w*' ) )  
 %            
            
            if ~isempty(regexpi( regexprep( foundDataToSearchFDList{i,1}, 'RP(\w+)1', 'RP1', 'ignorecase' ) , 'RP1') )... % || ~isempty(regexpi( regexprep( foundDataToSearchFDList{i,2}, 'RP(\w+)1', 'RP1', 'ignorecase' ) , 'RP1') ) ...
