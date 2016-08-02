@@ -78,13 +78,15 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % --Want to change to passing FdStringNames and Paths instead of from config    
 % Display the available data streams in the dropdown
 
-keyboard
+% keyboard
 dataFromGUI = guidata(dataSearchToPlot);
 
- FDList = dataFromGUI.newMasterFDList.names;
- keyboard
- set(handles.ui_dropdown_dataStreamList, 'String', FDList);
-keyboard
+handles.dataFromGUI = dataFromGUI;
+
+FDList = dataFromGUI.newMasterFDList.names;
+ 
+set(handles.ui_dropdown_dataStreamList, 'String', FDList);
+
 
 
 
@@ -108,7 +110,7 @@ keyboard
     handles.output = hObject;
 
     
-    keyboard
+    
 % Update handles structure
     guidata(hObject, handles);
 
@@ -411,10 +413,14 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
 % Get the selected FD from the dropdown
 % Generate FD from filename
 % -------------------------------------------------------------------------
-keyboard
-    index = get(handles.ui_dropdown_dataStreamList,'Value');
-    fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
 
+    index = get(handles.ui_dropdown_dataStreamList,'Value');
+    
+%     fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
+    fdFileName = handles.dataFromGUI.newMasterFDList.names{index};
+    fdDataSetPath = handles.dataFromGUI.newMasterFDList.names{index}
+   
+    
     newFD = fdFileName(1:end-4);
 
 
@@ -561,8 +567,8 @@ disp('Still in the GRAPH function')
 
     % DUMMY OPTIONS VARIABLE TO BE IMPLEMENTED LATER
     options = 5;
-    
-    
+    keyboard
+%     timeline = 
     plotGraphFromGUI(graph, timeline);
     %--> changed from ^^ (graph,options) to (graph,timeline) ^^
     

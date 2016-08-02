@@ -223,7 +223,7 @@ function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
 
 setappdata(hObject.Parent,'masterFDList',handles.newMasterFDList);
 
-keyboard
+
 
 makeGraphGUI;
 
