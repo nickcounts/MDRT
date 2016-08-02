@@ -182,6 +182,8 @@ endDateString = datestr(endDate);
 
 handles.end_textbox.String = endDateString;
 
+
+
 guidata(hObject,handles);
 
 
@@ -217,7 +219,9 @@ function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Calls GUI to plot multiple FD's on multiple subplots
-keyboard
+
+
+setappdata(hObject.Parent,'masterFDList',handles.newMasterFDList);
 
 guidata(hObject,handles);
 
@@ -233,17 +237,24 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % ---> preloaded dummy data file
 
 index = get(handles.FDList_popupmenu,'Value');
-keyboard
-% fdFileName = fullfile(handles.configuration.dataFolderPath, handles.FDList{index,2});
+
+string = handles.FDList_popupmenu.String{index};
+% --> This might be unneccesary, but at least now can match up index between
+% --> lists
+for i = 1:length(handles.masterFDList.names);
+    
+    if strcmp(string,handles.masterFDList.names(i));
+        newIndex = i;
+    end
+end
+
 
 % fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
 % fdFileName = handles.activeList(index,2);
 % fdFileName = '1014.mat';
 
-% figureNumber = paigeQuickPlot( fdFileName); 
-
-fdFile = get(handles.FDList_popupmenu,'Value');
-fdFileNameWithPath = char(handles.FDPathsWithName{index});
+fdFileNameWithPath = char(handles.newMasterFDList.paths{index});
+fdFileNameWithPath2 = char(handles.masterFDList.paths{newIndex});
 
 % fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep, handles.FDList{index,2}));
 % fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
@@ -251,9 +262,9 @@ fdFileNameWithPath = char(handles.FDPathsWithName{index});
 % If there is an events.mat file, then pass and plot t0
 
 
-        if exist([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'file')
+        if exist([fullfile(handles.newMasterFDList.pathsToDataSet{index},filesep,'timeline.mat')],'file')
 
-            load([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'-mat')
+            load([fullfile(handles.newMasterFDList.pathsToDataSet{index},filesep,'timeline.mat')],'-mat')
 
             figureNumber = reviewQuickPlot( fdFileNameWithPath, timeline, handles);
 
@@ -279,18 +290,23 @@ function RP1_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of RP1_radiobutton
 RP1 = 'RP1';
-fdFile = handles.FDList_popupmenu.String;
+fdFile = handles.newMasterFDList;
+% commodityFDList = searchfdListByCommodity(fdFile,RP1);
 commodityFDList = searchfdListByCommodity(fdFile,RP1);
 
 
-if ~isempty(commodityFDList)
+
+handles.newMasterFDList = commodityFDList;
+
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', handles.newMasterFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,RP1);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', handles.newMasterFDList.names);
 end
 
 
@@ -306,19 +322,23 @@ function LO2_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of LO2_radiobutton
 LO2 = 'LO2';
-fdFile = handles.FDList_popupmenu.String;
+
+fdFile = handles.newMasterFDList;
+
 commodityFDList = searchfdListByCommodity(fdFile,LO2);
 
-if ~isempty(commodityFDList)
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,LO2);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 end
 
+handles.newMasterFDList = commodityFDList;
 
 guidata(hObject, handles);
 
@@ -331,18 +351,22 @@ function LN2_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of LN2_radiobutton
 LN2 = 'LN2';
-fdFile = handles.FDList_popupmenu.String;
+fdFile = handles.newMasterFDList;
+
 commodityFDList = searchfdListByCommodity(fdFile,LN2);
 
-if ~isempty(commodityFDList)
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,LN2);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 end
+
+handles.newMasterFDList = commodityFDList;
 
 
 guidata(hObject, handles);
@@ -356,19 +380,22 @@ function GN2_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of GN2_radiobutton
 GN2 = 'GN2';
-fdFile = handles.FDList_popupmenu.String;
+fdFile = handles.newMasterFDList;
+
 commodityFDList = searchfdListByCommodity(fdFile,GN2);
 
-if ~isempty(commodityFDList)
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,GN2);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 end
 
+handles.newMasterFDList = commodityFDList;
 
 guidata(hObject, handles);
 
@@ -381,18 +408,22 @@ function GHE_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of GHE_radiobutton
 GHE = 'GHE';
-fdFile = handles.FDList_popupmenu.String;
+fdFile = handles.newMasterFDList;
+
 commodityFDList = searchfdListByCommodity(fdFile,GHE);
 
-if ~isempty(commodityFDList)
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,GHE);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 end
+
+handles.newMasterFDList = commodityFDList;
 
 guidata(hObject, handles);
 
@@ -405,18 +436,22 @@ function AIR_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of AIR_radiobutton
 ECS = 'ECS';
-fdFile = handles.FDList_popupmenu.String;
+fdFile = handles.newMasterFDList;
+
 commodityFDList = searchfdListByCommodity(fdFile,ECS);
 
-if ~isempty(commodityFDList)
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,ECS);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 end
+
+handles.newMasterFDList = commodityFDList;
 
 guidata(hObject, handles);
 
@@ -430,18 +465,22 @@ function WDS_radiobutton_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of WDS_radiobutton
 WDS = 'WDS';
-fdFile = handles.FDList_popupmenu.String;
+fdFile = handles.newMasterFDList;
+
 commodityFDList = searchfdListByCommodity(fdFile,WDS);
 
-if ~isempty(commodityFDList)
+if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 else
-    fdFile = handles.FDList;
+    fdFile = handles.masterFDList;
     commodityFDList = searchfdListByCommodity(fdFile,WDS);
+    handles.newMasterFDList = commodityFDList;
     set(handles.FDList_popupmenu,'Value',1); 
-    set(handles.FDList_popupmenu, 'String', commodityFDList);
+    set(handles.FDList_popupmenu, 'String', commodityFDList.names);
 end
+
+handles.newMasterFDList = commodityFDList;
 
 guidata(hObject, handles);
 
@@ -473,22 +512,39 @@ else
 % titleString = makeStringFromMetaData(searchResult);
 
 % handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
-handles.FDList_popupmenu.String = FDListStringNames;
+
 
 handles.searchResult = searchResult;
 
 
-handles.FDList = FDListStringNames;
-handles.FDPathsWithName = FileNameWithPath;
-handles.FDPathsToFolder = FDPathToDataFolder;
+handles.FDList = FDListStringNames; % Are these still needed??
+handles.FDPathsWithName = FileNameWithPath; % ??
+handles.FDPathsToFolder = FDPathToDataFolder; % ??
 handles.metaDataFlags = newMetaDataFlags;
 
-% --> creating structure to hold Names, File Paths with Names, and path to
-% data folders together instead of in 3 seperate arrays
+% -- creating structure to hold Names, File Paths with Names, and path to
+% --   data folders together instead of in 3 seperate arrays
+% -- Would make above ^^^^^^^^^^ unnessecary, should delte if this works
 
-handles.MasterFDList.names = FDListStringNames;
-handles.MasterFDList.paths = FileNameWithPath;
-handles.MasterFDList.folderPaths = FDPathToDataFolder;
+masterFDList = newMasterFDListStruct;
+
+handles.masterFDList.names = FDListStringNames;
+handles.masterFDList.paths = FileNameWithPath;
+handles.masterFDList.pathsToDataSet = FDPathToDataFolder;
+
+% -- DO i need a temp master list to display in popup menu? i.e. master
+% list is always entire list returned from search function but new list is
+% updated and displayed in popup based on selected filter?
+
+handles.newMasterFDList = handles.masterFDList;
+
+% handles.newMasterFDList.names = handles.masterFDList.names;
+% handles.newMasterFDList.paths = handles.masterFDList.paths;
+% handles.newMasterFDList.pathsToDataSet = handles.masterFDList.pathsToDataSet;
+
+% -- Pick ONE and display in popupmenu
+% handles.FDList_popupmenu.String = FDListStringNames;
+handles.FDList_popupmenu.String = handles.newMasterFDList.names;
 
 end
 
@@ -731,34 +787,34 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in searchName_button.
-function searchName_button_Callback(hObject, eventdata, handles)
-% hObject    handle to searchName_button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-[searchResult] = searchOperationName(handles.opNameInput);
-
-if ~isempty(searchResult)
-    
-    [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
-
-    handles.FDList_popupmenu.String = FDListStringNames;
-
-    handles.searchResult = searchResult;
-
-
-    handles.FDList = FDListStringNames;
-    handles.FDPathsWithName = FileNameWithPath;
-    handles.FDPathsToFolder = FDPathToDataFolder;
-    handles.metaDataFlags = newMetaDataFlags;
-
-else
-    handles.FDList_popupmenu.String = 'No Data Found Matching Search Criteria';
-end
-
-guidata(hObject, handles);
+% % --- Executes on button press in searchName_button.
+% function searchName_button_Callback(hObject, eventdata, handles)
+% % hObject    handle to searchName_button (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% 
+% [searchResult] = searchOperationName(handles.opNameInput);
+% 
+% if ~isempty(searchResult)
+%     
+%     [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
+% 
+%     handles.FDList_popupmenu.String = FDListStringNames;
+% 
+%     handles.searchResult = searchResult;
+% 
+% 
+%     handles.FDList = FDListStringNames;
+%     handles.FDPathsWithName = FileNameWithPath;
+%     handles.FDPathsToFolder = FDPathToDataFolder;
+%     handles.metaDataFlags = newMetaDataFlags;
+% 
+% else
+%     handles.FDList_popupmenu.String = 'No Data Found Matching Search Criteria';
+% end
+% 
+% guidata(hObject, handles);
 
 % function operationNameSearch_editbox_ButtonDownFcn(hObject, eventdata, handles)
 % % hObject    handle to axes1 (see GCBO)

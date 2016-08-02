@@ -65,7 +65,7 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Load the project configuration (paths to data, plots and raw data)
     config = getConfig;
-%     dataInfo = getDataIndex; % Do i need this if data already indexed? 
+   % dataInfo = getDataIndex; % Do i need this if data already indexed? 
    
  
 % Store configuration in handles structure    
@@ -78,11 +78,13 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % --Want to change to passing FdStringNames and Paths instead of from config    
 % Display the available data streams in the dropdown
 
+keyboard
+dataFromGUI = guidata(dataSearchToPlot);
 
-% FDList = handles.FDList_popupmenu.String;
-% keyboard
-% set(handles.ui_dropdown_dataStreamList, 'String', FDList);
-
+ FDList = dataFromGUI.newMasterFDList.names;
+ keyboard
+ set(handles.ui_dropdown_dataStreamList, 'String', FDList);
+keyboard
 
 
 
@@ -105,6 +107,8 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for makeGraphGUI
     handles.output = hObject;
 
+    
+    keyboard
 % Update handles structure
     guidata(hObject, handles);
 
@@ -407,9 +411,9 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
 % Get the selected FD from the dropdown
 % Generate FD from filename
 % -------------------------------------------------------------------------
-
+keyboard
     index = get(handles.ui_dropdown_dataStreamList,'Value');
-    fdFileName = handles.quickPlotFDs{index, 2};
+    fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
 
     newFD = fdFileName(1:end-4);
 
@@ -558,7 +562,9 @@ disp('Still in the GRAPH function')
     % DUMMY OPTIONS VARIABLE TO BE IMPLEMENTED LATER
     options = 5;
     
-    plotGraphFromGUI(graph, options);
+    
+    plotGraphFromGUI(graph, timeline);
+    %--> changed from ^^ (graph,options) to (graph,timeline) ^^
     
 
 
@@ -780,7 +786,7 @@ function makeListSelectionsValid(hObject, eventdata, handles)
     end
 
 
-    
+    % FIX THSISSSSISISISIS !!!!!!!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                                                                   %%%%
 %%%%                 Return Graph Structure from GUI                   %%%%
@@ -802,7 +808,8 @@ graphName = get(handles.ui_editBox_graphTitle, 'String');
     % Subplot 1 Parameters
     % ---------------------------------------------------------------------
             graphSubplotNames = getEditboxContents(handles.ui_editBox_subplot1Title);
-            dataStreams = get(handles.ui_listbox_streams1,'String')';
+% ---->>>>>>>>          dataStreams = get(handles.ui_listbox_streams1,'String')';
+% ---->>>>>>>>          dataStreams = dataFromGUI.newMasterFDList.paths;
             streams(1).toPlot = dataStreams;
     
     % Subplot 2 Parameters

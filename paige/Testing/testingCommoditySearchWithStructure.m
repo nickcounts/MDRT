@@ -23,7 +23,10 @@ function [commodityFDList] = testingCommoditySearchWithStructure( foundDataToSea
 % Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
 
 
-commodityFDList = []; % empty cell array of structures - will hold fd matches
+commodityFDListNames = []; % empty cell array of structures - will hold fd matches
+commodityFDListPaths = [];
+commodityFDListNamePathsToDataSet = [];
+
 
 % index over list of input fd values
 for i = 1:length(foundDataToSearchFDList.names)
@@ -39,15 +42,20 @@ for i = 1:length(foundDataToSearchFDList.names)
             % if input fd list contains 'RP1' or 'FLS' string matches (case insensitive)
             if ~isempty(regexpi( replacementRP1 , 'RP1' ) ) || ~isempty(regexpi( foundDataToSearchFDList.names{i,1}, 'FLS') )
 
-                % create a temporary fd list for each found fd indexing
-                tempCommodityFDList.names = foundDataToSearchFDList.names(i,:);
+               % create a temporary fd list for each found fd indexing
+                tempCommodityFDListNames = foundDataToSearchFDList.names(i,:); 
                 
-                tempCommodityFDList.path = foundDataToSearchFDList.path(i,:);
+                tempCommodityFDListPaths = foundDataToSearchFDList.paths(i,:);
                 
-                tempCommodityFDList.folderPath = foundDataToSearchFDList.folderPath(i,:);
+                tempCommodityFDListNamePathsToDataSet = foundDataToSearchFDList.pathsToDataSet(i,:);
                 
                 % append temporary fd list to output fd list
-                commodityFDList = vertcat(commodityFDList, tempCommodityFDList );
+                commodityFDListNames = vertcat(commodityFDListNames, tempCommodityFDListNames );
+                
+                commodityFDListPaths = vertcat(commodityFDListPaths, tempCommodityFDListPaths );
+
+                commodityFDListNamePathsToDataSet = vertcat(commodityFDListNamePathsToDataSet, tempCommodityFDListNamePathsToDataSet );
+                
 
             end % end RP1 if loop
 
@@ -138,6 +146,12 @@ for i = 1:length(foundDataToSearchFDList.names)
     end % end switch/case statement
 
 end % end for loop iterating over input fd list
+
+commodityFDList.names = commodityFDListNames;
+
+commodityFDList.paths = commodityFDListPaths;
+
+commodityFDList.pathsToDataSet = commodityFDListNamePathsToDataSet;
 
 end % end searchfdListByCommodity function
 

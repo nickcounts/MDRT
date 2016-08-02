@@ -279,8 +279,8 @@ timeSpanInput = length( timeStamp ); % is input 1 or 2 values?
 
 foundDataToSearch = []; % empty cell array of structures from Paige - will hold list
 
-% 
-%keyboard
+
+
 
 for i = 1:length(dataToSearch)
 

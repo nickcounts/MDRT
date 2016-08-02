@@ -1,4 +1,4 @@
-function varargout = plotGraphFromGUI(graph, timeline)
+ function varargout = plotGraphFromGUI(graph, timeline)
 %% plotGraphFromGUI is a function for the MARS data tool GUI
 %--> changes by Paige 8/1/16 -- changing secodn input from options structure to timeline structure
 % --- > make sure am passing timeline 
@@ -35,15 +35,20 @@ function varargout = plotGraphFromGUI(graph, timeline)
 
 % Loads event data files. If missing, procedes with events disabled.
 % -------------------------------------------------------------------------
+
+[pathstr,name,ext] = fileparts(datapath);
+
     if useTimeline
-        if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
-            load(fullfile(config.dataFolderPath, 'timeline.mat'));
-            disp('using timeline markers')
-        else
-            if ~supressWarningDialogs
-                warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
-            end
-            useTimeline = false;
+        if isempty(pathstr)
+%         if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
+%             load(fullfile(config.dataFolderPath, 'timeline.mat'));
+%             disp('using timeline markers')
+%         else
+%             if ~supressWarningDialogs
+%                 warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
+%             end
+%             useTimeline = false;
+%         end
         end
     end
 

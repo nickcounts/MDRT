@@ -67,7 +67,7 @@ graph.subplots = cellstr(subplotTitle);
     streams(3).toPlot = {};
 
     time = makeNewTimeStruct;
-
+ 
 
 
 graph(1).streams = streams;
