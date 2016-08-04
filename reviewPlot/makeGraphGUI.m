@@ -33,7 +33,8 @@ gui_State = struct('gui_Name',       mfilename, ...
                    'gui_OpeningFcn', @makeGraphGUI_OpeningFcn, ...
                    'gui_OutputFcn',  @makeGraphGUI_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);if nargin && ischar(varargin{1})
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
 
@@ -77,17 +78,24 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
     
 % --Want to change to passing FdStringNames and Paths instead of from config    
 % Display the available data streams in the dropdown
+%
+% dataFromGUI = guidata(dataSearchToPlot);
+% 
+% handles.dataFromGUI = dataFromGUI;
+% 
+% FDList = dataFromGUI.newMasterFDList.names;
+%  
+% set(handles.ui_dropdown_dataStreamList, 'String', FDList);
 
-% keyboard
-dataFromGUI = guidata(dataSearchToPlot);
-
-handles.dataFromGUI = dataFromGUI;
-
-FDList = dataFromGUI.newMasterFDList.names;
- 
-set(handles.ui_dropdown_dataStreamList, 'String', FDList);
 
 
+if nargin
+    if checkStructureType(varargin{1}) == 'masterFDList'
+        handles.masterFDList = varargin{1};
+    end
+end
+
+set(handles.ui_dropdown_dataStreamList, 'String', handles.masterFDList.names);
 
 
 
@@ -417,8 +425,8 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
     index = get(handles.ui_dropdown_dataStreamList,'Value');
     
 %     fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
-    fdFileName = handles.dataFromGUI.newMasterFDList.names{index};
-    fdDataSetPath = handles.dataFromGUI.newMasterFDList.names{index}
+    fdFileName = handles.masterFDList.names{index};
+    fdDataSetPath = handles.masterFDList.names{index}
    
     
     newFD = fdFileName(1:end-4);
@@ -568,7 +576,15 @@ disp('Still in the GRAPH function')
     % DUMMY OPTIONS VARIABLE TO BE IMPLEMENTED LATER
     options = 5;
     keyboard
-%     timeline = 
+    
+    % Need to load timeline file to pass to plotGraphFromGui
+    
+    index = 5 % need to find which index? is this streams?
+    pathToDataSet = handles.masterFDList.pathsToDataSet{index};
+    
+    load(fullfile(pathToDataSet,'timeline.mat'));
+%   timeline is loaded, can be passed to plotGraphFromGui
+
     plotGraphFromGUI(graph, timeline);
     %--> changed from ^^ (graph,options) to (graph,timeline) ^^
     
@@ -801,7 +817,7 @@ function makeListSelectionsValid(hObject, eventdata, handles)
 
 function graph = returnGraphStructureFromGUI(handles)
 % Does not contain error hadnling or valid structure checks
-
+keyboard
 % Initialize variables:
     graph = handles.graph;
     dataStreams = [];
@@ -814,10 +830,21 @@ graphName = get(handles.ui_editBox_graphTitle, 'String');
     % Subplot 1 Parameters
     % ---------------------------------------------------------------------
             graphSubplotNames = getEditboxContents(handles.ui_editBox_subplot1Title);
-% ---->>>>>>>>          dataStreams = get(handles.ui_listbox_streams1,'String')';
-% ---->>>>>>>>          dataStreams = dataFromGUI.newMasterFDList.paths;
+            dataStreams = get(handles.ui_listbox_streams1,'String')';
+            
+            index = get(handles.ui_listbox_streams1,'Value');
+            string = handles.ui_listbox_streams1.String{index};
+keyboard
+            for i = 1:length(handles.masterFDList.names);
+
+                if strcmp(string,handles.masterFDList.names(i));
+                    newIndex = i;
+                end
+            end
+
+            dataStreams = handles.masterFDList.paths{5};
             streams(1).toPlot = dataStreams;
-    
+    keyboard
     % Subplot 2 Parameters
     % ---------------------------------------------------------------------
         if get(handles.ui_checkbox_subplot2active, 'Value')

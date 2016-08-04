@@ -25,7 +25,7 @@
 % Flag to supress warning dialogs
     supressWarningDialogs = false;
 
-
+keyboard
 % Load the project configuration (paths to data, plots and raw data)
 % -------------------------------------------------------------------------
 % --> want to change to if timeline structure passed with path to data/timeline file, plot timeline. else if call

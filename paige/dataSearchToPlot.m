@@ -22,7 +22,7 @@ function varargout = dataSearchToPlot(varargin)
 
 % Edit the above text to modify the response to help dataSearchToPlot
 
-% Last Modified by GUIDE v2.5 29-Jul-2016 08:02:07
+% Last Modified by GUIDE v2.5 03-Aug-2016 12:55:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -225,7 +225,7 @@ setappdata(hObject.Parent,'masterFDList',handles.newMasterFDList);
 
 
 
-makeGraphGUI;
+makeGraphGUI(handles.newMasterFDList);
 
 guidata(hObject,handles);
 
@@ -775,6 +775,7 @@ function operationNameSearch_editbox_Callback(hObject, eventdata, handles)
 
 handles.opNameInput = get(hObject,'String');
 
+
 guidata(hObject, handles);
 
 
@@ -830,3 +831,52 @@ end
 % guidata(hObject,handles);
 
 
+
+
+% --- Executes on key press with focus on operationNameSearch_editbox and none of its controls.
+function operationNameSearch_editbox_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to operationNameSearch_editbox (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+if strcmp(eventdata.Key,'return')
+    
+    handles.opNameInput = get(hObject,'String');
+
+    [searchResult] = searchOperationName(handles.opNameInput);
+
+    if ~isempty(searchResult)
+
+        [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
+
+        handles.FDList_popupmenu.String = FDListStringNames;
+
+        handles.searchResult = searchResult;
+
+        handles.newMasterFDList.names =FDListStringNames;
+        handles.newMasterFDList.paths = FileNameWithPath;
+        handles.newMasterFDList.pathsToDataSet = FDPathToDataFolder;
+
+        handles.FDList = FDListStringNames;
+        handles.FDPathsWithName = FileNameWithPath;
+        handles.FDPathsToFolder = FDPathToDataFolder;
+        handles.metaDataFlags = newMetaDataFlags;
+
+    else
+        handles.FDList_popupmenu.String = 'No Data Found Matching Search Criteria';
+    end
+else
+    
+end
+
+guidata(hObject, handles);
+
+function operationNameSearch_editbox_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+guidata(hObject,handles);

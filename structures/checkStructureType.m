@@ -9,6 +9,7 @@ function [ structureTypeString ] = checkStructureType( testVariable )
 %   metadata
 %   config
 %   searchResult
+%   masterFDList
 %
 %   Will return an empty string if no match. Extra fields will not falsify
 %   the check. The prototype (makeStructure) fields must ALL be present.
@@ -45,6 +46,7 @@ timelinePrototype       = newTimelineStructure;
 metadataPrototype       = newMetaDataStructure;
 configPrototype         = newConfig;
 searchResultPrototype   = newSearchResult;
+masterFDListPrototype   = newMasterFDListStruct;
 
 % Create a cell array where each row is {'structure name', {'field list'}}
 
@@ -53,7 +55,8 @@ prototypes = {  'fd',           fieldnames(fdPrototype)';
                 'timeline',     fieldnames(timelinePrototype)';
                 'metadata',     fieldnames(metadataPrototype)';
                 'config',       fieldnames(configPrototype)';
-                'searchResult', fieldnames(searchResultPrototype)'};
+                'searchResult', fieldnames(searchResultPrototype)';
+                'masterFDList', fieldnames(masterFDListPrototype)'};
             
             
 %% Check each structure type
@@ -123,6 +126,11 @@ prototypes = {  'fd',           fieldnames(fdPrototype)';
             case 'searchResult'
                 if doesVariableHaveAllFields(testVariable, prototypes{n,2})
                     structureTypeString = 'searchResult';
+                    break
+                end
+            case 'masterFDList'
+                if doesVariableHaveAllFields(testVariable, prototypes{n,2})
+                    structureTypeString = 'masterFDList';
                     break
                 end
 
