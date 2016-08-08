@@ -10,6 +10,7 @@ function hs = makeSettingsGUI( varargin )
 % Counts, 2016 VCSFA
 
 if nargin == 0
+    % Run as standalone GUI for testing
 
     hs.fig = figure;
         guiSize = [672 387];
@@ -20,6 +21,7 @@ if nargin == 0
         hs.fig.ToolBar = 'none';
         
 elseif nargin == 1
+    % Populate a UI container
     
     hs.fig = varargin{1};
     
