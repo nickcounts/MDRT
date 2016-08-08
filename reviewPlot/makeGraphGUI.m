@@ -98,7 +98,6 @@ end
 set(handles.ui_dropdown_dataStreamList, 'String', handles.masterFDList.names);
 
 
-
 % Temporarily Assign a graph structure to graph variable for testing
 % purposes
 % load('testGraphStruct.mat')
@@ -109,7 +108,7 @@ set(handles.ui_dropdown_dataStreamList, 'String', handles.masterFDList.names);
     uiNewButton_ClickedCallback(hObject, eventdata, handles);
     handles.graph = returnGraphStructureFromGUI(handles);
     
-    
+    keyboard
 % Update the window title to reflect the working data set
     handles.figure1.Name = makeDataSetTitleStringFromActiveConfig(config);
     handles.figure1.NumberTitle = 'off';
@@ -442,7 +441,7 @@ keyboard
     % This avoids indexing errors for structure array streams(i).toPlot by
     % populating a missing but needed array.
     if length(tempStreams) < i
-        tempStreams(i).toPlot = cell(1,2);
+        tempStreams(i).toPlot = {};
     end
     
     % creates a copy of the streams variable (with an added blank toPlot
@@ -847,8 +846,8 @@ graphName = get(handles.ui_editBox_graphTitle, 'String');
                     
                     dataStreams = handles.masterFDList.paths{newIndex};
                     dataStreamNames = handles.masterFDList.names{newIndex};
-                    streams(1).toPlot(2) = dataStreams;
-                    streams(1).toPlot(1) = dataStreamNames;
+                    streams(1).toPlot(1) = dataStreams;
+                  
                 end
             end
 

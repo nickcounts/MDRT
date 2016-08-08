@@ -281,6 +281,8 @@ fdFileNameWithPath2 = char(handles.masterFDList.paths{newIndex});
 
 % figureNumber = reviewQuickPlot(fdFileNameWithPath); 
 
+load handel
+sound(y,Fs)
 
 guidata(hObject, handles);
 
