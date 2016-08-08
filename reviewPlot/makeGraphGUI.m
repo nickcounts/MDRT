@@ -421,36 +421,38 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
 % Get the selected FD from the dropdown
 % Generate FD from filename
 % -------------------------------------------------------------------------
-
+keyboard
     index = get(handles.ui_dropdown_dataStreamList,'Value');
     
-%     fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
+%   fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
     fdFileName = handles.masterFDList.names{index};
-    fdDataSetPath = handles.masterFDList.names{index}
+    fdDataSetPath = handles.masterFDList.paths{index};
    
     
-    newFD = fdFileName(1:end-4);
+    newFD = fdFileName;
+%   newFD = fdFileName(1:end-4);
+%   newFD = fdDataSetPath;
 
 
 % Make new streams structure to update graphs structure
 % -------------------------------------------------------------------------
-
+keyboard
     tempStreams = handles.graph.streams;
     
     % This avoids indexing errors for structure array streams(i).toPlot by
     % populating a missing but needed array.
     if length(tempStreams) < i
-        tempStreams(i).toPlot = {};
+        tempStreams(i).toPlot = cell(1,2);
     end
     
     % creates a copy of the streams variable (with an added blank toPlot
     % struct if required.
-    oldStreams = tempStreams(i).toPlot;
+    oldStreams = tempStreams(i).toPlot(1);
         if isempty(oldStreams)
             oldStreams = {};
         end
     newStreams = { oldStreams{:} newFD };
-
+%keyboard
     % update graph.streams with the newly constructed newStreams
     handles.graph.streams(i).toPlot = newStreams;
 
@@ -820,11 +822,14 @@ function graph = returnGraphStructureFromGUI(handles)
 keyboard
 % Initialize variables:
     graph = handles.graph;
+%     handles.graph.streams.toPlot = cell(1,2);
     dataStreams = [];
     streams = [];
+%     streams.toPlot = cell(1,2);
+    %--> toPlot = {[] []} --> { [streamName] [streamPath]}
 
 % Step 1: Update Graph Title and All Subplot Titles
-
+keyboard
 graphName = get(handles.ui_editBox_graphTitle, 'String');
     
     % Subplot 1 Parameters
@@ -833,16 +838,21 @@ graphName = get(handles.ui_editBox_graphTitle, 'String');
             dataStreams = get(handles.ui_listbox_streams1,'String')';
             
             index = get(handles.ui_listbox_streams1,'Value');
-            string = handles.ui_listbox_streams1.String{index};
-keyboard
+            string = handles.ui_listbox_streams1.String(index);
+
             for i = 1:length(handles.masterFDList.names);
 
                 if strcmp(string,handles.masterFDList.names(i));
                     newIndex = i;
+                    
+                    dataStreams = handles.masterFDList.paths{newIndex};
+                    dataStreamNames = handles.masterFDList.names{newIndex};
+                    streams(1).toPlot(2) = dataStreams;
+                    streams(1).toPlot(1) = dataStreamNames;
                 end
             end
 
-            dataStreams = handles.masterFDList.paths{5};
+            dataStreams = get(handles.ui_listbox_streams2,'String')';
             streams(1).toPlot = dataStreams;
     keyboard
     % Subplot 2 Parameters

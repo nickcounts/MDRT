@@ -7,7 +7,7 @@ function [ graph ] = newGraphStructure( varargin )
 %   newGraphStructure('newGraphTimeStruct') returns an empty graph time
 %   structure
 %
-%
+% 
 
 switch nargin
     case 1

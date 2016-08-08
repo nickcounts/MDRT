@@ -1,14 +1,14 @@
 function [searchResult] = newSearchResult(varagin)
-% A structure that is outputted from statenSearch that returns desired
+% A structure that is outputted from the searchTimeStamp function that returns desired
 % reuslt as a list of matching fd's, a filepath, and the corresponding
-% metaData structure of selectd data.
+% metaData structure of selectd data set.
 %           
 %
 %       searchResult: 
 %
 %                 metaData: [1x1] struct of metaData
 %               pathToData: 'C:/Users/Paige/Documents/MATLAB/MDRT'
-%           matchingFDList: ('fil string', 'filename.ext')
+%           matchingFDList: ('fd name', 'filename.ext')
 %
 % Pruce 7-14-16 VCSFA
 
