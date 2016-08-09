@@ -43,12 +43,11 @@ function updateSearchResults(anyUIhandle, ~, varargin)
 
             ind = [ind, cellfun(@(x)( ~isempty(x) ), regexpi(masterList, searchToks{i}))];
 
-        end
-
+        end 
         % combine matches (and searching, not or)
         ind = boolean(prod(ind,2));
 
- 
+  
     
    length(searchString);
    

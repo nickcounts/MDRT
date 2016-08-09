@@ -76,6 +76,9 @@ handles.startDateValue = [];
 handles.endDateValue = [];
 handles.searchResult = [];
 
+
+%This displays the MARS logo in the corner, kind of ugly. Feel free to
+%change or just delete (tried and failed 2 B fancy)
 axes(handles.axes1);
 imshow('C:\Users\Paige\Documents\MATLAB\MDRT\reviewPlot\images\MARS-logo.png')
 
@@ -120,9 +123,6 @@ handles.startDateValue = startDate;
 
 % Display selected date in edit text box
 startDateString = datestr(startDate);
-
-% uh=uicontrol('position',[0.154,0.87,0.226,0.056],'style','edit','string',startDateString);
-% startDisplay =uicontrol('position',[104,320,100,30],'style','edit','string',startDateString)
 
 handles.start_textbox.String = startDateString;
 
@@ -177,11 +177,8 @@ handles.endDateValue = endDate;
 % Display selected date in edit text box
 endDateString = datestr(endDate);
 
-% uh=uicontrol('position',[0.154,0.87,0.226,0.056],'style','edit','string',startDateString);
-% startDisplay =uicontrol('position',[104,320,100,30],'style','edit','string',startDateString)
 
 handles.end_textbox.String = endDateString;
-
 
 
 guidata(hObject,handles);
@@ -218,13 +215,15 @@ function ConfigPlot_pushbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Calls GUI to plot multiple FD's on multiple subplots
 
+
+% Calls GUI to plot multiple FD's on multiple subplots
+% NOT wokring currently.
 
 setappdata(hObject.Parent,'masterFDList',handles.newMasterFDList);
 
-
-
+%Passing newMasterFDList (contents of popup menu) as a varargin to
+%makeGraphGUI to create subplots
 makeGraphGUI(handles.newMasterFDList);
 
 guidata(hObject,handles);
@@ -237,14 +236,16 @@ function QuickPlot_pushbutton2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% ---> Test the 'paigeQuickPlot' version of reviewQuickPlot with a
-% ---> preloaded dummy data file
+
 
 index = get(handles.FDList_popupmenu,'Value');
 
 string = handles.FDList_popupmenu.String{index};
+
+
 % --> This might be unneccesary, but at least now can match up index between
-% --> lists
+% --> lists, takes value & string from popdown list and gets index of
+% --> corresponding match from master list
 for i = 1:length(handles.masterFDList.names);
     
     if strcmp(string,handles.masterFDList.names(i));
@@ -252,19 +253,14 @@ for i = 1:length(handles.masterFDList.names);
     end
 end
 
-
-% fdFilePath = '/Users/Paige/Documents/MARS Matlab/Data Repository/2014-01-09 - ORB-1/data/1014.mat';
-% fdFileName = handles.activeList(index,2);
-% fdFileName = '1014.mat';
+% Now can call the data from "newList" or with "newIndex" from old master
+% list --- these both do the same thing. 
 
 fdFileNameWithPath = char(handles.newMasterFDList.paths{index});
 fdFileNameWithPath2 = char(handles.masterFDList.paths{newIndex});
 
-% fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep, handles.FDList{index,2}));
-% fdFileNameWithPath = char(fullfile(handles.searchResult.pathToData,filesep,fdFile));
 
-% If there is an events.mat file, then pass and plot t0
-
+% Load a timeline file from the path to the correct data set
 
         if exist([fullfile(handles.newMasterFDList.pathsToDataSet{index},filesep,'timeline.mat')],'file')
 
@@ -278,9 +274,7 @@ fdFileNameWithPath2 = char(handles.masterFDList.paths{newIndex});
 
         end
         
-
-% figureNumber = reviewQuickPlot(fdFileNameWithPath); 
-
+% Yay you made a plot time to celebrate ---> HALLELUJAH
 load handel
 sound(y,Fs)
 
@@ -297,12 +291,16 @@ function RP1_radiobutton_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of RP1_radiobutton
 RP1 = 'RP1';
 fdFile = handles.newMasterFDList;
-% commodityFDList = searchfdListByCommodity(fdFile,RP1);
+
 commodityFDList = searchfdListByCommodity(fdFile,RP1);
 
-
-
 handles.newMasterFDList = commodityFDList;
+
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
 
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
@@ -333,6 +331,12 @@ fdFile = handles.newMasterFDList;
 
 commodityFDList = searchfdListByCommodity(fdFile,LO2);
 
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
+
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
     set(handles.FDList_popupmenu, 'String', commodityFDList.names);
@@ -360,6 +364,12 @@ LN2 = 'LN2';
 fdFile = handles.newMasterFDList;
 
 commodityFDList = searchfdListByCommodity(fdFile,LN2);
+
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
 
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
@@ -390,6 +400,12 @@ fdFile = handles.newMasterFDList;
 
 commodityFDList = searchfdListByCommodity(fdFile,GN2);
 
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
+
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
     set(handles.FDList_popupmenu, 'String', commodityFDList.names);
@@ -418,6 +434,12 @@ fdFile = handles.newMasterFDList;
 
 commodityFDList = searchfdListByCommodity(fdFile,GHE);
 
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
+
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
     set(handles.FDList_popupmenu, 'String', commodityFDList.names);
@@ -445,6 +467,12 @@ ECS = 'ECS';
 fdFile = handles.newMasterFDList;
 
 commodityFDList = searchfdListByCommodity(fdFile,ECS);
+
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
 
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
@@ -475,6 +503,12 @@ fdFile = handles.newMasterFDList;
 
 commodityFDList = searchfdListByCommodity(fdFile,WDS);
 
+% Run the search against what is cuurently in the popdown menu list
+% (newMasterFDList)
+% If no results, means that you have already filtered too far, so back out
+% and run search again on the masterFDList to get results for the selected filter
+% Then update popupmenu with new results
+
 if ~isempty(commodityFDList.names)
     set(handles.FDList_popupmenu,'Value',1); 
     set(handles.FDList_popupmenu, 'String', commodityFDList.names);
@@ -491,8 +525,12 @@ handles.newMasterFDList = commodityFDList;
 guidata(hObject, handles);
 
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%                                                                   %%%%
+% %%%%                      SEARCH BY DATE FUNCTION                      %%%%
+% %%%%                                                                   %%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% --------------------> STATEN SEARCH FUNTION <----------------------- %
 % --- Executes on button press in Search_pushbutton.
 function Search_pushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to Search_pushbutton (see GCBO)
@@ -500,37 +538,39 @@ function Search_pushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 time = [handles.startDateValue, handles.endDateValue];
-% Check to make sure dates are in correct order
 
-if handles.startDateValue > handles.endDateValue 
-    display('Warning! Your start date is after your end date. That is not how time works!')
-    dateWarningDialog
-    %--- STATEN TO DO : Automatically switch times - warning not needed
-else
-% --- Staten's search function
-% [FDList] = statenSearchFunction(time);
-% [searchResult] = statenSearchFunction(time);
+% --> This checks to make sure dates are in correct order, but not
+% neccessary because search function automatically switches dates.
+    % if handles.startDateValue > handles.endDateValue 
+    %     
+    %     dateWarningDialog % < displays message saying times are reversed
+    % 
+    %     % -> Automatically switch times - warning not needed
+    % else
+
+
+% Search function -> input a time, return a searchResult structure with
+% matching data
 
 [searchResult] = searchTimeStamp(time);
 
+
+% This function takes the searchResult structure and creates 3 arrays with
+% full string titles for each FD, the full filepath to the data file, and
+% the path to the corresponding data set
 [FDListStringNames,FileNameWithPath,FDPathToDataFolder] = makeNameAndPathFromSearchResult(searchResult,handles);
 
-% titleString = makeStringFromMetaData(searchResult);
-
-% handles.FDList_popupmenu.String = strcat(titleString,searchResult.matchingFDList(:,1));
-
-
+% Store searchResult in a handle in case need to access it later
 handles.searchResult = searchResult;
 
-
-handles.FDList = FDListStringNames; % Are these still needed??
-handles.FDPathsWithName = FileNameWithPath; % ??
-handles.FDPathsToFolder = FDPathToDataFolder; % ??
+% 
+% handles.FDList = FDListStringNames; % Are these still needed??
+% handles.FDPathsWithName = FileNameWithPath; % ??
+% handles.FDPathsToFolder = FDPathToDataFolder; % ??
 handles.metaDataFlags = newMetaDataFlags;
 
-% -- creating structure to hold Names, File Paths with Names, and path to
+% -- masterFDList is one structure that holds Names, File Paths with Names, and path to
 % --   data folders together instead of in 3 seperate arrays
-% -- Would make above ^^^^^^^^^^ unnessecary, should delte if this works
 
 masterFDList = newMasterFDListStruct;
 
@@ -538,9 +578,9 @@ handles.masterFDList.names = FDListStringNames;
 handles.masterFDList.paths = FileNameWithPath;
 handles.masterFDList.pathsToDataSet = FDPathToDataFolder;
 
-% -- DO i need a temp master list to display in popup menu? i.e. master
-% list is always entire list returned from search function but new list is
-% updated and displayed in popup based on selected filter?
+% Temporary  master list to display in popup menu = newMasterFDList? 
+% i.e. masterFDList is always entire list returned from search function but new list is
+% updated and displayed in popup based on selected filter
 
 handles.newMasterFDList = handles.masterFDList;
 
@@ -548,11 +588,9 @@ handles.newMasterFDList = handles.masterFDList;
 % handles.newMasterFDList.paths = handles.masterFDList.paths;
 % handles.newMasterFDList.pathsToDataSet = handles.masterFDList.pathsToDataSet;
 
-% -- Pick ONE and display in popupmenu
-% handles.FDList_popupmenu.String = FDListStringNames;
-handles.FDList_popupmenu.String = handles.newMasterFDList.names;
+% Always display new/temp list in popupmenu
 
-end
+handles.FDList_popupmenu.String = handles.newMasterFDList.names;
 
 guidata(hObject, handles);
 
@@ -628,6 +666,7 @@ function isOperation_checkbox_Callback(hObject, eventdata, handles)
 
 state = get(hObject,'Value');
 
+%Set the state of the metaDataFlag to be called later in metaDataFlagSearch
 handles.metaDataFlags.isOperation = state;
 
 
@@ -644,8 +683,8 @@ function hasMARSUID_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of hasMARSUID_checkbox
 state = get(hObject,'Value');
 
+%Set the state of the metaDataFlag to be called later in metaDataFlagSearch
 handles.metaDataFlags.hasMARSuid = state;
-
 
 guidata(hObject, handles);
 
@@ -659,6 +698,7 @@ function isProcedure_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of isProcedure_checkbox
 state = get(hObject,'Value');
 
+%Set the state of the metaDataFlag to be called later in metaDataFlagSearch
 handles.metaDataFlags.isMARSprocedure = state;
 
 
@@ -674,6 +714,7 @@ function isVehicleOp_checkbox_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of isVehicleOp_checkbox
 state = get(hObject,'Value');
 
+%Set the state of the metaDataFlag to be called later in metaDataFlagSearch
 handles.metaDataFlags.isVehicleOp = state;
 
 guidata(hObject, handles);
@@ -687,11 +728,12 @@ function OpFilter_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% [operationFDList] = searchMetaDataFlag (handles.metaDataFlags)
-keyboard
+% Passes teh searchResults to searchthrough, and the metaDataFlags to check
+% against -- only returns if ALL flags are a match
 [matchingOperationSearchResult] = newNewSearchMetaDataFlag(handles.searchResult, handles.metaDataFlags);
-keyboard
 
+
+% idk why im checking if its a structure it should alwasy be a structure??
 if isstruct(matchingOperationSearchResult) 
     [opFDListStringNames,opFileNameWithPath,opFDPathToDataFolder] = makeNameAndPathFromSearchResult(matchingOperationSearchResult,handles);
 
@@ -702,7 +744,7 @@ else
     set(handles.FDList_popupmenu, 'String', matchingOperationSearchResult);
 end
 
-keyboard
+
 
 guidata(hObject, handles);
 
