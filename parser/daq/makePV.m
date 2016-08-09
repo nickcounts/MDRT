@@ -5,8 +5,10 @@
 %     startTime = datenum('10-30-15 09:01:31')
 %     startTime = datenum('01-28-16 15:27:22')
 %     startTime = datenum('2016/032/17:05:36.203354')
-    startTime = datenum('2016/069/10:00:00.203354')
-    startTime = datenum('2016/113/10:00:00.203354')
+%     startTime = datenum('2016/069/10:00:00.203354')
+%     startTime = datenum('2016/113/10:00:00.203354')
+%     startTime = datenum('2016/221/13:15:31.347377')
+    startTime = datenum('2016/219/17:00:07.855209')
     % time = startTime + (t * oneSec);
 
 %% Generate new Time Vector
@@ -29,18 +31,21 @@
     dynamicDateTicks;
     plotStyle;
 
-%     keyboard
+    keyboard
 
 
 % save cursor data as variable c
 %     timeSync = datenum('10/29/2015 18:23:53.079655');
 %     timeSync = datenum('10/30/2015 13:32:19.206714');
 %     timeSync = datenum('01/28/2016 21:15:02.985759');
-    timeSync = datenum('April 22, 2016 15:00:00.203354');
-%     firstCommand = c.Position(1);
-%     
-%     
-%     time = time+(timeSync - firstCommand);
+
+%     timeSync = datenum('August 6, 2016 13:29:40.050157');
+
+
+    firstCommand = c.Position(1);
+    
+    
+    time = time+(timeSync - firstCommand);
 
 
 
