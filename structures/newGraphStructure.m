@@ -7,7 +7,7 @@ function [ graph ] = newGraphStructure( varargin )
 %   newGraphStructure('newGraphTimeStruct') returns an empty graph time
 %   structure
 %
-%
+% 
 
 switch nargin
     case 1
@@ -67,7 +67,7 @@ graph.subplots = cellstr(subplotTitle);
     streams(3).toPlot = {};
 
     time = makeNewTimeStruct;
-
+ 
 
 
 graph(1).streams = streams;

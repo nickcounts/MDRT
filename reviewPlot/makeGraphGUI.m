@@ -25,6 +25,8 @@ function varargout = makeGraphGUI(varargin)
 % Last Modified by GUIDE v2.5 09-Oct-2014 18:46:24
 
 % Begin initialization code - DO NOT EDIT
+
+
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
@@ -64,7 +66,7 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Load the project configuration (paths to data, plots and raw data)
     config = getConfig;
-    dataInfo = getDataIndex;
+   % dataInfo = getDataIndex; % Do i need this if data already indexed? 
    
  
 % Store configuration in handles structure    
@@ -74,24 +76,26 @@ function makeGraphGUI_OpeningFcn(hObject, eventdata, handles, varargin)
     handles.activeList = 1;
     
     
+% --Want to change to passing FdStringNames and Paths instead of from config    
 % Display the available data streams in the dropdown
-if exist(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'file')
-   
-    load(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'-mat');
-    
-    % Add the loaded list to the GUI handles structure
-    handles.quickPlotFDs = FDList;
-    
-    % add the list to the GUI menu
-    set(handles.ui_dropdown_dataStreamList, 'String', FDList(:,1));
-    
-else
-    
-    % TODO: Should this do something if the file isn't there... maybe do
-    % the initial parsing? That might be bad for the user experience...
+%
+% dataFromGUI = guidata(dataSearchToPlot);
+% 
+% handles.dataFromGUI = dataFromGUI;
+% 
+% FDList = dataFromGUI.newMasterFDList.names;
+%  
+% set(handles.ui_dropdown_dataStreamList, 'String', FDList);
 
+
+
+if nargin
+    if checkStructureType(varargin{1}) == 'masterFDList'
+        handles.masterFDList = varargin{1};
+    end
 end
 
+set(handles.ui_dropdown_dataStreamList, 'String', handles.masterFDList.names);
 
 
 % Temporarily Assign a graph structure to graph variable for testing
@@ -104,7 +108,7 @@ end
     uiNewButton_ClickedCallback(hObject, eventdata, handles);
     handles.graph = returnGraphStructureFromGUI(handles);
     
-    
+    keyboard
 % Update the window title to reflect the working data set
     handles.figure1.Name = makeDataSetTitleStringFromActiveConfig(config);
     handles.figure1.NumberTitle = 'off';
@@ -112,6 +116,8 @@ end
 % Choose default command line output for makeGraphGUI
     handles.output = hObject;
 
+    
+    
 % Update handles structure
     guidata(hObject, handles);
 
@@ -414,16 +420,22 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
 % Get the selected FD from the dropdown
 % Generate FD from filename
 % -------------------------------------------------------------------------
-
+keyboard
     index = get(handles.ui_dropdown_dataStreamList,'Value');
-    fdFileName = handles.quickPlotFDs{index, 2};
-
-    newFD = fdFileName(1:end-4);
+    
+%   fdFileName = handles.quickPlotFDs{index, 2}; % where does quickplotFDs come from??
+    fdFileName = handles.masterFDList.names{index};
+    fdDataSetPath = handles.masterFDList.paths{index};
+   
+    
+    newFD = fdFileName;
+%   newFD = fdFileName(1:end-4);
+%   newFD = fdDataSetPath;
 
 
 % Make new streams structure to update graphs structure
 % -------------------------------------------------------------------------
-
+keyboard
     tempStreams = handles.graph.streams;
     
     % This avoids indexing errors for structure array streams(i).toPlot by
@@ -434,12 +446,12 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
     
     % creates a copy of the streams variable (with an added blank toPlot
     % struct if required.
-    oldStreams = tempStreams(i).toPlot;
+    oldStreams = tempStreams(i).toPlot(1);
         if isempty(oldStreams)
             oldStreams = {};
         end
     newStreams = { oldStreams{:} newFD };
-
+%keyboard
     % update graph.streams with the newly constructed newStreams
     handles.graph.streams(i).toPlot = newStreams;
 
@@ -564,8 +576,18 @@ disp('Still in the GRAPH function')
 
     % DUMMY OPTIONS VARIABLE TO BE IMPLEMENTED LATER
     options = 5;
+    keyboard
     
-    plotGraphFromGUI(graph, options);
+    % Need to load timeline file to pass to plotGraphFromGui
+    
+    index = 5 % need to find which index? is this streams?
+    pathToDataSet = handles.masterFDList.pathsToDataSet{index};
+    
+    load(fullfile(pathToDataSet,'timeline.mat'));
+%   timeline is loaded, can be passed to plotGraphFromGui
+
+    plotGraphFromGUI(graph, timeline);
+    %--> changed from ^^ (graph,options) to (graph,timeline) ^^
     
 
 
@@ -787,7 +809,7 @@ function makeListSelectionsValid(hObject, eventdata, handles)
     end
 
 
-    
+    % FIX THSISSSSISISISIS !!!!!!!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                                                                   %%%%
 %%%%                 Return Graph Structure from GUI                   %%%%
@@ -796,22 +818,42 @@ function makeListSelectionsValid(hObject, eventdata, handles)
 
 function graph = returnGraphStructureFromGUI(handles)
 % Does not contain error hadnling or valid structure checks
-
+keyboard
 % Initialize variables:
     graph = handles.graph;
+%     handles.graph.streams.toPlot = cell(1,2);
     dataStreams = [];
     streams = [];
+%     streams.toPlot = cell(1,2);
+    %--> toPlot = {[] []} --> { [streamName] [streamPath]}
 
 % Step 1: Update Graph Title and All Subplot Titles
-
+keyboard
 graphName = get(handles.ui_editBox_graphTitle, 'String');
     
     % Subplot 1 Parameters
     % ---------------------------------------------------------------------
             graphSubplotNames = getEditboxContents(handles.ui_editBox_subplot1Title);
             dataStreams = get(handles.ui_listbox_streams1,'String')';
+            
+            index = get(handles.ui_listbox_streams1,'Value');
+            string = handles.ui_listbox_streams1.String(index);
+
+            for i = 1:length(handles.masterFDList.names);
+
+                if strcmp(string,handles.masterFDList.names(i));
+                    newIndex = i;
+                    
+                    dataStreams = handles.masterFDList.paths{newIndex};
+                    dataStreamNames = handles.masterFDList.names{newIndex};
+                    streams(1).toPlot(1) = dataStreams;
+                  
+                end
+            end
+
+            dataStreams = get(handles.ui_listbox_streams2,'String')';
             streams(1).toPlot = dataStreams;
-    
+    keyboard
     % Subplot 2 Parameters
     % ---------------------------------------------------------------------
         if get(handles.ui_checkbox_subplot2active, 'Value')

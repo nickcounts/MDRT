@@ -10,7 +10,7 @@ titleString = '';
 
 dbug = true;
 
-
+keyboard
 
 switch nargin
     case 1 % Caller passed either a config struct or a metadata struct

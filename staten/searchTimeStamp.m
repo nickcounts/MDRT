@@ -1,30 +1,30 @@
 function [foundDataToSearch] = searchTimeStamp( timeStamp )
 %% searchTimeStamp()
-
+%
 % Purpose: Provides a means of searching through dataToSearch file by 
 % timestamp input of a single day or a span of time.
-
+%
 % Function input timeStamp takes 1 or 2 numerical calendar day values. 
-
+%
 % Function output foundDataToSearch is every structure within dataToSearch
 % that matches timestamp input appended to include metadata fd list.
-
+%
 % Example output:
 %       foundDataToSearch =
-
+%
 %                           metaData: [1x1 struct]
 %                         pathToData: 'C:\Users\Staten\Deskt…'
 %                     matchingFDList: {289x2 cell}
-
+%
 % Subfunctions:
 %     isTimeStampWithinRange - checks if time stamp input is within range of existing timespan found in metadata files of dataToSearch
 %     dateWarningDialog displays warning message: "No data found within this time range."
 %     metaDataWarningDialog displays warning message: "No time span found to compare with input."
-
+%
 % Supporting functions:
 %     dataIndexer - parses through metadata files in current data repository
 %     dataIndexForSearching - creates dataToSearch file of all metadata files found and places file in data repository
-
+%
 % Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
 
 

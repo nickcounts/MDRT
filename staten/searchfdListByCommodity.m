@@ -1,14 +1,14 @@
 function [commodityFDList] = searchfdListByCommodity( foundDataToSearchFDList, fdTypeInput )
 %% searchfdListByCommodity()
-
+%
 % Purpose: Provides a means of searching through a given fd list for a given search expression.
-
+%
 % Function input (foundDataToSearchFDList, fdTypeInput) takes a given fd
 % list and commodity search expression.
-
+%
 % Function output commodityFDList creates a new list of every available fd
 % narrowed by commodity search expression.
-
+%
 % Example output:
 %             commodityFDList = 
 % 
@@ -16,10 +16,10 @@ function [commodityFDList] = searchfdListByCommodity( foundDataToSearchFDList, f
 %                 'RP1 PCVNC-1015 State'         '1015.mat'                 
 %                 'RP1 PCVNC-1015 Commande…'    '1015cmd.mat'              
 %                 'RP1 FM-1016 Coriolis Me…'    '1016.mat'      
-
+%
 % Supporting functions:
 %    searchTimeStamp - narrows search results by time parameters
-
+%
 % Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
 
 

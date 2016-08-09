@@ -1,27 +1,27 @@
 function [metaDataFlagSearchResults] = searchMetaDataFlag( foundDataToSearch, metaDataFlagFieldAndBooleanInputStructure )
 %% searchMetaDataFlag()
-
+%
 % Purpose: Provide a means of AND searching through dataToSearch file by 
 % metadata flag inputs.
-
+%
 % Function input (foundDataToSearch, metaDataFlagFieldAndBooleanInputStructure)
 % takes a set of dataToSearch structures and a structure of metadata flags
 % and their boolean values from the user.
-
+%
 % Function output metaDataFlagSearchResults creates a new list of
 % dataToSearch structures for structures with all matching metadata flags
 % (AND searching).
-
+%
 % Example output:
 %           metaDataFlagSearchResults =
-
+%
 %                           metaData: [1x1 struct]
 %                         pathToData: 'C:\Users\Staten\Deskt…'
 %                     matchingFDList: {289x2 cell}
-
+%
 % Supporting functions: 
 %    searchTimeStamp - narrows search results by time parameters
-
+%
 % Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
 
 

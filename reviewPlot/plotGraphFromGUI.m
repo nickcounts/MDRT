@@ -1,5 +1,9 @@
-function varargout = plotGraphFromGUI(graph, options)
+ function varargout = plotGraphFromGUI(graph, timeline)
 %% plotGraphFromGUI is a function for the MARS data tool GUI
+%--> changes by Paige 8/1/16 -- changing secodn input from options structure to timeline structure
+% --- > make sure am passing timeline 
+% function varargout = plotGraphFromGUI(graph, options)
+% function varargout = plotGraphFromGUI(graph, timeline)
 %
 %   takes a graph structure and an options structure
 %
@@ -21,22 +25,30 @@ function varargout = plotGraphFromGUI(graph, options)
 % Flag to supress warning dialogs
     supressWarningDialogs = false;
 
-
+keyboard
 % Load the project configuration (paths to data, plots and raw data)
 % -------------------------------------------------------------------------
+% --> want to change to if timeline structure passed with path to data/timeline file, plot timeline. else if call
+% --> getConfig to find timeline (check newTimelineStructure function for
+% --> fields contained in Timeline Structure
     config = getConfig;
 
 % Loads event data files. If missing, procedes with events disabled.
 % -------------------------------------------------------------------------
+
+[pathstr,name,ext] = fileparts(datapath);
+
     if useTimeline
-        if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
-            load(fullfile(config.dataFolderPath, 'timeline.mat'));
-            disp('using timeline markers')
-        else
-            if ~supressWarningDialogs
-                warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
-            end
-            useTimeline = false;
+        if isempty(pathstr)
+%         if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
+%             load(fullfile(config.dataFolderPath, 'timeline.mat'));
+%             disp('using timeline markers')
+%         else
+%             if ~supressWarningDialogs
+%                 warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
+%             end
+%             useTimeline = false;
+%         end
         end
     end
 
@@ -125,6 +137,7 @@ for graphNumber = 1:numberOfGraphs
         toPlot = graph(graphNumber).streams(subPlotNumber).toPlot;
         
         % Load data sets to be plotted into array of structs
+        % --> CHANGE TO CHECK FOR FULLFILE PATH <------------
         for i = 1:length(toPlot)
             s(i) = load([dataPath toPlot{i} '.mat'],'fd');
         end

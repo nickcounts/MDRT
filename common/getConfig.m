@@ -1,7 +1,7 @@
 function [ config ] = getConfig( input_args )
 %getConfig returns the config structure
 
-
+keyboard
 
 %TODO: Implement error checking - what if the file isn't there!?
 
@@ -22,6 +22,8 @@ else
 %         config = makeBlankConfigStruct;
 %     end
 end
+
+
 
 if exist('review.cfg','file')   
     % Config file exists. Load and populate missing items

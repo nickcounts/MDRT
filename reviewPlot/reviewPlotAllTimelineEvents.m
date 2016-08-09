@@ -12,12 +12,32 @@ end
 
 % path = config.dataFolderPath;
 
+
 % path = char(fullfile(handles.searchResult.pathToData));
 % keyboard
 % timelineFile = 'timeline.mat';
-index = get(handles.FDList_popupmenu,'Value');
 
-load([fullfile(handles.FDPathsToFolder{index},filesep,'timeline.mat')],'-mat')
+
+% --> Uses handles to get selected value from list and corresponding path
+% to the correct data set, then uses path to data set to load the correct
+% tieline file and plot it in quickPlot (this repaces config)
+
+index = get(handles.FDList_popupmenu,'Value');
+string = handles.FDList_popupmenu.String{index};
+
+for i = 1:length(handles.masterFDList.names);
+    
+    if strcmp(string,handles.masterFDList.names(i));
+        newIndex = i;
+    end
+end
+
+% Now can call the data from "newList" or with "newIndex" from old master
+% list --- these both do the same thing. 
+
+pathToDataSet = char(handles.masterFDList.pathsToDataSet{newIndex});
+
+load([fullfile(pathToDataSet,filesep,'timeline.mat')],'-mat')
 
 % load([path, filesep, timelineFile]);
 
