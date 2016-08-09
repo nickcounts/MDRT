@@ -572,7 +572,7 @@ handles.metaDataFlags = newMetaDataFlags;
 % -- masterFDList is one structure that holds Names, File Paths with Names, and path to
 % --   data folders together instead of in 3 seperate arrays
 
-masterFDList = newMasterFDListStruct;
+handles.masterFDList = newMasterFDListStruct;
 
 handles.masterFDList.names = FDListStringNames;
 handles.masterFDList.paths = FileNameWithPath;
@@ -900,14 +900,19 @@ if strcmp(eventdata.Key,'return')
         handles.FDList_popupmenu.String = FDListStringNames;
 
         handles.searchResult = searchResult;
+        
+        handles.masterFDList.names =FDListStringNames;
+        handles.masterFDList.paths = FileNameWithPath;
+        handles.masterFDList.pathsToDataSet = FDPathToDataFolder;
 
-        handles.newMasterFDList.names =FDListStringNames;
-        handles.newMasterFDList.paths = FileNameWithPath;
-        handles.newMasterFDList.pathsToDataSet = FDPathToDataFolder;
+        handles.newMasterFDList = handles.masterFDList;
+%         handles.newMasterFDList.names =FDListStringNames;
+%         handles.newMasterFDList.paths = FileNameWithPath;
+%         handles.newMasterFDList.pathsToDataSet = FDPathToDataFolder;
 
-        handles.FDList = FDListStringNames;
-        handles.FDPathsWithName = FileNameWithPath;
-        handles.FDPathsToFolder = FDPathToDataFolder;
+%         handles.FDList = FDListStringNames;
+%         handles.FDPathsWithName = FileNameWithPath;
+%         handles.FDPathsToFolder = FDPathToDataFolder;
         handles.metaDataFlags = newMetaDataFlags;
 
     else

@@ -29,7 +29,7 @@ function [foundDataToSearch] = searchTimeStamp( timeStamp )
 
 
 % set file path
-dataRepositoryDirectory = 'C:\Users\Staten\Desktop\Data Repository'; 
+dataRepositoryDirectory = 'C:\Users\Paige\Documents\MARS Matlab\Data Repository'; 
 
 % load variables from dataToSearch file
 load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') );
