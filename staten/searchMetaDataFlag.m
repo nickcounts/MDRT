@@ -139,13 +139,3 @@ for i = 1:length(foundDataToSearch)
 end % end for loop iterating over dataToSearch structures
 
 end % endFunctionMetaDataFlag
-
-% =========================================================================
-% garbage
-
-
-% what if: set up 4x1 structure of each flag as empty cell to be filled with true/false
-% input from Paige and compared to true/false values in metadata
-% iterate over each possible combination of these 4 values 
-% if all 4 are false, return all output
-% return based on all different combinations of output?
