@@ -22,6 +22,8 @@ function varargout = plotGraphFromGUI(graph, options)
     supressWarningDialogs = false;
 
 
+    
+    
 % Load the project configuration (paths to data, plots and raw data)
 % -------------------------------------------------------------------------
     config = getConfig;
@@ -101,7 +103,10 @@ for graphNumber = 1:numberOfGraphs
     set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
     
     % Add label size toggle and timeline refresh buttons
-    addToolButtonsToPlot(figureHandle);
+        addToolButtonsToPlot(figureHandle);
+    
+    % Add custom menu to plot window
+        addAdvancedMenuToPlot(figureHandle);
     
     orient('landscape');
     
