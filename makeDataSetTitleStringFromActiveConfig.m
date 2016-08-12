@@ -40,6 +40,11 @@ switch nargin
                 
                 metaData = loadMetadataFromConfig(config);
                 
+                if isempty(metaData)
+                    % metaData loading failed. return empty string
+                    return
+                end
+                
                 disp('passed a config struct, loaded metadata')
                 
             otherwise
@@ -74,6 +79,8 @@ titleString = makeStringFromMetaData(metaData);
 end
 
 function metaData = loadMetadataFromConfig(config)
+
+metaData = [];
 
 filename = fullfile(config.dataFolderPath,'metadata.mat');
                 
