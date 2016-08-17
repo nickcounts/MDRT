@@ -1,6 +1,6 @@
  function varargout = plotGraphFromGUI(graph, timeline)
 %% plotGraphFromGUI is a function for the MARS data tool GUI
-%--> changes by Paige 8/1/16 -- changing secodn input from options structure to timeline structure
+% --> changes by Paige 8/1/16 -- changing secodn input from options structure to timeline structure
 % --- > make sure am passing timeline 
 % function varargout = plotGraphFromGUI(graph, options)
 % function varargout = plotGraphFromGUI(graph, timeline)
@@ -25,7 +25,9 @@
 % Flag to supress warning dialogs
     supressWarningDialogs = false;
 
-keyboard
+
+    
+    
 % Load the project configuration (paths to data, plots and raw data)
 % -------------------------------------------------------------------------
 % --> want to change to if timeline structure passed with path to data/timeline file, plot timeline. else if call
@@ -113,7 +115,10 @@ for graphNumber = 1:numberOfGraphs
     set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
     
     % Add label size toggle and timeline refresh buttons
-    addToolButtonsToPlot(figureHandle);
+        addToolButtonsToPlot(figureHandle);
+    
+    % Add custom menu to plot window
+        addAdvancedMenuToPlot(figureHandle);
     
     orient('landscape');
     

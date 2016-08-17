@@ -24,7 +24,10 @@ for i = 1:length(rises)
     matches(:,i) = abs(rises(i)-falls);
 end
 
+% Original Line - not 100% sure I know what it's doing
 fallIndexes = sum(matches<timeFrame,2)>0;
+
+
 falls = falls(fallIndexes);
 
 % falls(fallIndexes)
@@ -53,13 +56,13 @@ range = start:stop;
     suptitle('MARS GN2 Performance Testing Flowdyne Valve Data');
 
 
-for i = 1:length(rises)
+for i = 1:numel(rises)
     start = rises(i) - 10;
     stop  = falls(i) + 10;
 
     msTurns = (t(falls(i))-t(rises(i)))*1000;
     
-    range = start:stop;
+    range = start:-1:stop;
     
     axes(subPlotAxes(i));
     

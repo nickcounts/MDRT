@@ -30,6 +30,17 @@
 %           
 
 
+
+topData(1) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Open.mat')
+topData(2) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Close.mat')
+topData(3) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Command.mat')
+
+midData(1) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Open.mat')
+midData(2) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Close.mat')
+midData(3) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Command.mat')
+
+botData    = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/STE PT.mat')
+
 %                                                 
 % -------------------------------------------------------------------------
 % Constants Defined Here
@@ -76,12 +87,12 @@ dataWindow = 90000;
 % ps2 = find( abs(topData(1).fd.ts.Time - datenum('2-1-16 18:25:57')) < (1/24/60/60/500));
 % 
 
-ps1 = find( abs(botData(1).fd.ts.Time - datenum('1-28-16 20:46:14.893933')) < (1/24/60));
-ps2 = find( abs(botData(1).fd.ts.Time - datenum('1-28-16 20:54:36.980957')) < (1/24/60));
-ps3 = find( abs(botData(1).fd.ts.Time - datenum('1-28-16 21:03:37.594080')) < (1/24/60));
-
-
-rises = [ps1(1); ps2(1); ps3(1)];
+% % ps1 = find( abs(botData(1).fd.ts.Time - datenum('1-28-16 20:46:14.893933')) < (1/24/60));
+% % ps2 = find( abs(botData(1).fd.ts.Time - datenum('1-28-16 20:54:36.980957')) < (1/24/60));
+% % ps3 = find( abs(botData(1).fd.ts.Time - datenum('1-28-16 21:03:37.594080')) < (1/24/60));
+% % 
+% % 
+% % rises = [ps1(1); ps2(1); ps3(1)];
 
 timeWindow = 90/24/60/60; % (5 seconds)
 % timeWindow = 0.500/24/60/60; % (0.5 second)
