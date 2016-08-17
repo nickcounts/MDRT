@@ -1,0 +1,9 @@
+# MDRT Configuration File
+# Hashtags are the comment symbols. Use them to add comments or ignore a line
+# 
+
+graphConfigFolderPath="~"
+dataArchivePath="~"
+userSavePath="~"
+userWorkingPath="~"
+
