@@ -6,7 +6,7 @@ function updateMatchingFDList( dsl, event )
 %
 %
 
-mdrt = getappdata(dsl.Parent);
+mdrt = getappdata(dsl.Parent)
 
     % get handle to the Operation Data Set Popup Lists
     hol1 = findobj(dsl.Parent.Children,'tag', 'opList1');
