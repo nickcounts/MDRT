@@ -43,7 +43,7 @@ end
     b_y_loc = eb_y_loc;
     b_wide  = 137;
     b_tall  = 21;
-    tags    = {'dataArchive';'outputPath';'workingPath';'graphConfig'};
+    tags    = {'dataArchive';'outputPath';'workingPath';'graphConfig';'saveConfig'};
     
 %% Configuration object instantiation
 % -------------------------------------------------------------------------
@@ -81,6 +81,14 @@ end
             'Tag',          tags{4},...
             'ToolTipString','Set Graph Configuration Path',...
             'Position',      [b_x_loc, b_y_loc(4), b_wide, b_tall]);
+        
+        
+    hs.button_saveConfig = uicontrol(hs.fig,...
+            'String',       'Save Configuration',...
+            'Callback',     @pushButtonCallback,...
+            'Tag',          tags{5},...
+            'ToolTipString','Save Graph Configuration to Disk',...
+            'Position',      [b_x_loc, 50, b_wide, b_tall * 2]);
 
 
         
@@ -148,6 +156,10 @@ end
                 guessPath = config.userWorkingPath;
             case 'graphConfig'
                 guessPath = config.graphConfigFolderPath;
+            case 'saveConfig'
+                % TODO - move this to its own callback?
+                config.writeConfigurationToDisk;
+                return;
             otherwise
                 % Something's gone very wrong. soft fail
                 return
