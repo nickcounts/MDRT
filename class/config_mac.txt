@@ -1,6 +1,11 @@
 # MDRT Configuration File
-# Hashtags are the comment symbols. Use them to add comments or ignore a line
-# 
+# Hashtags are the comment symbols. Use them to add comments or ignore a 
+# line
+#
+# There is no need to use escape characters in the paths. Spaces and 
+# slashes are valid as long as the entire path is enclosed in double quotes
+#
+# symbolic links and ~ are permitted
 
 graphConfigFolderPath="~"
 dataArchivePath="~"
