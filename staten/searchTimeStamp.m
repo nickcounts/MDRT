@@ -29,10 +29,13 @@ function [foundDataToSearch] = searchTimeStamp( timeStamp )
 
 
 % set file path
-dataRepositoryDirectory = 'C:\Users\Paige\Documents\MARS Matlab\Data Repository'; 
+% dataRepositoryDirectory = 'C:\Users\Paige\Documents\MARS Matlab\Data Repository'; 
+dataRepositoryDirectory = '~/Documents/Spaceport/Data'; 
 
 % load variables from dataToSearch file
-load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') );
+% load( fullfile(dataRepositoryDirectory, 'dataToSearch.mat') );
+s = load( fullfile(dataRepositoryDirectory, 'dataIndex.mat') );
+dataToSearch = s.dataIndex;
 
 
 % checks length of input (is input 1 or 2 values?)
