@@ -20,3 +20,4 @@ tab5 = uitab('Parent', tgroup, 'Title', 'Settings');
 makeDataComparisonGUI( tab4 );
 
 makeSettingsGUI( tab5 );
+
