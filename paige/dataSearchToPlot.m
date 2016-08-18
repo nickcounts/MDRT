@@ -80,7 +80,8 @@ handles.searchResult = [];
 %This displays the MARS logo in the corner, kind of ugly. Feel free to
 %change or just delete (tried and failed 2 B fancy)
 axes(handles.axes1);
-imshow('C:\Users\Paige\Documents\MATLAB\MDRT\reviewPlot\images\MARS-logo.png')
+logoFullFile = fullfile('resources','images','marsLogo_271x193.png');
+imshow(logoFullFile);
 
 % Update handles structure
 guidata(hObject, handles);
