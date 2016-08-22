@@ -12,7 +12,12 @@ function [ output_args ] = debugmode( varargin )
 setting = 'false';
 
 if nargin == 0
-    % no argument defaults to turn off
+    % no argument displays the current setting
+    
+    fprintf( '<strong>debugmode:</strong> %s\n', getenv('debugOutput') );
+    
+    return
+    
 elseif nargin == 1
     
     trueFalse = varargin{1};
