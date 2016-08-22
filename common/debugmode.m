@@ -14,6 +14,10 @@ setting = 'false';
 if nargin == 0
     % no argument displays the current setting
     
+    if isempty( getenv('debugOutput') )
+        setenv('debugOutput', 'false');
+    end
+    
     fprintf( '<strong>debugmode:</strong> %s\n', getenv('debugOutput') );
     
     return
