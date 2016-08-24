@@ -14,22 +14,35 @@ classdef FDCollection
     % fdc = FDCollection( dataIndex(1:2), {dataIndex(1).metaData.fdList(1:10,:);dataIndex(2).metaData.fdList(1:10,:)})
     
     properties
+        
         dataStreamNames     = {};
         dataFilesWithPath   = {};
         timelineFilesWithPath = [];
         fdDataSetIndex      = [];
+        
     end
+    
     
     properties (SetAccess = public)
         
-        
         targetUI            = [];
+        searchUI            = [];
+        
+        
+    end
+    
+    
+    properties (SetAccess = private)
+        
+        searchJUI           = [];
+        sbListener          = [];
         
     end
     
     
     properties (Dependent)
         
+        searchResults
         
     end
     
@@ -182,7 +195,7 @@ classdef FDCollection
         
         
         % Set Methods
-        
+        % -----------------------------------------------------------------
         function this = set.targetUI(this, uihandle)
             
             if ishghandle(uihandle)
@@ -192,6 +205,28 @@ classdef FDCollection
             end
             
         end
+        
+        
+        function this = set.searchUI(this, uihandle)
+            
+            if ishghandle(uihandle) && strcmpi(uihandle.Style, 'edit')
+                
+                this.searchUI = uihandle;
+                this.searchJUI = findjobj(this.searchUI);
+                this.sbListener = addlistener(uihandle, 'KeyRelease', ...
+                    @this.searchByGuiContents );
+                
+            end
+            
+        end
+        
+        
+
+        
+        % Dependent Property Get Methods
+        % -----------------------------------------------------------------
+
+        
         
         % Class Methods
         % -----------------------------------------------------------------
@@ -344,6 +379,7 @@ classdef FDCollection
             metaDataStruct = temp.metaData;
             
         end
+
         
         function fdStruct = getFDStructureFromUISelection(this)
             
@@ -361,10 +397,72 @@ classdef FDCollection
         end
         
         
+        % Search Function
+        % -----------------------------------------------------------------
+        function searchByString(self, searchString)
+            
+            
+            
+        end
+        
+        
+        function searchByGuiContents(self, varargin)
+            
+            % Do nothing if no search box set
+            if isempty(self.searchUI)
+                return
+            end
+            
+            searchString =  char(self.searchJUI.getText);
+
+            % Split into tokens
+            searchToks = strsplit(searchString);
+            
+            % remove stray whitespace
+            searchToks = strtrim(searchToks);
+            searchToks(strcmp('',searchToks)) = [];
+
+            % start with empty match index variable
+            ind = [];
+
+            % create an index of matches for each token
+            for i = 1:numel(searchToks)
+                ind = [ind, cellfun(@(x)( ~isempty(x) ), ...
+                       regexpi(self.dataStreamNames, searchToks{i}))];
+            end 
+            % combine matches (and searching, not or)
+            ind = boolean(prod(ind,2));
+           
+           
+            % Perform search by 
+            if length(searchString)
+       
+               % A non-empty search string means search!
+               if length(self.dataStreamNames(ind)) >= self.targetUI.Value
+                   % selected an item in the new list
+                   % lsr.Value = length(masterList(ind));
+                   % lsr.String = masterList(ind);
+               elseif ~length(self.dataStreamNames(ind))
+                   % New results are empty!
+                   self.targetUI.Value = 1;
+               else
+                   % Selection is outside new (nonzero)result list
+                   self.targetUI.Value = length(self.dataStreamNames(ind));
+               end
+
+                   self.targetUI.String = self.dataStreamNames(ind);
+           else
+               % No search string means return everything
+               self.targetUI.String = self.dataStreamNames;
+           end
+           
+            
+        end
         
     end
     
-   
+
     
+   
 end
 
