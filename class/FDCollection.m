@@ -15,12 +15,12 @@ classdef FDCollection
     
     properties
         
-        dataStreamNames         = {};
+        masterDataStreamNames         = {};
         dataFilesWithPath       = {};
         timelineFilesWithPath   = [];
         fdDataSetIndex          = [];
         
-        
+        selectedDataSet          = [];
         
     end
     
@@ -40,6 +40,8 @@ classdef FDCollection
         sbListener              = [];
         dataIndex
         
+        searchResultLogicalIndex = [];
+        
     end
     
     
@@ -47,6 +49,10 @@ classdef FDCollection
         
         searchResults
         dataSetNames
+        
+        selectedDataSetLogicalIndex
+        
+        isActiveSearch
         
     end
     
@@ -60,69 +66,82 @@ classdef FDCollection
             %
             % FDCollection(dataIndexVector)
             % FDCollection(dataIndexVector, UITarget)
-            % FDCollection(dataIndexVector, fdListVector)
-            % FDCollection(dataIndexVector, fdListVector, UITarget)
+            % FDCollection(dataIndexVector, selectedDataIndexVector)
+            % FDCollection(dataIndexVector, selectedDataIndexVector, UITarget)
             %
             % If no UITarget is specified, the FDCollection will have no
             % target uicontrol object. This can be set after object
             % instantiation if desired
             %
-            % If no fdListVector is specified, all FDs in the metaData
-            % fields of the dataIndexVector will be added to the
-            % FDCollection object.
+            % If no selectedDataIndexVector is specified, all data sets in
+            % dataIndexVector will be added to the FDCollection object.
+            
             
             % Check input number and type
-                        
+            
+            if ~nargin
+                warning('FDCollection constructor requires a dataIndexVector');
+                return
+            end
+            
+            dataIndexVector = varargin{1};
+            thisFDCollection.dataIndex = dataIndexVector;
+            
+            % Default to selecting ALL data sets
+            selectedDataIndexVector = 1:numel(dataIndexVector);
+
             targetUI = [];
-            fdListVector = {};
-            createUsingSubset = false;
+
             
             debugout(nargin)
             
+            % Allow 3 different constructor argument lists, and handle
+            % incorrect order of #2 and #3
+            % -------------------------------------------------------------
             switch nargin
                 case 1
                     % FDCollection(dataIndexVector)
                 
                 case 2
                     % FDCollection(dataIndexVector, UITarget)
-                    % FDCollection(dataIndexVector, fdListVector)
+                    % FDCollection(dataIndexVector, selectedDataIndexVector)
 
                     if ishghandle( varargin{2} )
                         targetUI = varargin{2};
+
                     else
                         % Using a subset of the dataIndex fds and no
                         % uitarget was passed
-                        createUsingSubset = true;
-                        fdListVector = varargin{2};
+                        selectedDataIndexVector = varargin{2};
                     end
                     
                 case 3
                     % Using a subset of the dataIndex fds and a targetUI
                     % control handle was passed
                     
-                    createUsingSubset = true;
                     
                     if ishghandle( varargin{3} ) && ~isempty(varargin{3})
                         % FDCollection(dataIndexVector, fdListVector, UITarget)
-                        debugout('FDCollection(dataIndexVector, fdListVector, UITarget)')
+                        debugout('FDCollection(dataIndexVector, selectedDataIndexVector, UITarget)')
 
-                        fdListVector    = varargin{2};
+                        selectedDataIndexVector    = varargin{2};
                         targetUI        = varargin{3};
 
                     else
                         % FDCollection(dataIndexVector, UITarget, fdListVector)
-                        debugout('FDCollection(dataIndexVector, UITarget, fdListVector)')
+                        debugout('FDCollection(dataIndexVector, UITarget, selectedDataIndexVector)')
 
-                        fdListVector    = varargin{3};
+                        selectedDataIndexVector    = varargin{3};
                         targetUI        = varargin{2};
 
                     end 
             end
             
+            
+            
             thisFDCollection.targetUI = targetUI;
             
-            dataIndexVector = varargin{1};
-            thisFDCollection.dataIndex = dataIndexVector;
+            
             
             
             % UITarget, dataIndexVector, fdListVector
@@ -132,69 +151,51 @@ classdef FDCollection
             timelineFilesWithPath = {};
             fdDataSetIndex      = [];
         
-            % Halt creation if passed a malformed
-            % dataIndexVector/fdListVector pair
-            if numel(dataIndexVector) ~= numel(fdListVector) && createUsingSubset
-                % Mismatch in data set/FD list lengths
-                warning('metaDataVector and FDList are not the same length')
-                return
-            end
             
             
-            
-            % Build the object properties if a subset of fdList was desired
+            % set object property with corrected selectedDataIndexVector
+            thisFDCollection.selectedDataSet = selectedDataIndexVector;
+                        
+            % Build the object properties for a subset of data sets 
             % -------------------------------------------------------------
-            for i = 1:numel(dataIndexVector)
+            for i = 1:numel(selectedDataIndexVector)
                 
-                tempTimelineFileWithPath = fullfile( dataIndexVector(i).pathToData, 'timeline.mat');
+                tempTimelineFileWithPath = fullfile( dataIndexVector(selectedDataIndexVector(i)).pathToData, 'timeline.mat');
                 
                 
                 if ~exist( tempTimelineFileWithPath, 'file')
-                    % if no timeline file, clear tempTimelineFileWithPath
-                    % so the final list doesn't have a link to a
-                    % nonexistant file
+                    % if no timeline file, set tempTimelineFileWithPath to
+                    % empty stringso the final list doesn't have a link to
+                    % a nonexistant file
                     tempTimelineFileWithPath = {''};
-                end
-                
-                
-                % Check for a match and then add to the class variable. Allows for subsets
-                if ~ createUsingSubset
-                    
-                   % Use all the FDs in the lists
-                   fdListVector{i} = dataIndexVector(i).metaData.fdList(:,1);
-                    
                 end
                 
                 
                 % Build internal variables by looping through input
                 % arguments
-                for j = 1:numel( fdListVector{i} )
-                    
-                    fdIndex = find(ismember( dataIndexVector(i).metaData.fdList(:,1), fdListVector{i}{j} ) );
-                    
-                    if ~isempty(fdIndex)
-                        
-                        dataStreamNames   = vertcat( dataStreamNames, ...
-                                                     dataIndexVector(i).metaData.fdList(fdIndex,1) );
-                                                 
-                        dataFilesWithPath = vertcat( dataFilesWithPath, ...
-                            fullfile( dataIndexVector(i).pathToData, ...
-                                      dataIndexVector(i).metaData.fdList(fdIndex,2) ) );
-                                  
-                        timelineFilesWithPath = vertcat ( timelineFilesWithPath, tempTimelineFileWithPath);
-                        
-                        fdDataSetIndex = vertcat( fdDataSetIndex, i);
+                % ---------------------------------------------------------
+
+                dataStreamNames   = vertcat( dataStreamNames, ...
+                                             dataIndexVector(selectedDataIndexVector(i)).metaData.fdList(:,1) );
+
+                dataFilesWithPath = vertcat( dataFilesWithPath, ...
+                    fullfile( dataIndexVector(selectedDataIndexVector(i)).pathToData, ...
+                              dataIndexVector(selectedDataIndexVector(i)).metaData.fdList(:,2) ) );
+
+                timelineFilesWithPath = vertcat ( timelineFilesWithPath, tempTimelineFileWithPath);
+                
+
+                fdDataSetIndex = vertcat( fdDataSetIndex, i*ones(length(dataIndexVector(selectedDataIndexVector(i)).FDList(:,1)),1) );
                                        
-                    
-                    end
-                end
-                
-                thisFDCollection.dataStreamNames = dataStreamNames;
-                thisFDCollection.dataFilesWithPath = dataFilesWithPath;
-                thisFDCollection.timelineFilesWithPath = timelineFilesWithPath;
-                thisFDCollection.fdDataSetIndex = fdDataSetIndex;
-                
             end
+            
+            thisFDCollection.searchResultLogicalIndex = true(size(dataStreamNames));
+            thisFDCollection.masterDataStreamNames = dataStreamNames;
+            thisFDCollection.dataFilesWithPath = dataFilesWithPath;
+            thisFDCollection.timelineFilesWithPath = timelineFilesWithPath;
+            thisFDCollection.fdDataSetIndex = fdDataSetIndex;
+                
+            
             
             
         end
@@ -227,6 +228,43 @@ classdef FDCollection
         end
         
         
+        function self = set.selectedDataSet(self, dataSetIndex)
+            %selectedDataSet
+            %
+            % accepts ingeger values that correspond to each dataIndex
+            % structure in the structure array
+            %
+            % setting to empty [] selects all sets
+            %
+            % Supports row vector index.
+            
+            
+            dataSetCount = numel(self.dataIndex);
+            validSetIndex = 1:dataSetCount;
+            
+            % Empty input sets to all available datasets!
+            if isempty(dataSetIndex)
+                self.selectedDataSet = 1:dataSetCount;
+                return
+            end
+            
+            % Halt creation if passed a malformed dataIndexVector and 
+            % selectedDataIndexVector pair
+            % -------------------------------------------------------------
+            if sum(ismember(dataSetIndex, validSetIndex)) == numel(dataSetIndex);
+                % each dataSetIndex is valid
+            else
+                % dataSetIndex had invalid entries
+                warning('dataSetIndex contains references to nonexistant metaDataVector elements')
+                % remove invalid data set indeces
+                dataSetIndex(~ismember(dataSetIndex, validSetIndex)) = [];
+            end
+
+            self.selectedDataSet = dataSetIndex;
+            
+            self.populateListbox
+
+        end
 
         
         % Dependent Property Get Methods
@@ -249,6 +287,21 @@ classdef FDCollection
         end
 
         
+        function index = get.selectedDataSetLogicalIndex(self)
+            
+            % Preallocate logical array with false
+            index = false(length(self.masterDataStreamNames), numel(self.selectedDataSet));
+            
+            for i = 1:numel(self.selectedDataSet)
+                
+                index(:,i) = self.fdDataSetIndex == self.selectedDataSet(i);
+                
+            end
+            
+            index = logical(sum(index, 2));
+            
+        end
+        
         
         % Class Methods
         % -----------------------------------------------------------------
@@ -263,22 +316,22 @@ classdef FDCollection
 
             numberOfOldStrings = numel(this.targetUI.String);
             
-            
+            toDisplay = logical( prod( [this.selectedDataSetLogicalIndex, this.searchResultLogicalIndex],2));
             
             if isempty(this.targetUI.Value)
                 this.targetUI.Value = 1;
             end
             
             
-            if isempty(this.dataStreamNames) 
+            if isempty(this.masterDataStreamNames(toDisplay)) 
                 
-            elseif numel(this.dataStreamNames) < numberOfOldStrings
+            elseif numel(this.masterDataStreamNames(toDisplay)) < numberOfOldStrings
                 
-            elseif numel(this.dataStreamNames) >= numberOfOldStrings
+            elseif numel(this.masterDataStreamNames(toDisplay)) >= numberOfOldStrings
                 % In this case, the old Value is still good 
             end
             
-            this.targetUI.String = this.dataStreamNames;
+            this.targetUI.String = this.masterDataStreamNames(toDisplay);
 
         end
 
@@ -423,7 +476,7 @@ classdef FDCollection
         % -----------------------------------------------------------------
         function searchByString(self, searchString)
             %searchByString updates the targetUI listbox based on a search
-            %of the dataStreamNames using the searchString argument.
+            %of the masterDataStreamNames using the searchString argument.
             %
             % searchByString( searchString )
             % searchByString( searchCellStr)
@@ -443,37 +496,48 @@ classdef FDCollection
 
             % start with empty match index variable
             ind = [];
-
+            
+            
+            
+            
+            
+            
             % create an index of matches for each token
+            % -------------------------------------------------------------
             for i = 1:numel(searchToks)
+                keyboard
                 ind = [ind, cellfun(@(x)( ~isempty(x) ), ...
-                       regexpi(self.dataStreamNames, searchToks{i}))];
-            end 
+                       regexpi(self.masterDataStreamNames, searchToks{i}))];
+            end
+            
             % combine matches (and searching, not or)
-            ind = boolean(prod(ind,2));
+            ind = logical(prod(ind,2));
            
            
             % Perform search by 
-            if length(searchString)
+            if numel(searchString)
        
                % A non-empty search string means search!
-               if length(self.dataStreamNames(ind)) >= self.targetUI.Value
+               if length(self.masterDataStreamNames(ind)) >= self.targetUI.Value
                    % selected an item in the new list
                    % lsr.Value = length(masterList(ind));
                    % lsr.String = masterList(ind);
-               elseif ~length(self.dataStreamNames(ind))
+               elseif ~length(self.masterDataStreamNames(ind))
                    % New results are empty!
                    self.targetUI.Value = 1;
                else
                    % Selection is outside new (nonzero)result list
-                   self.targetUI.Value = length(self.dataStreamNames(ind));
+                   self.targetUI.Value = length(self.masterDataStreamNames(ind));
                end
 
-                   self.targetUI.String = self.dataStreamNames(ind);
+                   self.targetUI.String = self.masterDataStreamNames(ind);
             else
                % No search string means return everything
-               self.targetUI.String = self.dataStreamNames;
+               self.targetUI.String = self.masterDataStreamNames(self.selectedDataSetLogicalIndex);
             end
+            
+            % Set object's search result logical index
+            self.searchResultLogicalIndex = ind;
             
         end
         
@@ -482,6 +546,9 @@ classdef FDCollection
             
             % Do nothing if no search box set
             if isempty(self.searchUI)
+                % clear search related properties
+                self.isActiveSearch = false;
+                self.searchResultLogicalIndex = [];
                 return
             end
             
@@ -543,6 +610,8 @@ classdef FDCollection
             titleString = strjoin({titleString, opString, opTypeString, '-', dateString});
    
         end
+        
+ 
 
         
     end
