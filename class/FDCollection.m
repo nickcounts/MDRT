@@ -1,4 +1,4 @@
-classdef FDCollection
+classdef FDCollection < handle
     %FDCollection An object to manage FDs for displaying in GUIs,
     %selecting and sending data to plots
     %   This collection object maintains a master list of FDs with all
@@ -49,7 +49,7 @@ classdef FDCollection
         
         searchResults
         dataSetNames
-        
+                
         selectedDataSetLogicalIndex
         
         isActiveSearch
@@ -265,6 +265,13 @@ classdef FDCollection
             self.populateListbox
 
         end
+        
+        
+        function self = set.searchResultLogicalIndex(self, index)
+            
+           self.searchResultLogicalIndex = index; 
+            
+        end
 
         
         % Dependent Property Get Methods
@@ -301,6 +308,7 @@ classdef FDCollection
             index = logical(sum(index, 2));
             
         end
+        
         
         
         % Class Methods
@@ -474,7 +482,7 @@ classdef FDCollection
         
         % Search Functions
         % -----------------------------------------------------------------
-        function searchByString(self, searchString)
+        function self = searchByString(self, searchString)
             %searchByString updates the targetUI listbox based on a search
             %of the masterDataStreamNames using the searchString argument.
             %
@@ -496,16 +504,12 @@ classdef FDCollection
 
             % start with empty match index variable
             ind = [];
-            
-            
-            
-            
-            
+    
             
             % create an index of matches for each token
             % -------------------------------------------------------------
             for i = 1:numel(searchToks)
-                keyboard
+                
                 ind = [ind, cellfun(@(x)( ~isempty(x) ), ...
                        regexpi(self.masterDataStreamNames, searchToks{i}))];
             end
@@ -514,7 +518,7 @@ classdef FDCollection
             ind = logical(prod(ind,2));
            
            
-            % Perform search by 
+            % Perform search by
             if numel(searchString)
        
                % A non-empty search string means search!
@@ -530,19 +534,21 @@ classdef FDCollection
                    self.targetUI.Value = length(self.masterDataStreamNames(ind));
                end
 
-                   self.targetUI.String = self.masterDataStreamNames(ind);
+%                    self.targetUI.String = self.masterDataStreamNames(ind);
             else
                % No search string means return everything
-               self.targetUI.String = self.masterDataStreamNames(self.selectedDataSetLogicalIndex);
+%                self.targetUI.String = self.masterDataStreamNames(self.selectedDataSetLogicalIndex);
+               ind = true( size(self.masterDataStreamNames));
             end
             
             % Set object's search result logical index
-            self.searchResultLogicalIndex = ind;
             
+            self.searchResultLogicalIndex = ind;
+                        
         end
         
         
-        function searchByGuiContents(self, varargin)
+        function self = searchByGuiContents(self, varargin)
             
             % Do nothing if no search box set
             if isempty(self.searchUI)
@@ -555,6 +561,8 @@ classdef FDCollection
             searchString =  char(self.searchJUI.getText);
             
             self.searchByString(searchString);
+            
+            self.populateListbox;
 
         end
         
