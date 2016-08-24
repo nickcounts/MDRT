@@ -15,18 +15,20 @@ classdef FDCollection
     
     properties
         
-        dataStreamNames     = {};
-        dataFilesWithPath   = {};
-        timelineFilesWithPath = [];
-        fdDataSetIndex      = [];
+        dataStreamNames         = {};
+        dataFilesWithPath       = {};
+        timelineFilesWithPath   = [];
+        fdDataSetIndex          = [];
+        
+        
         
     end
     
     
     properties (SetAccess = public)
         
-        targetUI            = [];
-        searchUI            = [];
+        targetUI                = [];
+        searchUI                = [];
         
         
     end
@@ -34,8 +36,9 @@ classdef FDCollection
     
     properties (SetAccess = private)
         
-        searchJUI           = [];
-        sbListener          = [];
+        searchJUI               = [];
+        sbListener              = [];
+        dataIndex
         
     end
     
@@ -43,6 +46,7 @@ classdef FDCollection
     properties (Dependent)
         
         searchResults
+        dataSetNames
         
     end
     
@@ -118,6 +122,8 @@ classdef FDCollection
             thisFDCollection.targetUI = targetUI;
             
             dataIndexVector = varargin{1};
+            thisFDCollection.dataIndex = dataIndexVector;
+            
             
             % UITarget, dataIndexVector, fdListVector
             
@@ -225,6 +231,22 @@ classdef FDCollection
         
         % Dependent Property Get Methods
         % -----------------------------------------------------------------
+        function dataSetNames = get.dataSetNames(self)
+            
+            dataSetNames = {};
+            
+            if numel(self.dataIndex)
+
+                for i = 1:numel(self.dataIndex)
+
+                    newSetName = self.makeStringFromMetaData(self.dataIndex(i).metaData);
+                    dataSetNames = vertcat(dataSetNames,  newSetName);
+
+                end
+                
+            end
+            
+        end
 
         
         
@@ -397,24 +419,21 @@ classdef FDCollection
         end
         
         
-        % Search Function
+        % Search Functions
         % -----------------------------------------------------------------
         function searchByString(self, searchString)
+            %searchByString updates the targetUI listbox based on a search
+            %of the dataStreamNames using the searchString argument.
+            %
+            % searchByString( searchString )
+            % searchByString( searchCellStr)
             
             
-            
-        end
-        
-        
-        function searchByGuiContents(self, varargin)
-            
-            % Do nothing if no search box set
-            if isempty(self.searchUI)
-                return
+            % Remove string from cell
+            while iscell(searchString)
+                searchString = searchString{1};
             end
             
-            searchString =  char(self.searchJUI.getText);
-
             % Split into tokens
             searchToks = strsplit(searchString);
             
@@ -451,13 +470,80 @@ classdef FDCollection
                end
 
                    self.targetUI.String = self.dataStreamNames(ind);
-           else
+            else
                % No search string means return everything
                self.targetUI.String = self.dataStreamNames;
-           end
-           
+            end
             
         end
+        
+        
+        function searchByGuiContents(self, varargin)
+            
+            % Do nothing if no search box set
+            if isempty(self.searchUI)
+                return
+            end
+            
+            searchString =  char(self.searchJUI.getText);
+            
+            self.searchByString(searchString);
+
+        end
+        
+    end
+    
+    
+    methods (Static)
+        
+        function titleString = makeStringFromMetaData(metaData)
+
+            titleString = '';
+
+            opString        = '';
+            opTypeString    = '';
+            dateString      = '';
+
+            if metaData.isOperation
+                if isempty(metaData.operationName)
+                    % is op, but no name - make a default name
+                    if     metaData.isVehicleOp
+                        opString = 'Vehicle Support';
+
+                    elseif metaData.isMARSprocedure
+                        opString = 'MARS Procedure';
+
+                    elseif metaData.isOperation
+                        opString = 'Operation';
+
+                    end
+                else
+                    % is op and has title
+                    opString = metaData.operationName;
+                end
+            end
+
+            if metaData.isVehicleOp
+                opTypeString = 'Vehicle Suport';
+            elseif metaData.isMARSprocedure
+                opTypeString = 'MARS Procedure';
+            else
+                opTypeString = 'Normal Standby Data';
+            end
+
+
+            % TODO: make smarter dateString depending on time interval, using the
+            % same month and year whenever possible
+            if ~isempty(metaData.timeSpan)
+                startStr = datestr(metaData.timeSpan(1), 'mmm dd, yyyy');
+                stopStr  = datestr(metaData.timeSpan(2), 'mmm dd, yyyy');
+                dateString = strjoin({startStr,'to', stopStr});
+            end
+
+            titleString = strjoin({titleString, opString, opTypeString, '-', dateString});
+   
+        end
+
         
     end
     
