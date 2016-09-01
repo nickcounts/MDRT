@@ -55,6 +55,8 @@ end
 %% iterate through delim files
 for i = 1:length(filenameCellList)
     
+    skipThisFile = false;
+    
     % UI Progress Update
     % ------------------
     frac = 0/5;
@@ -145,7 +147,7 @@ for i = 1:length(filenameCellList)
             valueTypeCell   = Q{3};
             longNameCell    = Q{4};
             valueCell       = Q{5};
-            unitCell        = Q(6);
+            unitCell        = Q{6};
 
         
         % UI Progress Update
@@ -388,41 +390,104 @@ for i = 1:length(filenameCellList)
                             % long string!!!
                             
                             
-                            
-                            ts = timeseries( sscanf(sprintf('%s ', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
+                            try
+                                ts = timeseries( sscanf(sprintf('%s ', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
+                            catch ME
+                                
+                                disp('There was a problem generating a timeseries from these data');
+                                
+                                % Open a window with some of the data
+                                showDataSampleWindow
+                                
+                                % Pause execution for now
+                                
+                                skipButton = 'Skip This File';
+                                haltButton = 'Halt';
+                                
+                                ButtonName = questdlg('There was an error parsing this data file. How do you want to proceed?', ...
+                                                    'MARS DRT Data Parse Error', ...
+                                                    skipButton, haltButton, haltButton);
+                                                
+                                switch ButtonName
+                                    case skipButton
+                                        disp('User selected SKIP');
+                                        skipThisFile = true;
+                                        
+                                        
+                                    case haltButton
+                                        
+                                        disp('User selected HALT');
+                                        
+                                        % Add the offending variables to
+                                        % the main workspace to allow power
+                                        % users to debug - only if not
+                                        % deployed!
+                                        if ~isdeployed
+                                            disp('Copying data to main workspace for debugging');
+                                                                                        
+                                            assignin('base' , 'parseValue', valueCell );
+                                            assignin('base' , 'parseTime',  timeVect  );
+                                            assignin('base' , 'parseUnits', unitCell );
+                                            assignin('base' , 'parseShort', shortNameCell );
+                                            assignin('base' , 'parseLong',  longNameCell );
+                                            
+                                        end
+                                        
+                                        
+                                        % Rethrow the exception and exit
+                                        error('Parsing data file failed');
+%                                         rethrow(ME)
+
+                                        
+                                    otherwise
+                                        % Assume user did something weird
+                                        % Rethrow the exception and exit
+                                        rethrow(ME)
+                                end
+                                    
+                                
+                                
+                            end
                             
                             % This is the old way and it was REALLY REALLY slow
                             % ts = timeseries( str2double(valueCell), timeVect, 'Name', info.FullString);
                     end
                     
-
-
-               
                     
+                    
+                    
+                    
+                if skipThisFile
+                    disp('SKIPPING THIS FILE');
+                    disp(sprintf('Total time spent on this file was: %f seconds',toc(tstart)));
+                    
+                else
 
-            %   ts.Name = info.FullString;
-                disp(sprintf('Generating timeseries took: %f seconds',toc));
+                    %   ts.Name = info.FullString;
+                    disp(sprintf('Generating timeseries took: %f seconds',toc));
 
-                tic;
-                    fd = struct('ID', info.ID,...
-                                'Type', info.Type,...
-                                'System', info.System,...
-                                'FullString', info.FullString,...
-                                'ts', ts,...
-                                'isValve', false);
+                    tic;
+                        fd = struct('ID', info.ID,...
+                                    'Type', info.Type,...
+                                    'System', info.System,...
+                                    'FullString', info.FullString,...
+                                    'ts', ts,...
+                                    'isValve', false);
 
-                disp(sprintf('Generating dataStream structure took: %f seconds',toc));
+                    disp(sprintf('Generating dataStream structure took: %f seconds',toc));
+
+
+                    % write timeSeries to disk as efficient 'mat' format
+                    tic;
+                        saveFDtoDisk(fd)
+                    disp(sprintf('Writing data to disk took: %f seconds',toc));
+
+
+
+                    disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
+                    disp(sprintf('Processing file took: %f seconds',toc(tstart)));
                 
-
-                % write timeSeries to disk as efficient 'mat' format
-                tic;
-                    saveFDtoDisk(fd)
-                disp(sprintf('Writing data to disk took: %f seconds',toc));
-                
-                
-
-                disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
-                disp(sprintf('Processing file took: %f seconds',toc(tstart)));
+                end
         end
 
     % End of actual processing loop
@@ -531,6 +596,42 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         % certain terms in the future?)
         
             fileName = strjoin([prependFindNumber, fullStringTokens]);
+        
+    end
+
+
+    function showDataSampleWindow
+        
+        dbugWindow = figure('Position',[100 100 400 150], ...
+                            'MenuBar',          'none', ...
+                            'NumberTitle',      'off', ...
+                            'Name', 'Sample Data from Failed Parse');
+
+        % Column names and column format
+        % ------------------------------------------------------------------------
+        % columnname = {'Short Name', 'Long Name', 'Type','Value','TimeStamp'};
+        columnname = {'Short Name', 'Long Name', 'Type','Value','Units'};
+
+        % columnformat = {'numeric','bank','logical',{'Fixed' 'Adjustable'}};
+
+        % Define the data
+        % ------------------------------------------------------------------------
+        % d = horzcat(valueTypeCell(1:20), valueCell(1:20), timeVect(1:20) );
+        % d = [shortNameCell(1:20), longNameCell(1:20), valueTypeCell(1:20), valueCell(1:20), num2cell(timeVect(1:20))];
+        d = [shortNameCell(1:20), longNameCell(1:20), valueTypeCell(1:20), valueCell(1:20), unitCell(1:20)];
+
+        % Create the uitable
+        % ------------------------------------------------------------------------
+        t = uitable(dbugWindow, 'Data', d, ...
+                    'ColumnName', columnname );
+
+        % Set width and height
+        % ------------------------------------------------------------------------
+        t.Position(3) = t.Extent(3);
+        t.Position(4) = t.Extent(4);    
+
+        dbugWindow.Position(3) = t.Extent(3) + 40;
+        dbugWindow.Position(4) = t.Extent(4) + 25; 
         
     end
 
