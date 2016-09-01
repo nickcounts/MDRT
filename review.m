@@ -296,7 +296,16 @@ config = handles.configuration;
 
 if ( exist(config.dataFolderPath,'dir') && exist(config.delimFolderPath,'dir') )
     % Confirmed that these folders DO EXIST
-    processDelimFiles(config);
+    try
+        processDelimFiles(config);
+    catch ME
+       % Something went wrong with the parsing engine.
+       % Errors will appear on console if the engine terminates abnormally
+       % This is bad practice, but for now I am soft-failing without
+       % displaying any error message from this function call. The parsing
+       % engine has its own error handling
+    end
+        
     
     % Refresh the FD list
     uiButton_updateFDList_Callback(hObject, eventdata, handles);
