@@ -181,9 +181,10 @@ reverseStr = '';
         m = regexp(FDlistForGrep{i}, '\w*','match');
         if length(m) > 3
             if isCustomRule
-               outName = strcat(customFDnames{isCustomRule, 6}, '.delim');
+                outName = strcat(customFDnames{isCustomRule, 6}, '.delim');
             else
-               outName = strcat(m{1:4},'.delim');
+                % USe all tokens to guarantee a unique filename
+                outName = strcat(m{1:end},'.delim');
             end
         else
             disp('FD was less than 4 tokens long. Processed array:');
