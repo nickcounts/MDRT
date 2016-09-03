@@ -39,24 +39,6 @@ graph.name = CG.Title;
     supressWarningDialogs = false;
 
 
-% Load the project configuration (paths to data, plots and raw data)
-% -------------------------------------------------------------------------
-    config = getConfig;
-
-% Loads event data files. If missing, procedes with events disabled.
-% -------------------------------------------------------------------------
-%     if useTimeline
-%         if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
-%             load(fullfile(config.dataFolderPath, 'timeline.mat'));
-%             disp('using timeline markers')
-%         else
-%             if ~supressWarningDialogs
-%                 warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
-%             end
-%             useTimeline = false;
-%         end
-%     end
-
 
 % -------------------------------------------------------------------------
 % Constants Defined Here
@@ -91,16 +73,9 @@ graph.name = CG.Title;
 % -------------------------------------------------------------------------
 % Generate new figure and handle. Set up for priting
 % -------------------------------------------------------------------------
-    figureHandle = figure();
+    figureHandle = makeMDRTPlotFigure;
     
-    saveButtonHandle = findall(figureHandle,'ToolTipString','Save Figure');
-    
-    set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
-    
-    % Add label size toggle and timeline refresh buttons
-    addToolButtonsToPlot(figureHandle);
-    
-    orient('landscape');
+    % Configure two subplots for easy comparison
     
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
