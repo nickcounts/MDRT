@@ -47,9 +47,9 @@ end
     
 %% Configuration object instantiation
 % -------------------------------------------------------------------------
-
-    config = MDRTConfig;    
-
+    
+    % MDRTConfig is now a singleton handle class!
+    config = MDRTConfig.getInstance;
 
 
 %% Button Generation
