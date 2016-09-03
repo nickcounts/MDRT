@@ -18,8 +18,12 @@ function hs = makeDataComparisonGUI(targetParentHandle)
 
         
     %% Debugging Tasks - variable loading, etc...
+    
+    % Converted to MDRTCongig object.
+    config = MDRTConfig.getInstance;
+    
     dataIndexName = 'dataIndex.mat';
-    dataIndexPath = dataRepositoryPath('get');
+    dataIndexPath = config.dataArchivePath;
     
     
     % Load the data index using the environment variable and the specified
