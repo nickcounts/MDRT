@@ -1,5 +1,24 @@
 function varargout = customFDeditor(varargin)
-% CUSTOMFDEDITOR MATLAB code for customFDeditor.fig
+% CUSTOMFDEDITOR
+%
+%   Launches a user interface to define special-case naming conventions for
+%   data parsed by MDRT's ImportDataEngine.
+%
+%   Custom naming rules are saved in 'processDelimFiles.cfg' which is a
+%   MATLAB .mat variable file containing a cell array of the form:
+% 
+% Original FD,                  System, ID,   Type, FullString,      FileName
+% AIR FM-0001 Flow Meter  Mon,  ECS,    0001, FM,   Fwd-Bay Airflow, ECS-FM-0001
+% AIR FM-0002 Flow Meter  Mon,  ECS,    0002, FM,   Mid-Bay Airflow, ECS-FM-0002
+% AIR FM-0003 Flow Meter  Mon,  ECS,    0003, FM,   Aft-Bay Airflow, ECS-FM-0003
+% 
+%   Filenames may be deprecated in future releases, as the ImportDataEngine
+%   filename generator is overhauled.
+%
+%   These override values are triggered by a matchhing Original FD, which
+%   the ImportDataEngine checks before commiting a processed FD to disk.
+%
+
 %      CUSTOMFDEDITOR, by itself, creates a new CUSTOMFDEDITOR or raises the existing
 %      singleton*.
 %
