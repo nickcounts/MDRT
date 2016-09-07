@@ -9,6 +9,7 @@
 
 graphConfigFolderPath="~"
 dataArchivePath="~"
+importDataPath="~"
 userSavePath="~"
 userWorkingPath="~"
 
