@@ -32,10 +32,20 @@ function [ output_args ] = processDelimFiles( config )
 % savePath = '/Users/nick/Documents/MATLAB/Data Review/12-11-13/data/';
 
 % TODO: Fix this ugly parameter passing!!! GROSS
-path = config.delimFolderPath;
-savePath = config.dataFolderPath;
 
-delimFiles = dir([path '*.delim']);
+
+if isa(config, 'MDRTConfig')
+    
+    path = config.workingDelimPath;
+    savePath = config.workingDataPath;
+else
+    path = config.delimFolderPath;
+    savePath = config.dataFolderPath;
+end
+
+
+
+delimFiles = dir(fullfile(path, '*.delim'));
 filenameCellList = {delimFiles.name};
 
 
@@ -566,7 +576,7 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
             % Don't update anything!
         end
         
-        save([savePath fileName '.mat'],'fd','-mat')
+        save(fullfile(savePath ,[fileName '.mat']),'fd','-mat')
         
     end
 
