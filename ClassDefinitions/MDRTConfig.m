@@ -18,6 +18,7 @@ classdef MDRTConfig < handle
     %     set.graphConfigFolderPath
     %     set.userSavePath
     %     set.userWorkingPath
+    %     set.importDataPath
     %   
     %   makeWorkingDirectoryStructure( newWorkingDirectoryRootPath )
     %   makeWorkingDirectoryStructure()
@@ -32,6 +33,7 @@ classdef MDRTConfig < handle
         dataArchivePath
         userSavePath
         userWorkingPath
+        importDataPath
         
         % These are normal object properties
         % -----------------------------------------------------------------
@@ -49,7 +51,8 @@ classdef MDRTConfig < handle
             'graphConfigFolderPath'; ...
             'dataArchivePath'; ...
             'userSavePath'; ...
-            'userWorkingPath'
+            'userWorkingPath'; ...
+            'importDataPath'
             };
     end
 
@@ -81,7 +84,7 @@ classdef MDRTConfig < handle
         applicationName = 'mdrt';
 
         linuxPrefix = '.';
-        configFileName = 'config.txt';
+        configFileName = 'config_linux.txt';
 
         macConfigFile = 'config_mac.txt';
         winConfigFile = 'config_windows.txt'
@@ -216,6 +219,35 @@ classdef MDRTConfig < handle
                     % Clearing object 
                     warning('MDRTConfig.userSavePath set to empty string');
                     obj.userWorkingPath = '';
+                end
+                
+            end
+            
+            obj.updateConfigurationFromProperties;
+            
+        end
+        
+        
+        function set.importDataPath(obj,val)
+            % Only set if it is a valid path.
+            if exist( fullfile(val), 'dir' )
+                
+                obj.importDataPath = fullfile(val);
+
+            else
+                
+                warning('Invalid path specified. MDRT_IMPORT_DATA_PATH not set');
+                
+                % Invalid path specified. Check if existing value is good
+                % and retain or clear
+                if exist(obj.importDataPath, 'dir')
+                    % there is a valid path in the object. Do nothing?
+                    
+                else
+                    % Bad path passed and invalid directory in object.
+                    % Clearing object 
+                    warning('MDRTConfig.importDataPath set to empty string');
+                    obj.importDataPath = '';
                 end
                 
             end
