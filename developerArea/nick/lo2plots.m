@@ -11,13 +11,13 @@
 
 %% Operation Comparison Variables
 
-    load(fullfile('/Users/nickcounts/Documents/Spaceport/Data/Stage Test/WDR/data','timeline.mat'));
-    timelineWDR = timeline;
-
-    load(fullfile('/Users/nickcounts/Documents/Spaceport/Data/Stage Test/A230 Stage Test/data','timeline.mat'));
-    timelineST = timeline;
-
-    offset = timelineST.t0.time - timelineWDR.t0.time;
+%     load(fullfile('/Users/nickcounts/Documents/Spaceport/Data/Stage Test/WDR/data','timeline.mat'));
+%     timelineWDR = timeline;
+% 
+%     load(fullfile('/Users/nickcounts/Documents/Spaceport/Data/Stage Test/A230 Stage Test/data','timeline.mat'));
+%     timelineST = timeline;
+% 
+%     offset = timelineST.t0.time - timelineWDR.t0.time;
 
 %% LO2 Plot #1
 
@@ -52,20 +52,44 @@
 
 %% LO2 Plot #3
 
+% hold on;
+% 
+%     filenames = {'2015' '2016' 'LO2 Flow Control Max SP' 'LO2 Flow Control Min'};
+%     path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
+%     
+%     i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+%     i = 2; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+%     i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', 'SP-Flow Control')
+%     i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', 'SP-Flow Control')
+% 
+% 
+% hold on;
+
+
+
+%% LO2 Plot #4
+
+
 hold on;
 
-    filenames = {'2015' '2016' 'LO2 Flow Control Max SP' 'LO2 Flow Control Min'};
-    path = '~/Documents/Spaceport/Data/Stage Test/WDR/data/';
+    offset = -105.03751978;
+
+    filenames = {
+                    '2112 LO2 PT-2112 Press Sensor Mon'
+                    '2909 LO2 PT-2909 Press Sensor Mon'
+                    '2904 LO2 PT-2904 Press Sensor Mon'
+                    '2918 LO2 PT-2918 Press Sensor Mon'
+                 };
+                
+    path = '~/Documents/Spaceport/Data/Testing/2016-08-08 - LO2 Decay Check/data/';
     
     i = 1; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
     i = 2; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
-    i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', 'SP-Flow Control')
-    i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', 'r', 'displayname', 'SP-Flow Control')
+    i = 3; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
+    i = 4; load(fullfile(path, [filenames{i} '.mat'])); plot(fd.ts.Time + offset, fd.ts.Data, 'color', colors{i}, 'displayname', [fd.Type '-' fd.ID])
 
 
 hold on;
-
-
 
 
 

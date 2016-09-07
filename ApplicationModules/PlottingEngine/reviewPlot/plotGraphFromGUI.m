@@ -38,20 +38,20 @@
 % Loads event data files. If missing, procedes with events disabled.
 % -------------------------------------------------------------------------
 
-[pathstr,name,ext] = fileparts(datapath);
+% [pathstr,name,ext] = fileparts(datapath);
 
     if useTimeline
-        if isempty(pathstr)
-%         if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
-%             load(fullfile(config.dataFolderPath, 'timeline.mat'));
-%             disp('using timeline markers')
-%         else
-%             if ~supressWarningDialogs
-%                 warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
-%             end
-%             useTimeline = false;
-%         end
+%         if isempty(pathstr)
+        if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
+            load(fullfile(config.dataFolderPath, 'timeline.mat'));
+            disp('using timeline markers')
+        else
+            if ~supressWarningDialogs
+                warndlg('Event data file "timeline.mat" was not found. Continuing with events disabled.');
+            end
+            useTimeline = false;
         end
+%         end
     end
 
 

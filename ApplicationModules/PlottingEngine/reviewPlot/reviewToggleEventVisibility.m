@@ -85,14 +85,14 @@ function toggleEventsAndButton( figureHandle, buttonHandle )
         case 'on'
             % ON means visibility is ON
             % Set icon to visible mode
-            buttonHandle.CData = imread('reviewPlot/images/showTimeline_icon_16x16.png','png');
+            buttonHandle.CData = imread('resources/images/showTimeline_icon_16x16.png','png');
             
             buttonHandle.TooltipString = 'Hide Event Markers';
             
         case 'off'
             % OFF means visibility is OFF
             % Set icon to hidden mode
-            buttonHandle.CData = imread('reviewPlot/images/hideTimeline_icon_16x16.png','png');
+            buttonHandle.CData = imread('resources/images/hideTimeline_icon_16x16.png','png');
             
             buttonHandle.TooltipString = 'Show Event Markers';
     end
