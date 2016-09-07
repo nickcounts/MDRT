@@ -1,6 +1,12 @@
-function [ output_args ] = splitDelimFiles( config )
+function [ output_args ] = splitDelimFiles( varargin )
 %splitDelimFiles reads a .delim file and splits it into discrete .delim
 %files for parsing by the MARS Review Tool
+%
+%   splitDelimFiles( configStruct )
+%   splitDelimFiles( MDRTConfig )
+%
+%   splitDelimFiles( filename, configStruct )
+%   splitDelimFiles( filename, configStruct )
 %
 %   This tool has been updated to support Windows as well as *nix systems.
 %   getFileLineCount.m and countlines.pl are required
@@ -10,33 +16,74 @@ function [ output_args ] = splitDelimFiles( config )
 %   Updated 2016, Counts, VCSFA - Better delim naming convention, should
 %   eliminate overloaded filenames.
 
+switch nargin
+    case 1
+        configVar = varargin{1};
+        noFilenamePassed = true;
+    case 2
+        fileName = varargin{1};
+        configVar = varargin{2};
+        noFilenamePassed = false;
+    otherwise
+        error('Invalid arguments for function splitDelimFiles');
+        
+end
+        
+        
 
+% Handle configuration variable argument
+if isa(configVar, 'MDRTConfig')
+    delimPath = configVar.workingDelimPath;
+    
+elseif strcmpi( checkStructureType(configVar), 'config')
+    delimPath = configVar.delimFolderPath;
+    
+else
+    error('Unknown configuration parameter')
+    
+end
 
 % Define paths from config structure
 %     delimPath = '~/Documents/MATLAB/Data Review/ORB-2/delim';
-    delimPath = config.delimFolderPath;
+%     delimPath = config.delimFolderPath;
     % processPath = fullfile(delimPath, '..'); % Not sure why I ever did this
     processPath = fullfile(delimPath);
+    
+    if noFilenamePassed
+        
+        [fileName processPath] = uigetfile( {...
+                                '*.delim', 'CCT Delim File'; ...
+                                '*.*',     'All Files (*.*)'}, ...
+                                'Pick a file', fullfile(processPath, '*.delim'));
 
-    [fileName processPath] = uigetfile( {...
-                            '*.delim', 'CCT Delim File'; ...
-                            '*.*',     'All Files (*.*)'}, ...
-                            'Pick a file', fullfile(processPath, '*.delim'));
+        if isnumeric(fileName)
+            % User cancelled .delim pre-parse
+            disp('User cancelled .delim pre-parse');
+            return
+        end
+        
+        fileName = fullfile(processPath, fileName);
 
-if isnumeric(fileName)
-    % User cancelled .delim pre-parse
-    disp('User cancelled .delim pre-parse');
-    return
-end
+    else
+        
+        % Do error checking here for passed filename
+        
+        % de-cell the fileName
+        while iscell(fileName)
+            fileName = fileName{1};
+        end
+        
+    end
                         
 % Open the file selected above
 % -------------------------------------------------------------------------
-fid = fopen(fullfile(processPath,fileName));
+fid = fopen(fileName);
 
 
 % Get lines in data file to chunk large files
 % -------------------------------------------------------------------------
-    numLines = getFileLineCount(fullfile(processPath, fileName));
+    
+    numLines = getFileLineCount(fileName);
     N = 50000;
     flagReadAsChunks = false;
     
@@ -195,7 +242,7 @@ reverseStr = '';
         outputFile = fullfile(delimPath, outName);
         outputFile = regexprep(outputFile, '\s','\\ ');
         
-        grepFilename = regexprep(fullfile(processPath, fileName), '\s','\\ ');
+        grepFilename = regexprep(fileName, '\s','\\ ');
                 
         % Generate egrep command to split delim into parseable files
         egrepCommand = ['egrep "', FDlistForGrep{i}, '" ',grepFilename, ' > ', outputFile];
