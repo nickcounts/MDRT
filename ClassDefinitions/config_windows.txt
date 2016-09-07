@@ -4,6 +4,7 @@
 
 graphConfigFolderPath="%userprofile%"
 dataArchivePath="%userprofile%"
+importDataPath="%userprofile%"
 userSavePath="%userprofile%"
 userWorkingPath="%userprofile%"
 
