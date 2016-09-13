@@ -60,7 +60,7 @@ classdef (CaseInsensitiveProperties) FileListBox < handle
         jTextArea
         hContainer
         
-        
+        listUpdatedTrigger = 0;
         
         %DROPFILEFCN Callback function executed upon dropping of system files.
         DropFileFcn = @addDroppedFilesToList;        
@@ -76,7 +76,7 @@ classdef (CaseInsensitiveProperties) FileListBox < handle
     end
     
     % Properties only accessible from within the class or a subclass
-    properties (Access=protected)
+    properties (Access=protected, SetObservable=true)
         fileList = {};
     end
        
@@ -198,7 +198,6 @@ classdef (CaseInsensitiveProperties) FileListBox < handle
            end
            
            obj.fileList = unique(obj.fileList);
-           obj.refreshGUI
            
         end
         
@@ -218,6 +217,14 @@ classdef (CaseInsensitiveProperties) FileListBox < handle
             end
             
             obj.fileList = unique(obj.fileList);
+            
+            
+        end
+        
+        function obj = set.fileList(obj, newList)
+            
+            obj.fileList = newList;
+            obj.listUpdatedTrigger = obj.listUpdatedTrigger + 1;
             obj.refreshGUI;
             
         end
@@ -232,17 +239,20 @@ classdef (CaseInsensitiveProperties) FileListBox < handle
         
         function refreshGUI(obj)
             
-            obj.jTextArea.setText('');
-
-            for i = 1:numel(obj.fileList)
-               obj.jTextArea.append( sprintf('%s\n', getFileName(obj, i) ) );
-            end
+            if ~isempty(obj.Parent)
             
+                obj.jTextArea.setText('');
+
+                for i = 1:numel(obj.fileList)
+                   obj.jTextArea.append( sprintf('%s\n', getFileName(obj, i) ) );
+                end
+                
+            end
+
         end
         
         function obj = clearFileList(obj)
             obj.fileList = {};
-            obj.refreshGUI;
         end
         
         
