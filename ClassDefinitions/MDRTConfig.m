@@ -348,6 +348,7 @@ classdef MDRTConfig < handle
              
             datapath  = fullfile( wpath, 'data');
             delimpath = fullfile( wpath, 'delim');
+            plotspath = fullfile( wpath, 'plots');
             
             % Check for existing folders and create if necessary
             
@@ -378,6 +379,11 @@ classdef MDRTConfig < handle
                 mkdir(fullfile(delimpath, 'ignore'));
             end
             
+            % Create plots path
+            if ~isdir(plotspath)
+                mkdir(plotspath);
+            end
+            
             
             % At this point all folders exist
             %     workingDirectory Root
@@ -385,6 +391,7 @@ classdef MDRTConfig < handle
             %         delim
             %             original
             %             ignore
+            %         plots
             
             % Update Object pointer to working directory root.
             this.userWorkingPath = wpath;
