@@ -226,18 +226,14 @@ reverseStr = '';
         
 
         m = regexp(FDlistForGrep{i}, '\w*','match');
-        if length(m) > 3
+
             if isCustomRule
                 outName = strcat(customFDnames{isCustomRule, 6}, '.delim');
             else
-                % USe all tokens to guarantee a unique filename
+                % Use all tokens to guarantee a unique filename
                 outName = strcat(m{1:end},'.delim');
             end
-        else
-            disp('FD was less than 4 tokens long. Processed array:');
-            m
-            outName = strcat(m{:});
-        end
+
         
         outputFile = fullfile(delimPath, outName);
         outputFile = regexprep(outputFile, '\s','\\ ');
