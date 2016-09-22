@@ -219,60 +219,67 @@ for i = 1:length(filenameCellList)
                 
                 %  TODO: Discrete Valve Retrieval parsing - add more than just "state" variable parsing and fold into FD timeseries structure. 
 
-                disp('Processing state only until further implementation');
-                
-                
+                    
+                try
+                    
+                    disp('Processing state only until further implementation');
 
-                % Strip out the values that contain 'State' in the descriptor
-                
-                if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
-                    % Special Exception for WDS proportional valves
-                    valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
-                else
-                    valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
+                    % Strip out the values that contain 'State' in the descriptor
+
+                    if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
+                        % Special Exception for WDS proportional valves
+                        valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
+                    else
+                        valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
+                    end
+
+
+
+                    if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
+                        % Special Exception for WDS proportional valves
+                        info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'Mon')),1,'first')});
+                    else
+                        info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
+                    end    
+
+
+
+                    % Generate time series for state values            
+                    tic;
+
+                        % ts = timeseries( sscanf(sprintf('%s', valveState{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
+
+
+                    if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
+                        % Special Exception for WDS proportional valves
+                        ts = timeseries( str2double(valvePosition), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
+                    else
+                        ts = timeseries( str2double(valveState), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
+                    end
+
+                    disp(sprintf('Generating timeseries took: %f seconds',toc));            
+
+
+                    fd = struct('ID', info.ID,...
+                                    'Type', info.Type,...
+                                    'System', info.System,...
+                                    'FullString', info.FullString,...
+                                    'ts', ts, ...
+                                    'isValve', true);
+
+                    % write timeSeries to disk as efficient 'mat' format
+                    tic;
+    %                     save([savePath info.ID '.mat'],'fd','-mat')
+                        saveFDtoDisk(fd)
+                    disp(sprintf('Writing data to disk took: %f seconds',toc));
+
+                    disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
+                    
+                catch ME
+
+                    handleParseFailure(ME)
+
                 end
-                
-                
-                
-                if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
-                    % Special Exception for WDS proportional valves
-                    info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'Mon')),1,'first')});
-                else
-                    info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
-                end    
-                
-
-                
-                % Generate time series for state values            
-                tic;
-                    
-                    % ts = timeseries( sscanf(sprintf('%s', valveState{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                    
-                    
-                if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
-                    % Special Exception for WDS proportional valves
-                    ts = timeseries( str2double(valvePosition), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
-                else
-                    ts = timeseries( str2double(valveState), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                end
-                                    
-                disp(sprintf('Generating timeseries took: %f seconds',toc));            
-                
-
-                fd = struct('ID', info.ID,...
-                                'Type', info.Type,...
-                                'System', info.System,...
-                                'FullString', info.FullString,...
-                                'ts', ts, ...
-                                'isValve', true);
-
-                % write timeSeries to disk as efficient 'mat' format
-                tic;
-%                     save([savePath info.ID '.mat'],'fd','-mat')
-                    saveFDtoDisk(fd)
-                disp(sprintf('Writing data to disk took: %f seconds',toc));
-
-                disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
 
             case {'PCVNO','PCVNC'}
                 %% --------------------------------------------------------
@@ -281,49 +288,57 @@ for i = 1:length(filenameCellList)
                 
                 disp('Processing state and percent open');
                 
-                % Strip out the values that contain 'State' in the descriptor
-                valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
-                if ~isempty(valveState)
-                    info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
-                else
-                    disp('NOTE: Valve state not found. No state data added to structure');
+                try
+                
+                    % Strip out the values that contain 'State' in the descriptor
+                    valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
+                    if ~isempty(valveState)
+                        info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
+                    else
+                        disp('NOTE: Valve state not found. No state data added to structure');
+                    end
+
+                    valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
+
+                    % Generate time series for state values            
+                    tic;
+
+                        tsState = timeseries( sscanf(sprintf('%s ', valveState{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
+                        % tsState = timeseries( str2double(valveState), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
+                    disp(sprintf('Generating state timeseries took: %f seconds',toc));
+
+                    % Generate time series for position values
+
+
+
+                    tic;
+                        tsPos = timeseries( sscanf(sprintf('%s ', valvePosition{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
+                        % tsPos = timeseries( str2double(valvePosition), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
+                    disp(sprintf('Generating position timeseries took: %f seconds',toc));
+
+                    fd = struct('ID', info.ID,...
+                                    'Type', info.Type,...
+                                    'System', info.System,...
+                                    'FullString', info.FullString,...
+                                    'ts', tsState, ...
+                                    'isValve', true, ...
+                                    'isProportional', true, ...
+                                    'position', tsPos);
+
+                    % write timeSeries to disk as efficient 'mat' format
+                    tic;
+    %                     save([savePath info.ID '.mat'],'fd','-mat')
+                        saveFDtoDisk(fd)
+
+                    disp(sprintf('Writing data to disk took: %f seconds',toc));
+
+                    disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
+                    
+                catch ME
+
+                    handleParseFailure(ME)
+
                 end
-
-                valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
-
-                % Generate time series for state values            
-                tic;
-                        
-                    tsState = timeseries( sscanf(sprintf('%s ', valveState{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                    % tsState = timeseries( str2double(valveState), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                disp(sprintf('Generating state timeseries took: %f seconds',toc));
-
-                % Generate time series for position values
-                
-                
-                
-                tic;
-                    tsPos = timeseries( sscanf(sprintf('%s ', valvePosition{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
-                    % tsPos = timeseries( str2double(valvePosition), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
-                disp(sprintf('Generating position timeseries took: %f seconds',toc));
-
-                fd = struct('ID', info.ID,...
-                                'Type', info.Type,...
-                                'System', info.System,...
-                                'FullString', info.FullString,...
-                                'ts', tsState, ...
-                                'isValve', true, ...
-                                'isProportional', true, ...
-                                'position', tsPos);
-
-                % write timeSeries to disk as efficient 'mat' format
-                tic;
-%                     save([savePath info.ID '.mat'],'fd','-mat')
-                    saveFDtoDisk(fd)
-
-                disp(sprintf('Writing data to disk took: %f seconds',toc));
-
-                disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
 
 
 
@@ -333,39 +348,45 @@ for i = 1:length(filenameCellList)
                 % ---------------------------------------------------------
                 
                 % Process data boundary sets
-
-                disp('Processing flow control set-points');
-
-
-                % Generate normal time series        
-                tic;
-                    % ts = timeseries( sscanf(sprintf('%s', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
-                    ts = timeseries( str2double(valueCell), timeVect, 'Name', info.FullString);
-                disp(sprintf('Generating timeseries took: %f seconds',toc));            
-
-                fd = struct('ID',           info.ID,...
-                            'Type',         info.Type,...
-                            'System',       info.System,...
-                            'FullString',   info.FullString,...
-                            'ts',           ts, ...
-                            'isLimit',      true);
-
-                % write timeSeries to disk as efficient 'mat' format
-                tic;
-%                     if isequal(info.Type, 'Set Point')
-%                         % Save happy file name
-%                         save([savePath info.ID '.mat'],'fd','-mat')
-%                     else
-%                         save([savePath info.System ' ' info.ID '.mat'],'fd','-mat')
-%                     end
-
-                        saveFDtoDisk(fd)
-
-                disp(sprintf('Writing data to disk took: %f seconds',toc));
-
-                disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
-  
                 
+                try
+
+                    disp('Processing flow control set-points');
+
+
+                    % Generate normal time series        
+                    tic;
+                        % ts = timeseries( sscanf(sprintf('%s', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
+                        ts = timeseries( str2double(valueCell), timeVect, 'Name', info.FullString);
+                    disp(sprintf('Generating timeseries took: %f seconds',toc));            
+
+                    fd = struct('ID',           info.ID,...
+                                'Type',         info.Type,...
+                                'System',       info.System,...
+                                'FullString',   info.FullString,...
+                                'ts',           ts, ...
+                                'isLimit',      true);
+
+                    % write timeSeries to disk as efficient 'mat' format
+                    tic;
+    %                     if isequal(info.Type, 'Set Point')
+    %                         % Save happy file name
+    %                         save([savePath info.ID '.mat'],'fd','-mat')
+    %                     else
+    %                         save([savePath info.System ' ' info.ID '.mat'],'fd','-mat')
+    %                     end
+
+                            saveFDtoDisk(fd)
+
+                    disp(sprintf('Writing data to disk took: %f seconds',toc));
+
+                    disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
+  
+                catch (ME)
+
+                    handleParseFailure(ME)
+
+                end
                 
   
 
@@ -404,59 +425,8 @@ for i = 1:length(filenameCellList)
                                 ts = timeseries( sscanf(sprintf('%s ', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
                             catch ME
                                 
-                                disp('There was a problem generating a timeseries from these data');
-                                
-                                % Open a window with some of the data
-                                showDataSampleWindow
-                                
-                                % Pause execution for now
-                                
-                                skipButton = 'Skip This File';
-                                haltButton = 'Halt';
-                                
-                                ButtonName = questdlg('There was an error parsing this data file. How do you want to proceed?', ...
-                                                    'MARS DRT Data Parse Error', ...
-                                                    skipButton, haltButton, haltButton);
-                                                
-                                switch ButtonName
-                                    case skipButton
-                                        disp('User selected SKIP');
-                                        skipThisFile = true;
-                                        
-                                        
-                                    case haltButton
-                                        
-                                        disp('User selected HALT');
-                                        
-                                        % Add the offending variables to
-                                        % the main workspace to allow power
-                                        % users to debug - only if not
-                                        % deployed!
-                                        if ~isdeployed
-                                            disp('Copying data to main workspace for debugging');
-                                                                                        
-                                            assignin('base' , 'parseValue', valueCell );
-                                            assignin('base' , 'parseTime',  timeVect  );
-                                            assignin('base' , 'parseUnits', unitCell );
-                                            assignin('base' , 'parseShort', shortNameCell );
-                                            assignin('base' , 'parseLong',  longNameCell );
-                                            
-                                        end
-                                        
-                                        
-                                        % Rethrow the exception and exit
-                                        error('Parsing data file failed');
-%                                         rethrow(ME)
-
-                                        
-                                    otherwise
-                                        % Assume user did something weird
-                                        % Rethrow the exception and exit
-                                        rethrow(ME)
-                                end
+                                handleParseFailure(ME)
                                     
-                                
-                                
                             end
                             
                             % This is the old way and it was REALLY REALLY slow
@@ -642,6 +612,65 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
 
         dbugWindow.Position(3) = t.Extent(3) + 40;
         dbugWindow.Position(4) = t.Extent(4) + 25; 
+        
+    end
+
+
+
+    function handleParseFailure(ME)
+        
+        disp('There was a problem generating a timeseries from these data');
+                                
+                                % Open a window with some of the data
+                                showDataSampleWindow
+                                
+                                % Pause execution for now
+                                
+                                skipButton = 'Skip This File';
+                                haltButton = 'Halt';
+                                
+                                ButtonName = questdlg('There was an error parsing this data file. How do you want to proceed?', ...
+                                                    'MARS DRT Data Parse Error', ...
+                                                    skipButton, haltButton, haltButton);
+                                                
+                                switch ButtonName
+                                    case skipButton
+                                        disp('User selected SKIP');
+                                        skipThisFile = true;
+                                        
+                                        
+                                    case haltButton
+                                        
+                                        disp('User selected HALT');
+                                        
+                                        % Add the offending variables to
+                                        % the main workspace to allow power
+                                        % users to debug - only if not
+                                        % deployed!
+                                        if ~isdeployed
+                                            disp('Copying data to main workspace for debugging');
+                                                                                        
+                                            assignin('base' , 'parseValue', valueCell );
+                                            assignin('base' , 'parseTime',  timeVect  );
+                                            assignin('base' , 'parseUnits', unitCell );
+                                            assignin('base' , 'parseShort', shortNameCell );
+                                            assignin('base' , 'parseLong',  longNameCell );
+                                            
+                                        end
+                                        
+                                        
+                                        % Rethrow the exception and exit
+                                        error('Parsing data file failed');
+%                                         rethrow(ME)
+
+                                        
+                                    otherwise
+                                        % Assume user did something weird
+                                        % Rethrow the exception and exit
+                                        rethrow(ME)
+                                end
+        
+
         
     end
 
