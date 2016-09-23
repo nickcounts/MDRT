@@ -8,7 +8,8 @@
 %     startTime = datenum('2016/069/10:00:00.203354')
 %     startTime = datenum('2016/113/10:00:00.203354')
 %     startTime = datenum('2016/221/13:15:31.347377')
-    startTime = datenum('2016/219/17:00:07.855209')
+%     startTime = datenum('2016/219/17:00:07.855209')
+    startTime = datenum('Sept 18 2016 10:00:00')
     % time = startTime + (t * oneSec);
 
 %% Generate new Time Vector
@@ -27,9 +28,12 @@
 
 % look at 8020 Ctl
 
-    reduce_plot(time, a5, 'DisplayName', '8020 Command');
+%     reduce_plot(time, a6, 'DisplayName', '8030 Command');
+    reduce_plot(time, a5, 'DisplayName', 'STE Pressure');
     dynamicDateTicks;
     plotStyle;
+    
+    msgbox('Place a marker on the plot at the time you wish to synchronize with a CCT datestamp. Save the cursor as variable c', 'User Action Required')
 
     keyboard
 
@@ -42,6 +46,13 @@
 %     timeSync = datenum('August 6, 2016 13:29:40.050157');
 
 
+
+    cctDateString = inputdlg('CCT Timestamp of command:','Command Timestamp', 1, {''});
+
+%     timeSync = makeMatlabTimeVector({'2016/243/13:26:30.929299'}, 0, 0);
+    timeSync = makeMatlabTimeVector(cctDateString, 0, 0);
+    
+    
     firstCommand = c.Position(1);
     
     
@@ -81,7 +92,7 @@ ts.Data = psi;
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,['STE PT', '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', 'STE PT', '.mat']),'fd','-mat');
 
 progressbar(1/7);
 
@@ -97,7 +108,7 @@ ts.Data = a1;
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,[fd.ID, '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', fd.ID, '.mat']),'fd','-mat');
 progressbar(2/7);
 
 % DCVNO-8020
@@ -112,7 +123,7 @@ ts.Data = a2;
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,[fd.ID, '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', fd.ID, '.mat']),'fd','-mat');
 progressbar(3/7);
 
 %% DCVNC-8030
@@ -127,7 +138,7 @@ ts.Data = a3;
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,[fd.ID, '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', fd.ID, '.mat']),'fd','-mat');
 progressbar(4/7);
 
 % DCVNO-8020
@@ -142,7 +153,7 @@ ts.Data = a4;
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,[fd.ID, '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', fd.ID, '.mat']),'fd','-mat');
 progressbar(5/7);
 
 %% DCVNC-8020 Command
@@ -157,7 +168,7 @@ ts.Data = a5 /4.9 * 24 ; % Convert to 24V signal (from voltage divider)
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,[fd.ID, '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', fd.ID, '.mat']),'fd','-mat');
 progressbar(6/7);
 
 %% DCVNO-8030 Command
@@ -172,7 +183,7 @@ ts.Data = a6 / 4.9 * 24 ; % Convert to 24V signal (from voltage divider);
 
 fd.ts = ts;
 
-save(fullfile(dataFolderPath,[fd.ID, '.mat']),'fd','-mat');
+save(fullfile(dataFolderPath,['MARDAQ ', fd.ID, '.mat']),'fd','-mat');
 progressbar(7/7);
 
 
