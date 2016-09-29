@@ -315,7 +315,7 @@ keyboard
 
 
 %  Dump cursor data to a file
-    dcm_obj = datacursormode(1);
+    dcm_obj = datacursormode(figureHandle(i));
     cursors = getCursorInfo(dcm_obj);
 
     datestr(cursors(1).Position(1),'HH:MM:SS.FFF');
