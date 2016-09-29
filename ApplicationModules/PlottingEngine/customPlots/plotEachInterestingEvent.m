@@ -31,15 +31,64 @@
 
 
 
-topData(1) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Open.mat')
-topData(2) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Close.mat')
-topData(3) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Command.mat')
+% Data from 8/8/16
+% -------------------------------------------------------------------------
+% 
+% topData(1) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Open.mat')
+% topData(2) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Close.mat')
+% topData(3) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8020 Command.mat')
+% 
+% midData(1) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Open.mat')
+% midData(2) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Close.mat')
+% midData(3) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Command.mat')
+% 
+% botData    = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/STE PT.mat')
 
-midData(1) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Open.mat')
-midData(2) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Close.mat')
-midData(3) = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/8030 Command.mat')
 
-botData    = load('/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-08-06 - HSS Testing/2016-08-08 - HSS Testing ITR-1448 - Day 2/data/STE PT.mat')
+
+% folderLocation = '/Users/nickcounts/Documents/Spaceport/Data/Testing/2016-09-20 - HSS Testing ITR-1448/data';
+
+
+disp('Directions for use:');
+disp('First select the folder containing MARDAQ HSS Data');
+disp(' ');
+disp('The script will search the 8030 valve for energize events.');
+disp('Each found event will be plotted. After each plot, program execution');
+disp('will pause to allow placing data cursors.');
+disp(' ');
+disp('When the plot and cursors are satisfactory, resume execution with the');
+disp('resume command.');
+disp(' ');
+disp('The script will save the plot and move to the next event.');
+disp(' ');
+
+input('Press any key to continue')
+
+disp(' ');
+disp(' ');
+
+pause
+
+
+
+folderLocation = uigetdir;
+
+% Quit if cancelled or invalid directory
+if ~exist(folderLocation, 'dir')
+    return
+end
+
+topData(1) = load(fullfile(folderLocation, 'MARDAQ 8020 Open.mat'));
+topData(2) = load(fullfile(folderLocation, 'MARDAQ 8020 Close.mat'));
+topData(3) = load(fullfile(folderLocation, 'MARDAQ 8020 Command.mat'));
+
+midData(1) = load(fullfile(folderLocation, 'MARDAQ 8030 Open.mat'));
+midData(2) = load(fullfile(folderLocation, 'MARDAQ 8030 Close.mat'));
+midData(3) = load(fullfile(folderLocation, 'MARDAQ 8030 Command.mat'));
+
+botData    = load(fullfile(folderLocation, 'MARDAQ STE PT.mat'));
+
+
 
 %                                                 
 % -------------------------------------------------------------------------
@@ -76,11 +125,17 @@ dataWindow = 90000;
 % -------------------------------------------------------------------------
 
 
-% Look for rises in 8030 command
+% % Look for rises in 8030 command
     rises = find(diff(midData(3).fd.ts.Data)>10);
     rises = rises(midData(3).fd.ts.Data(rises)> -10);
     
     falls = find(diff(midData(3).fd.ts.Data)<-10);
+
+% % Look for rises in STE PT command
+%     rises = find(diff(botData.fd.ts.Data)>5);
+%     rises = rises(botData.fd.ts.Data(rises)> -5);
+%     
+%     falls = find(diff(botData.fd.ts.Data)<-10);
 
 % % Locate specific times    
 % ps1 = find( abs(topData(1).fd.ts.Time - datenum('2-1-16 18:09:48')) < (1/24/60/60/500));
@@ -152,28 +207,28 @@ for i = 1:length(rises)
             hold on;
             
             axes(subPlotAxes(1))
-%             topAxisLine(1) = plot(topData(1).fd.ts.Time(rises(i)-1000:rises(i)+1000) , topData(1).fd.ts.Data(rises(i)-1000:rises(i)+1000), 'displayname', '8020 Open Switch');
-            topAxisLine(1) = plot(topData(1).fd.ts.Time, topData(1).fd.ts.Data, 'displayname', '8021 State');
+            topAxisLine(1) = plot(topData(1).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , topData(1).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', '8020 Open Switch');
+%             topAxisLine(1) = plot(topData(1).fd.ts.Time, topData(1).fd.ts.Data, 'displayname', '8021 State');
             topAxisLine(1).Color = 'b';
             
             hold on;
 
-%             axes(subPlotAxes(1))
-%             topAxisLine(2) = plot(topData(2).fd.ts.Time(rises(i)-1000:rises(i)+1000) , topData(2).fd.ts.Data(rises(i)-1000:rises(i)+1000), 'displayname', '8020 Close Switch');
-%             topAxisLine(2).Color = 'g';
-% 
-%             hold on;
-%             
-%             axes(subPlotAxes(1))
-%             topAxisLine(3) = plot(topData(3).fd.ts.Time(rises(i)-1000:rises(i)+1000) , topData(3).fd.ts.Data(rises(i)-1000:rises(i)+1000), 'displayname', '8020 Control');
-%             topAxisLine(3).Color = 'm';
+            axes(subPlotAxes(1))
+            topAxisLine(2) = plot(topData(2).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , topData(2).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', '8020 Close Switch');
+            topAxisLine(2).Color = 'g';
+
+            hold on;
+            
+            axes(subPlotAxes(1))
+            topAxisLine(3) = plot(topData(3).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , topData(3).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', '8020 Control');
+            topAxisLine(3).Color = 'm';
             
             % Style subplot 1 Axis
             legend(subPlotAxes(1), 'show');
             % -------------------------------------------------------------
             % CHANGED TITLE!!!!!!
             % -------------------------------------------------------------
-            topAxisTitle = title(subPlotAxes(1), 'DCVNO-8021');
+            topAxisTitle = title(subPlotAxes(1), 'DCVNO-8020');
             hold on;
             plotStyle;
             dynamicDateTicks
@@ -181,26 +236,26 @@ for i = 1:length(rises)
             % -------------------------------------------------------------
             % CHANGED LIMITS!!!!!!
             % -------------------------------------------------------------
-%             set(subPlotAxes(1), 'YLim', [-5, 30]);
-            set(subPlotAxes(1), 'YLim', [-1, 3]);
+            set(subPlotAxes(1), 'YLim', [-5, 30]);
+%             set(subPlotAxes(1), 'YLim', [-1, 3]);
             set(subPlotAxes(1), 'YTickLabelMode', 'auto');
 
             axes(subPlotAxes(2))
             
-            midAxisLine(1) = plot(midData(1).fd.ts.Time(rises(i)-1000:rises(i)+1000) , midData(1).fd.ts.Data(rises(i)-1000:rises(i)+1000), 'displayname', '8030 Open Switch');
+            midAxisLine(1) = plot(midData(1).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , midData(1).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', '8030 Open Switch');
             midAxisLine(1).Color = 'b';
             
 
             hold on;
             
             axes(subPlotAxes(2));
-            midAxisLine(2) = plot(midData(2).fd.ts.Time(rises(i)-1000:rises(i)+1000) , midData(2).fd.ts.Data(rises(i)-1000:rises(i)+1000), 'displayname', '8030 Close Switch');
+            midAxisLine(2) = plot(midData(2).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , midData(2).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', '8030 Close Switch');
             midAxisLine(2).Color = 'g';
 
             hold on;
             
             axes(subPlotAxes(2));
-            midAxisLine(3) = plot(midData(3).fd.ts.Time(rises(i)-1000:rises(i)+1000) , midData(3).fd.ts.Data(rises(i)-1000:rises(i)+1000), 'displayname', '8030 Control');
+            midAxisLine(3) = plot(midData(3).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , midData(3).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', '8030 Control');
             midAxisLine(3).Color = 'm';
 
             
@@ -212,6 +267,9 @@ for i = 1:length(rises)
             set(subPlotAxes(2), 'YLim', [-5, 30]);
             set(subPlotAxes(2), 'YTickLabelMode', 'auto');
             
+            
+            % Axis 3
+            % ------------------------------------------------------------
             axes(subPlotAxes(3));
             botAxisLine    = plot(botData(1).fd.ts.Time(rises(i)-dataWindow:rises(i)+dataWindow) , botData(1).fd.ts.Data(rises(i)-dataWindow:rises(i)+dataWindow), 'displayname', 'HSS STE PT');
             botAxisLine.Color = 'b';
@@ -228,8 +286,8 @@ for i = 1:length(rises)
         % Link x axes
 %             dynamicDateTicks(subPlotAxes(1:3), 'link', 'HH:MM:SS.FFF')
             linkaxes(subPlotAxes(:),'x');
-%             dynamicDateTicks
-            tlabel(subPlotAxes(3), 'HH:MM:SS.FFF', 'WhichAxes', 'Last');
+            dynamicDateTicks
+%             tlabel(subPlotAxes(3), 'HH:MM:SS.FFF', 'WhichAxes', 'Last');
             
             
             newTime = midData(3).fd.ts.Time(rises(i));
@@ -274,7 +332,7 @@ keyboard
 % Save plot
 
     path = '~/Desktop';
-    figureName = sprintf('2-1-16 HSS Test Run %i', i)
+    figureName = sprintf('HSS Test Run %i', i)
     saveas(figureHandle(i), fullfile(path, figureName), 'pdf')
 
 
