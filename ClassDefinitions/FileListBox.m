@@ -110,6 +110,9 @@ classdef (CaseInsensitiveProperties) FileListBox < handle
         %
         %   obj = FileListBox(javaobj,DropFileFcn,DropStringFcn) sets the
         %   callback functions for dropping of files and text.
+        
+            % InitJava - ensure the appropriate classes are available
+            obj.initJava;
             
             % Check for Java class
             assert(FileListBox.isInitialized(),'Javaclass MLDropTarget not found. Call FileListBox.initJava() for initialization.')
