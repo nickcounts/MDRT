@@ -8,9 +8,6 @@ function [ titleString ] = makeDataSetTitleStringFromActiveConfig( varargin )
 
 titleString = '';
 
-dbug = true;
-
-
 
 switch nargin
     case 1 % Caller passed either a config struct or a metadata struct
@@ -18,6 +15,12 @@ switch nargin
         if ~ isstruct(varargin{1} )
             % Not a structure!
             % soft fail
+            return
+        end
+        
+        if isempty(checkStructureType( varargin{1} ) )
+            % broke checkStructureType - soft fail by exiting and returning
+            % enpty string
             return
         end
         
@@ -35,6 +38,11 @@ switch nargin
                 config = varargin{1};
                 
                 metaData = loadMetadataFromConfig(config);
+                
+                if isempty(metaData)
+                    % metaData loading failed. return empty string
+                    return
+                end
                 
                 disp('passed a config struct, loaded metadata')
                 
@@ -70,6 +78,8 @@ titleString = makeStringFromMetaData(metaData);
 end
 
 function metaData = loadMetadataFromConfig(config)
+
+metaData = [];
 
 filename = fullfile(config.dataFolderPath,'metadata.mat');
                 
@@ -148,6 +158,7 @@ function titleString = makeStringFromMetaData(metaData)
     
 
 	titleString = strjoin({titleString, opString, opTypeString, '-', dateString});
+    titleString = strtrim(titleString);
     
     
 end

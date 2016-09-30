@@ -28,7 +28,7 @@ function varargout = review(varargin)
 
 % Edit the above text to modify the response to help review
 
-% Last Modified by GUIDE v2.5 22-Jul-2016 04:00:04
+% Last Modified by GUIDE v2.5 29-Sep-2016 22:54:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -296,7 +296,16 @@ config = handles.configuration;
 
 if ( exist(config.dataFolderPath,'dir') && exist(config.delimFolderPath,'dir') )
     % Confirmed that these folders DO EXIST
-    processDelimFiles(config);
+    try
+        processDelimFiles(config);
+    catch ME
+       % Something went wrong with the parsing engine.
+       % Errors will appear on console if the engine terminates abnormally
+       % This is bad practice, but for now I am soft-failing without
+       % displaying any error message from this function call. The parsing
+       % engine has its own error handling
+    end
+        
     
     % Refresh the FD list
     uiButton_updateFDList_Callback(hObject, eventdata, handles);
@@ -506,13 +515,13 @@ end
     guidata(hObject, handles);
 
 
-% --- Executes on button press in uiButton_splitDelims.
-function uiButton_splitDelims_Callback(~, ~, handles)
-% hObject    handle to uiButton_splitDelims (see GCBO)
+% --- Executes on button press in uiButton_importData.
+function uiButton_importData_Callback(~, ~, handles)
+% hObject    handle to uiButton_importData (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-splitDelimFiles(handles.configuration);
+makeDataImportGUI;
 
 function populateFDlistFromDataFolder(hObject, handles, folder)
 
