@@ -19,7 +19,7 @@ classdef mdrtDataBrowser_model < handle
     
     methods
         function obj = mdrtDataBrowser_model()
-            obj.config = MDRTConfig;
+            obj.config = MDRTConfig.getInstance;
             obj.reset();
         end
                 
@@ -30,7 +30,7 @@ classdef mdrtDataBrowser_model < handle
             
             dataSetList = cell(numel(di.dataIndex), 1);
             
-            for i = 1:numel(dataSetList)    
+            for i = 1:numel(dataSetList)
                dataSetList{i,1} = makeDataSetTitleStringFromActiveConfig(di.dataIndex(i).metaData); 
             end
             
