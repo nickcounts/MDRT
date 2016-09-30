@@ -106,22 +106,10 @@ for graphNumber = 1:numberOfGraphs
 % -------------------------------------------------------------------------
 % Generate new figure and handle. Set up for priting
 % -------------------------------------------------------------------------
-    figureHandle(graphNumber) = figure();
+    figureHandle(graphNumber) = makeMDRTPlotFigure();
     
     UserData.graph = graph;
-    saveButtonHandle = findall(figureHandle(graphNumber),'ToolTipString','Save Figure');
-    
-    set(figureHandle(graphNumber), 'UserData', UserData);
-    set(saveButtonHandle, 'ClickedCallback', 'MARSsaveFigure');
-    
-    % Add label size toggle and timeline refresh buttons
-        addToolButtonsToPlot(figureHandle);
-    
-    % Add custom menu to plot window
-        addAdvancedMenuToPlot(figureHandle);
-    
-    orient('landscape');
-    
+
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
                             
