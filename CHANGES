@@ -1,3 +1,6 @@
+Version 0.4.4:
+
+
 Version 0.4.3:
  - Merge branch 'feature-Comparison' into develop Initial release of data comparison tool. Uses environment variable to look for the data repository root path. Features include live FD searching, time synch to selected FDs, error-checking FDs in plot lists to make sure they match the selected data set. Automatic subplot titling.
  - Added 3 small testing files
