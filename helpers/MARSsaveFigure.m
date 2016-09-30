@@ -13,6 +13,22 @@ config = getConfig;
 
 fh = gcf;
 
+
+%% Automatically select best font size for printing
+
+    % Data Cursors / Tooltips
+    cursors = findall(fh, 'type', 'hggroup');
+    set(cursors, 'FontSize', 6)
+    
+    % Plot Legends
+    legends = findall(fh, 'Type', 'Legend');
+    set(legends, 'FontSize', 7); % default font was 9
+    
+    % Timeline Events
+    
+    
+%% Intelligent filename guess based on plot super title
+
 UserData = get(fh, 'UserData');
 
 % Find handle to supertitle object and extract string

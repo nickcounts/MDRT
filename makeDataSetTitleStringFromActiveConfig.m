@@ -158,6 +158,7 @@ function titleString = makeStringFromMetaData(metaData)
     
 
 	titleString = strjoin({titleString, opString, opTypeString, '-', dateString});
+    titleString = strtrim(titleString);
     
     
 end
