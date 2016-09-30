@@ -46,6 +46,8 @@ classdef MDRTConfig < handle
     end
     
     properties (Constant)
+        prototypeConfigFilePath = 'ClassDefinitions';
+        
         % UPDATE THESE from the list above!
         validConfigKeyNames = {...
             'graphConfigFolderPath'; ...
@@ -709,7 +711,8 @@ classdef MDRTConfig < handle
             if ~exist( fullfile(pathToConfig, self.configFileName), 'file')
                 % TODO: Should this be converted to a try/catch?
 
-                [status, message, ~] = copyfile( defaultConfigFile, fullfile( pathToConfig, self.configFileName ) );
+                [status, message, ~] = copyfile( fullfile( self.prototypeConfigFilePath, defaultConfigFile), ...
+                                                 fullfile( pathToConfig, self.configFileName ) );
 
                 if ~status
                     % Copy failed!
