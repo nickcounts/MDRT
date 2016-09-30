@@ -21,6 +21,8 @@ fh = gcf;
     set(cursors, 'FontSize', 6)
     
     % Plot Legends
+    legends = findall(fh, 'Type', 'Legend');
+    set(legends, 'FontSize', 7); % default font was 9
     
     % Timeline Events
     
