@@ -454,16 +454,16 @@ function menu_review_help_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in uiButton_helpButton.
 function uiButton_helpButton_Callback(hObject, eventdata, handles)
+% Open web browser window to MDRT wiki homepage
+web('https://github.com/nickcounts/MDRT/wiki')
 
 % popup an "about" dialog with version info.
-% TODO: Add a "quickstart" guide
-
-helpDialogTitle = 'About Review Tool';
-helpDialogMessage = {'MARS Review Tool beta'; ...
-                     '10-8-2014'; ...
-                     'Quickstart guide coming soon'};
-
-helpdlg(helpDialogMessage,helpDialogTitle);
+% helpDialogTitle = 'About Review Tool';
+% helpDialogMessage = {'MARS Review Tool beta'; ...
+%                      '10-8-2014'; ...
+%                      'Quickstart guide coming soon'};
+% 
+% helpdlg(helpDialogMessage,helpDialogTitle);
 
 
 
