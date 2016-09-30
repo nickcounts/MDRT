@@ -21,3 +21,4 @@ makeDataComparisonGUI( tab4 );
 
 makeSettingsGUI( tab5 );
 
+makeDataImportGUI( tab2 );
