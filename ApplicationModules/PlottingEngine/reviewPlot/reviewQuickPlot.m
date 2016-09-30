@@ -20,18 +20,10 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handl
         % For quickplot, only 1 subplot
         numberOfSubplots = 1;
     
-    figureHandle = figure();
+    figureHandle = makeMDRTPlotFigure();
     set(figureHandle,'Tag','quickPlot');
     
-    % Add label size toggle and timeline refresh buttons
-    addToolButtonsToPlot(figureHandle);
-    
-   
-    
-    
-    
-    % Fix orientation for printing and .pdf generation
-    orient('landscape');
+
     subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
 
