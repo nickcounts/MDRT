@@ -5,13 +5,15 @@ function addAdvancedMenuToPlot( figureHandle )
 
 m = uimenu(figureHandle, 'Label', 'Advanced');
 
-
 uimenu(m,   'Label',        'Link Axes', ...
-            'Callback',     @linkTimeAxes )
+            'Callback',     @linkTimeAxes );
         
 uimenu(m,   'Label',        'Unlink Axes', ...
-            'Callback',     @unlinkTimeAxes )
+            'Callback',     @unlinkTimeAxes );
         
+uimenu(m,   'Label',        'Export Figure', ...
+            'Callback',     'filemenufcn(gcbf,''FileSaveAs'')', ...
+            'Separator',    'on');
         
 end
 
