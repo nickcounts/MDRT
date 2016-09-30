@@ -611,7 +611,10 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         t.Position(4) = t.Extent(4);    
 
         dbugWindow.Position(3) = t.Extent(3) + 40;
-        dbugWindow.Position(4) = t.Extent(4) + 25; 
+        dbugWindow.Position(4) = t.Extent(4) + 25;
+        
+        t.Units = 'normalized';
+        t.Position = [0.1 0.1 0.8 0.8];
         
     end
 
@@ -619,56 +622,56 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
 
     function handleParseFailure(ME)
         
-        disp('There was a problem generating a timeseries from these data');
+        warning('There was a problem generating a timeseries from these data');
                                 
-                                % Open a window with some of the data
-                                showDataSampleWindow
-                                
-                                % Pause execution for now
-                                
-                                skipButton = 'Skip This File';
-                                haltButton = 'Halt';
-                                
-                                ButtonName = questdlg('There was an error parsing this data file. How do you want to proceed?', ...
-                                                    'MARS DRT Data Parse Error', ...
-                                                    skipButton, haltButton, haltButton);
-                                                
-                                switch ButtonName
-                                    case skipButton
-                                        disp('User selected SKIP');
-                                        skipThisFile = true;
-                                        
-                                        
-                                    case haltButton
-                                        
-                                        disp('User selected HALT');
-                                        
-                                        % Add the offending variables to
-                                        % the main workspace to allow power
-                                        % users to debug - only if not
-                                        % deployed!
-                                        if ~isdeployed
-                                            disp('Copying data to main workspace for debugging');
-                                                                                        
-                                            assignin('base' , 'parseValue', valueCell );
-                                            assignin('base' , 'parseTime',  timeVect  );
-                                            assignin('base' , 'parseUnits', unitCell );
-                                            assignin('base' , 'parseShort', shortNameCell );
-                                            assignin('base' , 'parseLong',  longNameCell );
-                                            
-                                        end
-                                        
-                                        
-                                        % Rethrow the exception and exit
-                                        error('Parsing data file failed');
+            % Open a window with some of the data
+            showDataSampleWindow();
+
+            % Pause execution for now
+
+            skipButton = 'Skip This File';
+            haltButton = 'Halt';
+
+            ButtonName = questdlg('There was an error parsing this data file. How do you want to proceed?', ...
+                                'MARS DRT Data Parse Error', ...
+                                skipButton, haltButton, haltButton);
+
+            switch ButtonName
+                case skipButton
+                    disp('User selected SKIP');
+                    skipThisFile = true;
+
+
+                case haltButton
+
+                    disp('User selected HALT');
+
+                    % Add the offending variables to
+                    % the main workspace to allow power
+                    % users to debug - only if not
+                    % deployed!
+                    if ~isdeployed
+                        disp('Copying data to main workspace for debugging');
+
+                        assignin('base' , 'parseValue', valueCell );
+                        assignin('base' , 'parseTime',  timeVect  );
+                        assignin('base' , 'parseUnits', unitCell );
+                        assignin('base' , 'parseShort', shortNameCell );
+                        assignin('base' , 'parseLong',  longNameCell );
+
+                    end
+
+
+                    % Rethrow the exception and exit
+                    error('Parsing data file failed');
 %                                         rethrow(ME)
 
-                                        
-                                    otherwise
-                                        % Assume user did something weird
-                                        % Rethrow the exception and exit
-                                        rethrow(ME)
-                                end
+
+                otherwise
+                    % Assume user did something weird
+                    % Rethrow the exception and exit
+                    rethrow(ME)
+            end
         
 
         
