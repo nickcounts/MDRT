@@ -44,7 +44,7 @@ function [ availFDs ] = listAvailableFDs( path, fileType )
                 % TODO: Fix error case where file is named *.mat but is NOT 
                 % a -mat file. Loader quits with an error
 
-                F = load([path filesOfType(i).name],'-mat');
+                F = load(fullfile(path, filesOfType(i).name),'-mat');
                 % disp(sprintf('%s',[fd.Type '-' fd.ID]))
 
                 if isfield(F, 'fd')
