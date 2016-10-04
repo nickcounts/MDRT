@@ -32,9 +32,14 @@ function [tlist1, tlist2] = updateEventDropdowns(hcontrol)
         load(fullfile(dataIndex(ol1.Value).pathToData, filename))
 
         % Load the t0 info if it exists and put at the top of the list
-        if timeline.uset0
-            elist1 = {timeline.t0.name};
-            tlist1 = timeline.t0.time;
+        try
+            if timeline.uset0
+                elist1 = {timeline.t0.name};
+                tlist1 = timeline.t0.time;
+            end
+        catch
+           % If this fails, there was no uset0 or no timeline struct
+           % soft fail - do nothing and continue
         end
 
         % Assemble list of event strings and event times
@@ -58,9 +63,14 @@ function [tlist1, tlist2] = updateEventDropdowns(hcontrol)
         load(fullfile(dataIndex(ol2.Value).pathToData, filename))
 
         % Load the t0 info if it exists and put at the top of the list
-        if timeline.uset0
-            elist2 = {timeline.t0.name};
-            tlist2 = timeline.t0.time;
+        try
+            if timeline.uset0
+                elist2 = {timeline.t0.name};
+                tlist2 = timeline.t0.time;
+            end
+        catch
+           % If this fails, there was no uset0 or no timeline struct
+           % soft fail - do nothing and continue
         end
 
         % Assemble list of event strings and event times
