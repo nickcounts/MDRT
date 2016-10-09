@@ -643,7 +643,7 @@ classdef MDRTConfig < handle
         % Must call this function to instantiate the object
         function inst = getInstance()
             persistent singletonObj
-            if isempty(singletonObj)
+            if isempty(singletonObj) || ~isvalid(singletonObj)
                 singletonObj = MDRTConfig();
                 inst = singletonObj;
             else
