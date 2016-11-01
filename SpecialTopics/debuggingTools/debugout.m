@@ -2,12 +2,19 @@ function debugout( somethingToPrintToConsole )
 %debugout will display console output for debugging purposes
 %   looks for environment variable 'debugOutput' which is true or false
 %
+%   When called from within a function, debugout will display the name of
+%   that function in bold, followed by the debugging content.
+%
+%   debugout produces output similar to that of disp - you can pass
+%   code as an argument, and the evaluated output will be displayed.
+%
 %   Example:
 %
-%       setenv('debugOutput','true');
+%       >> debugmode(true)
+%        debugmode: Debugging output is active
 %
 %       >> debugout('test debugging')
-%       test
+%       test debugging
 %
 %   Counts, VCSFA 2016
 
