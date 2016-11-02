@@ -12,7 +12,9 @@ function eventMarkerVisibilityTool(hobj, event, varargin)
 % Find all event markers in the calling figure:
     lines   = findall(fh, 'Tag',  'vline');
     labels  = findall(fh, 'Tag',  'vlinetext');
-
+    
+% Add listener to close this tool if the calling window closes
+lh = addlistener(fh, 'Close', @graphWindowClosed);
 
 % Prepare event strings, sorted list, and sort index for display in
 % checklist
@@ -135,5 +137,10 @@ jScrollPane = com.mathworks.mwswing.MJScrollPane(jCBList);
         
     end
 
-end
+    function graphWindowClosed(hobj, event, varargin)
+        
+        close(hs.fig);
 
+    end
+
+end
