@@ -24,7 +24,7 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handl
     set(figureHandle,'Tag','quickPlot');
     
 
-    subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
 
     % Set plotting axes!!
