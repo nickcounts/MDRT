@@ -33,18 +33,19 @@ axw = (1-sum(marginHeight) - (plotsWide-1) * gap(2)) / plotsWide;
 
 py = 1 - marginWidth(2) - axh; 
 
-hax = zeros(plotsHigh*plotsWide,1);
+% hax = zeros(plotsHigh*plotsWide,1);
+hax = {};
 ii = 0;
 for ih = 1:plotsHigh
     px = marginHeight(1);
     
     for ix = 1:plotsWide
         ii = ii+1;
-        hax(ii) = axes('Units','normalized', ...
+        hax = vertcat( axes('Units','normalized', ...
             'Position',[px py axw axh], ...
             'XTickLabel','', ...
             'YTickLabel','', ...
-            'HitTest', 'off');
+            'HitTest', 'off') );
 
         
         px = px+axw+gap(2);
