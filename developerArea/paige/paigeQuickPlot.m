@@ -34,7 +34,7 @@ function [ figureHandle ] = paigeQuickPlot( searchResult, handles)
    
     % Fix orientation for printing and .pdf generation
     orient('landscape');
-    subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
 
     % Set plotting axes!!
