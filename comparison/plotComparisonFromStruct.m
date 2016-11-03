@@ -77,7 +77,7 @@ graph.name = CG.Title;
     
     % Configure two subplots for easy comparison
     
-    subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
                             
     
