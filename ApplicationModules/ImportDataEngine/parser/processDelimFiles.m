@@ -166,7 +166,7 @@ for i = 1:length(filenameCellList)
         progressbar( (bytesProcessed + delimFiles(i).bytes * frac) / totalBytes, frac); 
         disp(sprintf('Assigning cell arrays took: %f seconds',toc));
         
-        
+        keyboard
         
         % Optional Cleanup
         tic;
@@ -308,6 +308,9 @@ for i = 1:length(filenameCellList)
                     disp(sprintf('Generating state timeseries took: %f seconds',toc));
 
                     % Generate time series for position values
+                    
+                    % valveCommand = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Param')))
+                    % tsCmd = timeseries( sscanf(sprintf('%s ', valveCommand{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Param'))), 'Name', info.FullString);
 
 
 
@@ -551,33 +554,7 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
     end
 
 
-    function fileName = makeFileNameForFD(FDinfo)
-        %% Pseudo code for filename generator
-        
-        % Tokenize the fullstring
-        
-        % fullStringTokens = regexp(info.FullString, '\w*','match');
-        fullStringTokens = regexp(FDinfo.FullString, '\S+','match'); % keeps ABC-1234 together as one token
-        
-        % If fullstring follows ABC-#####, then start filename with #####
-        
-            prependFindNumber = '';
-        
-            if max( logical( regexp( FDinfo.FullString, '\w-\d{4,5}' ) ))
-                
-                reQueryForFindNumber = '(?<=\w+-)(\d{4,5})';
-                
-                prependFindNumber = regexp( FDinfo.FullString, reQueryForFindNumber, 'match' );
-                
-            end
-            
-        
-        % Build filename, use entire FD Fullstring (do I want to exclude
-        % certain terms in the future?)
-        
-            fileName = strjoin([prependFindNumber, fullStringTokens]);
-        
-    end
+
 
 
     function showDataSampleWindow
