@@ -20,7 +20,7 @@
     useTimeline = true;
     
 % temporary hack to handle giant data sets
-    useReducePlot = true;
+    useReducePlot = false;
     
 % Flag to supress warning dialogs
     supressWarningDialogs = false;
@@ -156,10 +156,14 @@ for graphNumber = 1:numberOfGraphs
 
             hold off;
             axes(subPlotAxes(subPlotNumber));
+            
             for i = 1:length(toPlot)
                 
                 % Valve thing to do for the plot
                     if(any(strcmp('isValve',fieldnames(s(i).fd))))
+                        
+                        
+                        debugout(subPlotAxes(subPlotNumber).HitTest)
                         
                         if(any(strcmp('isProportional',fieldnames(s(i).fd))))
                             % Default to plotting just the position right
@@ -267,7 +271,7 @@ for graphNumber = 1:numberOfGraphs
             % -------------------------------------------------------------
                 
                 
-                    
+                debugout(subPlotAxes(subPlotNumber).HitTest)    
             
                 % Set subplot title and draw T:0
                     title(subPlotAxes(subPlotNumber),graph(graphNumber).subplots(subPlotNumber));
@@ -278,12 +282,6 @@ for graphNumber = 1:numberOfGraphs
                         % Plot time markers for major LFF events
                             % Loop through listed events
                             axes(subPlotAxes(subPlotNumber));
-
-                            
-                            % Commented out this bs...
-%                             for i = 1:length(graph(graphNumber).events)
-%                                 plotEvents(dataPath, eventFile, graph(graphNumber).events{i}, '-k');
-%                             end
 
                             % Crappy workaround to still have timeline events
                             if useTimeline
@@ -325,11 +323,11 @@ for graphNumber = 1:numberOfGraphs
                     if subPlotNumber == numberOfSubplots
                         % on last subplot, so add date string
                         tlabel('WhichAxes', 'last')
-                        disp('last tlabel call')
+                        debugout('last tlabel call')
                         
                     else
                         tlabel('Reference', 'none')
-                        disp('regular tlabel call')
+                        debugout('regular tlabel call')
                         
                     end
                     
@@ -371,9 +369,11 @@ for graphNumber = 1:numberOfGraphs
                     end
             end
         end
+
         
         
         set(subPlotAxes(subPlotNumber),'XLim',timeLimits);
+        
 
 
     % Fix paper orientation for saving
