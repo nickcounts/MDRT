@@ -1,12 +1,30 @@
+function updateDataFileNamesInDirectory(pathToData)
 %% updateDataFileNamesInDirectory
-% updateDataFileNamesInDirectory - script
-% prompts user for directory, backs up all data files, renames using the
-% 'makeFileNameForFD' function. Places problem data files inan 'e rror' 
-% directory for visibility.
+% updateDataFileNamesInDirectory()
+% updateDataFileNamesInDirectory(pathToData)
+%
+% If no path is supplied, prompts user for directory, backs up all data 
+% files, renames using the 'makeFileNameForFD' function. Places problem 
+% data files in an 'error' directory for visibility.
 
 % Find all data files in directory
 
-rootPath = uigetdir;
+%% Allow calling as a standalone or with a path;
+if nargin == 0
+    rootPath = uigetdir;
+    if rootPath == 0
+        % User pressed cancel
+        return
+    end
+else
+    if exist(pathToData, 'dir')
+        rootPath = pathToData;
+    else
+        error('input argument is not a valid directory');
+    end
+end
+    
+    
 directory = dir(rootPath);
 
 originalFiles = {directory(~[directory.isdir]).name}';
