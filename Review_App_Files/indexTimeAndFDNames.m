@@ -1,10 +1,8 @@
 function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
-%listAvailableFDs 
+%indexTimeAndFDNames 
 %
-%   listAvailableFDs( path, fileType )
+%   indexTimeAndFDNames( path, fileType )
 %
-%       fileType is a string
-%           fileType = 'dat'
 %
 %       path is a string and should be a well formed directory string.
 %       now checks to be sure there is an fd structure in the variable
@@ -17,10 +15,13 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
 %           ...         ...
 %       'FDN name' 'fdFileNameN.mat'
 %
+%   Returns a 1 x 2 matrix of datenums
+%
+%       [firstDataPointTimestamp, lastDataPointTimestamp]
 %
 %   This function is now cross-platform compatible
 %
-%   N. Counts, Spaceport Support Services, 2014
+%   N. Counts, Spaceport Support Services, 2017
 
     filesOfType = dir( fullfile( path, '*.mat') );
     
