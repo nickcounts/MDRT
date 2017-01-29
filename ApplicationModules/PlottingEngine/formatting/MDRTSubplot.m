@@ -1,17 +1,32 @@
-function [ hax ] = MDRTSubplot( plotsHigh, plotsWide, gap, marginWidth, marginHeight )
+function [ hAaxes ] = MDRTSubplot( plotsHigh, plotsWide, gap, marginWidth, marginHeight )
 %MDRTSubplot creates subplot axes for MDRT plotting tools
 %   
+%   MDRTSubplot( parentFigure )
+%   MDRTSubplot( plotsHigh, plotsWide )
+%   MDRTSubplot( plotsHigh, plotsWide, gap )
+%   MDRTSubplot( plotsHigh, plotsWide, gap, marginWidth )
+%   MDRTSubplot( plotsHigh, plotsWide, gap, marginHeight )
+%   MDRTSubplot( plotsHigh, plotsWide, gap, marginWidth, marginHeight )
+%
+%   gap, marginWidth, and marginHeight are in normalized units.
+%
+%   returns an array of axes handles
+%
+%   calling MDRTSubplot without gap, marginW
 
 %	Default page setup for landscape US Letter
-        graphsInFigure = 1;
-        graphsPlotGap = 0.05;
-        GraphsPlotMargin = 0.06;
+        defaultNumperOfPlots = 1;
+        defaultPlotGap = 0.05;
+        defaultPlotMargin = 0.06;
         
-% Original tight_supblot code
 
 % Handle input arguments
-    if nargin < 3; gap = .02; end
-    if nargin < 4 || isempty(marginWidth); marginWidth = .05; end
+    if (nargin == 1 && isa(plotsHigh, 'matlab.ui.Figure'))
+        
+    end
+        
+    if nargin < 3; gap = defaultPlotGap; end
+    if nargin < 4 || isempty(marginWidth); marginWidth = defaultPlotMargin; end
     if nargin < 5; marginHeight = .05; end
 
 % Handle vectorized gap and margin inputs
@@ -28,29 +43,39 @@ function [ hax ] = MDRTSubplot( plotsHigh, plotsWide, gap, marginWidth, marginHe
         marginWidth = [marginWidth marginWidth];
     end
 
-axh = (1-sum(marginWidth)  - (plotsHigh-1) * gap(1)) / plotsHigh; 
-axw = (1-sum(marginHeight) - (plotsWide-1) * gap(2)) / plotsWide;
+axheight = (1-sum(marginWidth)  - (plotsHigh-1) * gap(1)) / plotsHigh; 
+axwidth  = (1-sum(marginHeight) - (plotsWide-1) * gap(2)) / plotsWide;
 
-py = 1 - marginWidth(2) - axh; 
+yPos = 1 - marginWidth(2) - axheight; 
 
 % hax = zeros(plotsHigh*plotsWide,1);
-hax = {};
+% Init empty cell array of axes handles
+hAaxes = {};
 ii = 0;
 for ih = 1:plotsHigh
-    px = marginHeight(1);
+    xPos = marginHeight(1);
     
     for ix = 1:plotsWide
         ii = ii+1;
-        hax = vertcat( axes('Units','normalized', ...
-            'Position',[px py axw axh], ...
-            'XTickLabel','', ...
-            'YTickLabel','', ...
-            'HitTest', 'off') );
-
-        
-        px = px+axw+gap(2);
+        hAaxes = vertcat(hAaxes, ...
+            axes('Units','normalized', ...
+                'Position',[xPos yPos axwidth axheight], ...
+                'XTickLabel','', ...
+                'YTickLabel','', ...
+                ... 'HitTest', 'off', ...
+                'NextPlot', 'add', ...
+                'XGrid','on', ...
+                'XMinorGrid','on', ...
+                'XMinorTick','on', ...
+                'YGrid','on', ...
+                'YMinorGrid','on', ...
+                'YMinorTick','on', ...
+                'YTickLabelMode', 'auto', ...
+                'Box', 'on') );
+            
+        xPos = xPos+axwidth+gap(2);
     end
-    py = py-axh-gap(1);
+    yPos = yPos-axheight-gap(1);
 end
         
         
