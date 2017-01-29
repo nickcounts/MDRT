@@ -9,6 +9,9 @@ function hs = makeDataImportGUI( varargin )
 %
 % Counts, 2016 VCSFA
 
+figureName = 'Data Import GUI';
+overrideWindowDelete = true;
+
 if nargin == 0
     % Run as standalone GUI for testing
     % Run as standalone GUI for testing
@@ -16,12 +19,15 @@ if nargin == 0
     hs.fig = figure;
         guiSize = [672 387];
         hs.fig.Position = [hs.fig.Position(1:2) guiSize];
-        hs.fig.Name = 'Data Import GUI';
+        hs.fig.Name = figureName;
         hs.fig.NumberTitle = 'off';
         hs.fig.MenuBar = 'none';
         hs.fig.ToolBar = 'none';
         hs.fig.Tag = 'importFigure';
-        hs.fig.DeleteFcn = @windowCloseCleanup;
+        
+        if overrideWindowDelete
+            hs.fig.DeleteFcn = @windowCloseCleanup;
+        end
 
 elseif nargin == 1
     % Populate a UI container
