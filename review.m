@@ -425,7 +425,7 @@ function uiButton_saveQuickPlot_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Launch the GUI that saves stuff
-reviewSavePlot
+% reviewSavePlot
 
 
 % --- Executes on button press in uiButton_plotSetup.
