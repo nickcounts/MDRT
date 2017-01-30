@@ -11,23 +11,23 @@ function updateDataFileNamesInDirectory(pathToData)
 
 %% Allow calling as a standalone or with a path;
 if nargin == 0
-    rootPath = uigetdir;
-    if rootPath == 0
+    rootDir_path = uigetdir;
+    if rootDir_path == 0
         % User pressed cancel
         return
     end
 else
     if exist(pathToData, 'dir')
-        rootPath = pathToData;
+        rootDir_path = pathToData;
     else
         error('input argument is not a valid directory');
     end
 end
     
     
-directory = dir(rootPath);
+directoryList = dir(rootDir_path);
 
-originalFiles = {directory(~[directory.isdir]).name}';
+originalFiles = {directoryList(~[directoryList.isdir]).name}';
 
 % remove items beginning with "."
 originalFiles(~cellfun(@isempty, regexpi(originalFiles, '^\.'))) = [];
@@ -40,15 +40,15 @@ originalFiles(~cellfun(@isempty, regexpi(originalFiles, 'AvailableFDs.mat'))) = 
 
 %% Make temporary directories
 
-tempDir = fullfile(rootPath, 'temp');
-backupDir = fullfile(rootPath, 'backup');
-issuesDir = fullfile(rootPath, 'issues');
-errorDir = fullfile(rootPath, 'error');
+tempDir_path   = fullfile(rootDir_path, 'temp');
+backupDir_path = fullfile(rootDir_path, 'backup');
+issuesDir_path = fullfile(rootDir_path, 'issues');
+errorDir_path  = fullfile(rootDir_path, 'error');
 
-mkdir(tempDir);
-mkdir(backupDir);
-mkdir(issuesDir);
-mkdir(errorDir);
+mkdir(tempDir_path);
+mkdir(backupDir_path);
+mkdir(issuesDir_path);
+mkdir(errorDir_path);
 
 % Prepare UI Progress Indicator
 numberOfFiles = numel(originalFiles);
@@ -61,14 +61,14 @@ progressbar('Data Directory Update - Overall', ...
 
 %% Copy entire rootPath into backupDir
 for i = 1:numberOfFiles
-    copyfile(fullfile(rootPath, originalFiles{i}), backupDir);
+    copyfile(fullfile(rootDir_path, originalFiles{i}), backupDir_path);
     totalFrac = i/totalLoops;
     progressbar(totalFrac, i/numberOfFiles, [], []);
 end
 
 %% Move entire rootPath into tempDir (the working directory)
 for i = 1:numberOfFiles
-    movefile(fullfile(rootPath, originalFiles{i}), tempDir);
+    movefile(fullfile(rootDir_path, originalFiles{i}), tempDir_path);
     totalFrac = (numberOfFiles + i)/totalLoops;
     progressbar(totalFrac, [], i/numberOfFiles, []);
 end
@@ -78,26 +78,26 @@ end
 for i = 1:numberOfFiles
     
     % Select a file on which to operate:
-    thisFile = fullfile(tempDir, originalFiles{i});
+    thisFullFile = fullfile(tempDir_path, originalFiles{i});
 
     % Error handling for non-existant variables. Must be a better way to do
     % this, but it seems expedient and is relatively fast.
     try
-        loadedVar = load(thisFile, '-mat', 'fd');
+        loadedVar = load(thisFullFile, '-mat', 'fd');
         
         % Does the file have an FD structure?
         if isfield(loadedVar, 'fd')
             
             % Make the new filename
-            newFileName = makeFileNameForFD(loadedVar.fd);
+            newFileName_str = makeFileNameForFD(loadedVar.fd);
             
-            renamedFile = fullfile(rootPath, strcat(newFileName, '.mat') );
+            renamedFullFile = fullfile(rootDir_path, strcat(newFileName_str, '.mat') );
             
             % Check for Filename Collisions
-            if ~exist(renamedFile, 'file')
+            if ~exist(renamedFullFile, 'file')
 
                 % rename the file in place
-                [status, ~, ~] = movefile(thisFile, renamedFile);
+                [status, ~, ~] = movefile(thisFullFile, renamedFullFile);
                 
                 % Someday I will check this status and do something smart
                 
@@ -106,7 +106,7 @@ for i = 1:numberOfFiles
                 
                 % put the offending file in issues directory and leave
                 % the original alone. Move on
-                copyfile(thisFile, issuesDir);
+                copyfile(thisFullFile, issuesDir_path);
                 
             end
             
@@ -119,7 +119,7 @@ for i = 1:numberOfFiles
         % Assume unable to load variable 'fd'
         % Could have been errors in file handling.
         % Copy file to error directory for visibility
-        copyfile(thisFile, errorDir);
+        copyfile(thisFullFile, errorDir_path);
     end
     
     totalFrac = ( (2*numberOfFiles) + i)/totalLoops;
