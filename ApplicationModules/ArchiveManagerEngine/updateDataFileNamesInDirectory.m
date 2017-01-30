@@ -37,7 +37,6 @@ originalFiles(~cellfun(@isempty, regexpi(originalFiles, 'metadata.mat'))) = [];
 originalFiles(~cellfun(@isempty, regexpi(originalFiles, 'timeline.mat'))) = [];
 originalFiles(~cellfun(@isempty, regexpi(originalFiles, 'AvailableFDs.mat'))) = [];
 
-AvailableFDs
 
 %% Make temporary directories
 
