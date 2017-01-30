@@ -34,7 +34,7 @@ end
 %% STEP 1: rename all files in data set
 
 % Temporarily disabled
-% updateDataFileNamesInDirectory(rootPath);
+updateDataFileNamesInDirectory(rootPath);
 
 
 %% STEP 2: re-index data files
@@ -187,7 +187,7 @@ if exist(dataIndexFullFile, 'file')
     if writeDataIndexFile
         
         backupFileName_str = sprintf('dataIndex-%s.bak', ...
-                                     datestr(now, 'mmmddyyyy-hhmmss') );
+                                     datestr(now, 'mmmddyyyy-HHMMSS') );
                                  
         backupFullFile = fullfile(archiveRootPath, backupFileName_str);
         
