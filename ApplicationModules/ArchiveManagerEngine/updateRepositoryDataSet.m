@@ -16,17 +16,19 @@
 % Counts, VCSFA 2017
 
 %% CONSTANT DEFINITIONS
-fdIndexFileName_str = 'AvailableFDs.mat'; % Should this come from a project
+FD_INDEX_FILE_NAME_STR = 'AvailableFDs.mat'; % Should this come from a project
                                           % configuration file?
-metaDataFileName_str = 'metadata.mat';
-dataIndexFileName_str = 'dataIndex.mat';
-dataFoldersLevelsDeepInArchive = 2;
+                                          
+                                          
+METADATA_FILE_NAME_STR = 'metadata.mat';
+DATAINDEX_FILE_NAME_STR = 'dataIndex.mat';
+DATA_FOLDERS_LEVELS_DEEP_IN_ARCHIVE = 2;
 
 %% STEP 0: Select data directory to update/refresh
 
-rootPath = uigetdir;
+rootDir_path = uigetdir;
 
-if rootPath == 0
+if rootDir_path == 0
     % User pressed cancel
     return
 end
@@ -34,71 +36,71 @@ end
 %% STEP 1: rename all files in data set
 
 % Temporarily disabled
-updateDataFileNamesInDirectory(rootPath);
+updateDataFileNamesInDirectory(rootDir_path);
 
 
 %% STEP 2: re-index data files
 
-[ FDList, timespan ] = indexTimeAndFDNames( rootPath );
+[ FDList, timespan ] = indexTimeAndFDNames( rootDir_path );
 
 
 %% STEP 3: Update AvailableFDs.mat
 
-writeFdFile = false;
+bWriteFdFile = false;
 
-if ~exist(fullfile(rootPath, fdIndexFileName_str), 'file')
+if ~exist(fullfile(rootDir_path, FD_INDEX_FILE_NAME_STR), 'file')
 	% Ask if you want to create a new file
     qString = sprintf('%s does not exist. Do you want to create one?', ...
-                        fdIndexFileName_str);
-    titleString = ['Create ' fdIndexFileName_str];
+                        FD_INDEX_FILE_NAME_STR);
+    titleString = ['Create ' FD_INDEX_FILE_NAME_STR];
     choice = questdlg(  qString, ...
                         titleString, ...
                         'Yes', 'No', 'No');
 	switch choice
         case 'Yes'
-            writeFdFile = true;
+            bWriteFdFile = true;
         otherwise            
 	end
     
 end
 
-if writeFdFile
-	save( fullfile(rootPath, fdIndexFileName_str), 'FDList');
+if bWriteFdFile
+	save( fullfile(rootDir_path, FD_INDEX_FILE_NAME_STR), 'FDList');
 end
 
 
 
 %% STEP 4: update/create metadata.mat
 
-writeMetadataFile = false;
+bWriteMetadataFile = false;
 
 % Generate metadata
 metadata = newMetaDataStructure;
     
-if ~exist(fullfile(rootPath, metaDataFileName_str), 'file')
+if ~exist(fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'file')
 
 	% Ask if you want to create a new file
     qString = sprintf('%s does not exist. Do you want to create one?', ...
-                        metaDataFileName_str);
-    titleString = ['Create ' metaDataFileName_str];
+                        METADATA_FILE_NAME_STR);
+    titleString = ['Create ' METADATA_FILE_NAME_STR];
     choice = questdlg(  qString, ...
                         titleString, ...
                         'Yes', 'No', 'No');
 	switch choice
         case 'Yes'
-            writeMetadataFile = true;
+            bWriteMetadataFile = true;
         otherwise            
 	end
 
 else
 
     % Found existing metadata file
-    m = load( fullfile(rootPath, metaDataFileName_str));
+    m = load( fullfile(rootDir_path, METADATA_FILE_NAME_STR));
     
     % use existing metadata variable if it exists
     if isfield(m, 'metadata')
         metadata = m.metadata;
-        writeMetadataFile = true;
+        bWriteMetadataFile = true;
     else
     end
 
@@ -108,23 +110,23 @@ end
 metadata.timeSpan = timespan;
 
 
-if writeMetadataFile
-	save( fullfile(rootPath, metaDataFileName_str), 'metadata');
+if bWriteMetadataFile
+	save( fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'metadata');
 end
 
 
 %% STEP 5: Find and update dataIndex.mat
 
-higherLevels = rootPath;
+higherLevels = rootDir_path;
 
 % get path 2 directories 'up'
-for i = 1:dataFoldersLevelsDeepInArchive
+for i = 1:DATA_FOLDERS_LEVELS_DEEP_IN_ARCHIVE
 	[higherLevels, currentDirectory, ~] = fileparts(higherLevels);
 end
 
 archiveRootPath = higherLevels;
 
-dataIndexFullFile = fullfile(archiveRootPath, dataIndexFileName_str);
+dataIndexFullFile = fullfile(archiveRootPath, DATAINDEX_FILE_NAME_STR);
 
 if exist(dataIndexFullFile, 'file')
     
@@ -138,13 +140,13 @@ if exist(dataIndexFullFile, 'file')
     matchingEntries = [];
     
     for i = 1:numel(dataIndex)
-        if strcmp(dataIndex(i).pathToData, rootPath)
+        if strcmp(dataIndex(i).pathToData, rootDir_path)
             % Found a dataIndex enry that points to this data set
             matchingEntries = vertcat(matchingEntries, i);
         end
     end
     
-    writeToIndex = true;
+    bWriteToIndex = true;
     
     switch length(matchingEntries)
         case 0
@@ -156,21 +158,21 @@ if exist(dataIndexFullFile, 'file')
         otherwise
             % Multiple matches found.
             % Throw error or launch another tool?
-            writeToIndex = false;
+            bWriteToIndex = false;
             error('Multiple dataIndex entries found for data set.');
             
     end
     
     
-    if writeToIndex
+    if bWriteToIndex
         
         dataIndex(indexIndex).metaData = metadata;
         dataIndex(indexIndex).FDList = metadata.fdList;
-        dataIndex(indexIndex).pathToData = rootPath;
+        dataIndex(indexIndex).pathToData = rootDir_path;
         
     end
     
-    writeDataIndexFile = false;
+    bWriteDataIndexFile = false;
     
     % Ask if you want to write new dataIndex
     qString = 'Commit updated dataIndex.mat to disk?';
@@ -180,11 +182,11 @@ if exist(dataIndexFullFile, 'file')
                         'Yes', 'No', 'No');
 	switch choice
         case 'Yes'
-            writeDataIndexFile = true;
+            bWriteDataIndexFile = true;
         otherwise            
     end
     
-    if writeDataIndexFile
+    if bWriteDataIndexFile
         
         backupFileName_str = sprintf('dataIndex-%s.bak', ...
                                      datestr(now, 'mmmddyyyy-HHMMSS') );
