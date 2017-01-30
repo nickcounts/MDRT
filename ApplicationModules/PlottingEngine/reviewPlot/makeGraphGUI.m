@@ -99,7 +99,12 @@ end
 
 % Start GUI with a new graph structure and populate GUI
     handles.graph = newGraphStructure;
+    
     uiNewButton_ClickedCallback(hObject, eventdata, handles);
+    
+    graph.name = makeDataSetTitleStringFromActiveConfig(config);
+    handles.ui_editBox_graphTitle.String = makeDataSetTitleStringFromActiveConfig(config);
+    
     handles.graph = returnGraphStructureFromGUI(handles);
     
     
