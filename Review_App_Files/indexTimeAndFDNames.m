@@ -1,7 +1,7 @@
 function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
 %indexTimeAndFDNames 
 %
-%   indexTimeAndFDNames( path, fileType )
+%   [ availFDs, timespan ] =indexTimeAndFDNames( path, fileType )
 %
 %
 %       path is a string and should be a well formed directory string.
