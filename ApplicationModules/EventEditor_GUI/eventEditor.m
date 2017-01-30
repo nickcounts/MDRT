@@ -837,7 +837,7 @@ function uiAddEventButton_Callback(hObject, eventdata, handles)
     if timeline.uset0
         newMilestone.Time = timeline.t0.time;
     else
-        newMilestone.Time = today;
+        newMilestone.Time = floor(now);
     end
     
     % add new timeline event to the structure
