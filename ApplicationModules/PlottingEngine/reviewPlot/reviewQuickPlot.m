@@ -10,6 +10,9 @@ function [ figureHandle ] = reviewQuickPlot( fdFileNameWithPath, varargin, handl
 %   Counts 2014, Spaceport Support Services
 %   Counts 2016, VCSFA - Updated
 
+%   Counts 2017, VCSFA - fixed issue with passing non-existant handles
+%   variables.
+
     % SET PLOT STYLE INFO FOR SAVING TO PDF
     
     %	Page setup for landscape US Letter
@@ -108,7 +111,7 @@ end
         vline(timeline.t0.time,'r-',t0string,0.5)
 
         % Cheat and plot everything the quick and dirty way
-        reviewPlotAllTimelineEvents(timeline,handles);
+        reviewPlotAllTimelineEvents(timeline);
 
 
 
