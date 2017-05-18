@@ -25,7 +25,7 @@ config = MDRTConfig.getInstance;
     switch nargin
         case 0
                             
-            t = today() + 0.5 : 1/24/60/60/10 : today() + 0.75;
+            t = floor(now) + 0.5 : 1/24/60/60/10 : floor(now) + 0.75;
             y = awgn( sin(t * 24), 25);
 
             fd.FullString = 'Example Signal';
@@ -42,6 +42,8 @@ config = MDRTConfig.getInstance;
             if ~ exist(fdDataFullFile, 'file')
                 error('Attempted to open a file that does not exist');
             end
+            
+            loadDataFile;
         
         otherwise
             
@@ -243,7 +245,7 @@ end
     
     
     %% Initial Plotting
-    
+
     
 %     hs.hLine1 = reduce_plot(fd.ts, '-b', 'DisplayName', 'Original');
     hs.hLine1 = plot(fd.ts, '-b', 'DisplayName', 'Original');
