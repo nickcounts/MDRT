@@ -166,8 +166,6 @@ for i = 1:length(filenameCellList)
         progressbar( (bytesProcessed + delimFiles(i).bytes * frac) / totalBytes, frac); 
         disp(sprintf('Assigning cell arrays took: %f seconds',toc));
         
-        keyboard
-        
         % Optional Cleanup
         tic;
             clear Q;
@@ -525,7 +523,7 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         
 %% New code to fix overloaded FD file names
 
-        fileName = makeFileNameForFD(info);
+        fileName = makeFileNameForFD(info.FullString);
         
         % Check fullstring against override list
         

@@ -1,0 +1,5 @@
+The graphical interface represents the tree 
+structure of the source directory specified 
+by user and includes classical functionalities:
+expansion through [+], folding through [-],
+moving through sliders, etc.        

@@ -1,38 +1,6 @@
 function [foundFolderNames, foundFolderPaths] = findDataFolders(rootSearchPath, searchExpression)
 %% findDataFolders()
-%
-%   findFilesInDirectory is a utility that returns the filename/paths of
-%   all matching files in a specified directory and its subdirectories.
-%   
-%   
-%
-%   This function is based on dataIndexer, written by Staten Longo for
-%   VCSFA Aug 2016.
-%
-%
 
-% Purpose: Provides a means of indexing through a folder for a specific
-% expression in the name of each folder by running a recursive search.
-
-% Function output [foundFilenames, foundFilePaths] creates a two cell
-% arrays of string values including the matching filenames and paths to
-% those files where the actual data lives.
-
-% Subfunctions:
-%     fileIsOK -                checks filename string input for '._' 
-%                               characters, returns logical value
-%     directoryIsSearchable  -  checks if the item in the current directory 
-%                               is searchable, returns logical value
-%     isTheFileWeWant -         checks if the item is not a directory and 
-%                               contains, returns logical value
-
-% Supporting functions:
-%     dataIndexForSearching - creates dataToSearch file of all metadata files found to place in data repository
-    
-% Longo 8-11-16, Virginia Commercial Space Flight Authority (VCSFA)
-
-% Argument Parsing
-% ------------------------------------------------------------------------
 
 defaultSearchExpression = 'data';
 defaultDirectory = pwd;
@@ -135,27 +103,11 @@ end % end function dataIndexer
     % or false/0 if file is not useable
 
 function fileIsOK = isValidFilename(filenameString)    
+    % Ignore hidden files and files (start with .)
+    fileIsOK = isempty( regexp( filenameString, '\.') );
 
-% Use strfind to look for weird characters: if empty, then not found
-% and filename is good!
+end
 
-    fileIsOK = isempty( strfind( filenameString, '._') );
-
-end % end subfunction isValidFilename
-
-% -------------------------------------------------------------------------
-% Function:
-    % isDirectoryToSearch checks if the item in the current directory is 
-    % searchable and returns logical value true/1 or false/0
-    
-% Input:
-    % directoryItem input takes a current directory path to check whether
-    % or not input is actually a directory and whether or not the filename
-    % is in the current directory or the directory above
-    
-% Output: 
-    % directoryIsSearchable returns logical value true/1 if directory item 
-    % is searchable or false/0 if directory item is not searchable
     
 function directoryIsSearchable = isDirectoryToSearch( directoryItem )
 
@@ -170,24 +122,7 @@ directoryIsSearchable = directoryIsSearchable * ~strcmp(directoryItem.name, '..'
 
 end % end subfunction isDirectoryToSearch
     
-% -------------------------------------------------------------------------
-% Function:
-    % isTheFolderWeWant checks if the item in the current directory is 
-    % not a directory and contains a match to the search expression
-    % and returns logical value true/1 or false/0
-    
-% Input:
-    % directoryItem input takes a current directory path to check whether
-    % or not input is actually a directory and whether or not the directory
-    % item name contains a match to the search expression
-    % searchString input takes a search expression to compare to the
-    % directoryItem input name
-    
-% Output: 
-    % foundDirectory returns logical value true/1 if directory item is not
-    % a directory and contains a match, or false/0 if directory item is a
-    % directory or does not contain a match
-    
+
     
 function foundDirectory = isTheFolderWeWant( directoryItem, searchString )
     

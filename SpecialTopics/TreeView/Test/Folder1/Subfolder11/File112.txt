@@ -1,0 +1,7 @@
+"TreeView" creates a treeview structure in
+a specific frame inside the figure defined 
+by user, at the specified position.
+
+A resizing method allows user to update
+treeview position with regard to parent 
+figure dimensions.

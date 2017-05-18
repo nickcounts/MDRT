@@ -1,0 +1,6 @@
+This figure contains a treeview generated through
+"TreeView" object.
+
+"TreeView" consists of a graphical object including
+the properties and methods making it a standalone
+component like MATLAB uicontrols.
