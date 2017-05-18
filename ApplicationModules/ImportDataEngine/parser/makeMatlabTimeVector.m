@@ -22,9 +22,9 @@ function [ matlabTimeVector ] = makeMatlabTimeVector( timeCellArray , convertUTC
 %   assemble Matlab date using datenum
     rawDate = datenum(timeMat(:,1),1,1) + timeMat(:,2) - 1;
 
-        yearM   = year(rawDate);
-        monthM  = month(rawDate); 
-        dayM    = day(rawDate);
+        yearM   = str2double(datestr(rawDate, 'yyyy'));
+        monthM  = str2double(datestr(rawDate, 'mm')); 
+        dayM    = str2double(datestr(rawDate, 'dd'));
 
 %   TIME VARIABLE: time is a matlab-style time value (double)
     matlabTimeVector = datenum(yearM,monthM,dayM,timeMat(:,3),timeMat(:,4),timeMat(:,5));
