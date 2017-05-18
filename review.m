@@ -28,7 +28,7 @@ function varargout = review(varargin)
 
 % Edit the above text to modify the response to help review
 
-% Last Modified by GUIDE v2.5 29-Sep-2016 22:54:09
+% Last Modified by GUIDE v2.5 07-Feb-2017 11:41:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -418,11 +418,18 @@ function uiButton_toggleTimelineLabelSize_Callback(hObject, eventdata, handles)
 reviewRescaleAllTimelineLabels
 
 
-% --- Executes on button press in uiButton_saveQuickPlot.
-function uiButton_saveQuickPlot_Callback(hObject, eventdata, handles)
-% hObject    handle to uiButton_saveQuickPlot (see GCBO)
+% --- Executes on button press in uiButton_filterData.
+function uiButton_filterData_Callback(hObject, eventdata, handles)
+% hObject    handle to uiButton_filterData (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+index = get(handles.uiPopup_FDList,'Value');
+fdFullFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
+
+keyboard
+
+filterFdTool(fdFullFileName);
 
 % Launch the GUI that saves stuff
 % reviewSavePlot
@@ -433,6 +440,8 @@ function uiButton_plotSetup_Callback(hObject, eventdata, handles)
 % hObject    handle to uiButton_plotSetup (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+filterFdTool
 
 makeGraphGUI;
 
