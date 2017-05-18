@@ -566,7 +566,7 @@ function updateGUIfromHandles(handles)
         % There is a t0, so load it and update the editor pane
         t0time = handles.timeline.t0.time;
         
-        handles.ui_popup_monthPicker.Value  = month(t0time);
+        handles.ui_popup_monthPicker.Value  = datestr(t0time, 'mm');
         handles.ui_editBox_year.String      = datestr(t0time, 'yyyy');
         handles.ui_editBox_day.String       = datestr(t0time, 'dd');
         
@@ -577,7 +577,7 @@ function updateGUIfromHandles(handles)
     end
         
     % Update Event information group
-    handles.ui_popup_monthPicker.Value      = month(currentEvent.Time);
+    handles.ui_popup_monthPicker.Value      = datestr(currentEvent.Time, 'mm');
     
     handles.ui_editBox_eventDay.String      = datestr(currentEvent.Time, 'dd');
     handles.ui_editBox_eventYear.String     = datestr(currentEvent.Time, 'yyyy');
