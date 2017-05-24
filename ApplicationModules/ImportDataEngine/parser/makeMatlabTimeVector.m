@@ -21,10 +21,11 @@ function [ matlabTimeVector ] = makeMatlabTimeVector( timeCellArray , convertUTC
 %   extract yyyy mm dd
 %   assemble Matlab date using datenum
     rawDate = datenum(timeMat(:,1),1,1) + timeMat(:,2) - 1;
+    rawDateN = datevec(rawDate);
 
-        yearM   = str2double(datestr(rawDate, 'yyyy'));
-        monthM  = str2double(datestr(rawDate, 'mm')); 
-        dayM    = str2double(datestr(rawDate, 'dd'));
+        yearM   = rawDateN(:,1)
+        monthM  = rawDateN(:,2)
+        dayM    = rawDateN(:,3)
 
 %   TIME VARIABLE: time is a matlab-style time value (double)
     matlabTimeVector = datenum(yearM,monthM,dayM,timeMat(:,3),timeMat(:,4),timeMat(:,5));
