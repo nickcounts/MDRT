@@ -31,9 +31,9 @@ f = figure;
 
 plot(fd.ts)
 hold on;
-plot(fd.ts.Time, weighted, 'displayname', 'Averaged')
+plot(fd.ts.Time, weighted, 'displayname', 'Weighted')
 hold on;
-plot(fd.ts.Time, smoothed, 'displayname', 'Averaged')
+plot(fd.ts.Time, smoothed, 'displayname', 'Smoothed')
 
 
 

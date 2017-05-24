@@ -31,7 +31,7 @@ function fileName = makeFileNameForFD(fdStruct)
 
     switch class(fdStruct)
         case 'struct'
-
+            %% TODO - fix non-existant handle issue
             if ~isempty(fdStruct.ts.Name)
                 % Prefer the full name of the timeseries for file
                 % names.

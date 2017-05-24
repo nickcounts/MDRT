@@ -176,7 +176,10 @@ function MDRTbrushMenu(hobj, event)
     
     function CloseOverride(hobj, event)
 
-        hs.mybrush.ActionPostCallback = [];
+        if exist('hs.mybrush', 'var')
+            hs.mybrush.ActionPostCallback = [];
+        end
+        
         hl.delete;
 %         delete(hs.fig);
         delete(gcf);

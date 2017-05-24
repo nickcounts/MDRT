@@ -6,10 +6,7 @@ function [ output_args ] = nodeSelected( hobj, event, varargin )
 %     n.setIcon(java.awt.Toolkit.getDefaultToolkit.createImage('folder-warning-16x16.png'))
 %     drawnow
     
-    
-    
-    
-    path = arrayfun(@(nd) char(nd.getName), n.getPath, 'Uniform',false);
+    path = arrayfun(@(nd) char(nd.getName), n.getPath, 'Uniform', false);
     
     npath = '';
     for i = 1:length(path)
