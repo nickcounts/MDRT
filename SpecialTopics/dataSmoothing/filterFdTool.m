@@ -17,21 +17,46 @@
      
      
 function filterFdTool(fdDataFullFile)
+% This is the main function for the data smoothing tool. This function
+% defines constants, instantiates "shared" (ugh, I know it's global state 
+% and that's bad) variables, calls the GUI generating function, and handles
+% the input cases (file passed, nothing passed). The graphics area is
+% populated.
 
-fd = newFD;
-config = MDRTConfig.getInstance;
+
+    fd = newFD;
+    config = MDRTConfig.getInstance;
+    hs = struct();
+
+    %% Constant Definitions
+
+    % Slider Bounds [min default max]
+        GAUSSIAN_WEIGHTED_SLIDER_BOUNDS     = [1 100 1000];
+        TIME_AVERAGE_WINDOW_SLIDER_BOUNDS   = [1 10    60];
+        SAMPLE_RATE_SLIDER_BOUNDS           = [1 80   100];
+
+    % Create the tool GUI and all handles
+        createSmoothingGUI();
+
 
 %% Initial Conditions for testing!!!
+
+
+    % Always populate the fd struct with test data when the fuction is
+    % first run. That way we can cancel file loads and still have valid
+    % data.
+    
+    t = floor(now) + 0.5 : 1/24/60/60/10 : floor(now) + 0.75;
+    y = awgn( sin(t * 24), 25);
+
+    fd.FullString = 'Example Signal';
+    fd.ts = timeseries(y', t');
+    fd.ts.Name = fd.FullString;
+
     switch nargin
         case 0
                             
-            t = floor(now) + 0.5 : 1/24/60/60/10 : floor(now) + 0.75;
-            y = awgn( sin(t * 24), 25);
-
-            fd.FullString = 'Example Signal';
-            fd.ts = timeseries(y', t');
-            fd.ts.Name = fd.FullString;
-            
+            % Is there any reason to look at this case anymore?
             
             % '/Users/nickcounts/Documents/Spaceport/Data/Testing/2017-01-11 - ITR-1555 LNSS-2/data/3917 LN2 PT-3917 Press Sensor Mon.mat';
             %         vars = load(testFullFile, 'fd', '-mat');
@@ -43,11 +68,15 @@ config = MDRTConfig.getInstance;
                 error('Attempted to open a file that does not exist');
             end
             
-            loadDataFile;
+            % Call file loading function since no file was passed
+            loadDataFile();
         
         otherwise
             
     end
+    
+    
+    
         
 
 
@@ -57,209 +86,213 @@ config = MDRTConfig.getInstance;
     dataFileName_str = strcat(fileName_str, extension_str);
 
 
-%% Constant Definitions
 
-    % Slider Bounds [min default max]
-    GAUSSIAN_WEIGHTED_SLIDER_BOUNDS     = [1 100 1000];
-    TIME_AVERAGE_WINDOW_SLIDER_BOUNDS   = [1 10    60];
-    SAMPLE_RATE_SLIDER_BOUNDS           = [1 80   100];
-
-
-%% Figure Properties
-
-    fig = figure;
-
-        fig.Resize = 'off';
-        fig.Units = 'pixels';
-        fig.Position(3:4) = [560 420];
-        fig.NumberTitle = 'off';
-        fig.Name = 'Data Smoothing Tool';
-    %     fig.Name = strcat('Data Smoothing Tool: ', ts.Name);
-        fig.ToolBar = 'figure';
-        fig.MenuBar = 'none';
-        
-        % Customize Toolbar
-        buttonsToDisable = {    'Standard.EditPlot';
-                                'Standard.PrintFigure';
-                                'Standard.SaveFigure';
-                                'Standard.FileOpen';
-                                'Standard.NewFigure';
-                                'Exploration.DataCursor';
-                                'Plottools.PlottoolsOn';
-                                'Plottools.PlottoolsOff';
-                                'Exploration.Rotate';
-                                'Annotation.InsertColorbar';
-                                'DataManager.Linking'};
-                                
-%                                 'Exploration.Pan';
-%                                 'Exploration.ZoomOut';
-%                                 'Exploration.ZoomIn';
-%                                 'Annotation.InsertLegend';
-
-for i = 1:numel(buttonsToDisable)
-    tObj = findall(fig, 'Tag', buttonsToDisable{i});
-    
-    tObj.Visible = 'off';
-end
-                                
-
-    hs.fig = fig;
-
-%% Axes Properties
-
-    hs.ax           = axes('Parent', hs.fig);
-    hs.ax.Units     = 'pixels';
-    hs.ax.Position  = [35 163 501 238];    
 
     
-%% Panel Properties
-
-    panelName = 'Filter Controls';
-    panelUnits = 'pixels';
-    panelPosition = [0 0 559 150];
-
-    hs.panel = uipanel(hs.fig, ...
-                    'Title',        panelName, ...
-                    'Units',        panelUnits, ...
-                    'Position',     panelPosition);
-            
-%% Dropdown Properties
-
-    dropdownContents = {    'Smooth Data';
-                            'Filter Data';
-                            'Make Lightweight' };
-
-    dropdownUnits = 'pixels';
-    % dropdownPos   = [ 0.1 0.1 0.5 0.5];
-    dropdownPos   = [410 110 140 027];
+    
+%% Initial Plotting
 
 
-    hs.popup = uicontrol(hs.panel, 'Style', 'popup', ...
-                    'Units',        dropdownUnits, ...
-                    'Position',     dropdownPos, ...
-                    'String',       dropdownContents,...
-                    'Value',        1);
-            
-            
-%% Edit Boxes
+        % hs.hLine1 = reduce_plot(fd.ts, '-b', 'DisplayName', 'Original');
+        hs.hLine1 = plot(fd.ts, '-b', 'DisplayName', 'Original');
+            dynamicDateTicks;
 
-    editHandles = { 'hEdit_gaussSize';
-                    'hEdit_windowSize';
-                    'hEdit_sampleRate'};
 
-    editPos     = { [10 86 70 22];
-                    [10 48 70 22];
-                    [10 11 70 22]};
-                
-	editTag     = { 'gaussSize';
-                    'windowSize';
-                    'sampleRate'};
+        hold on
+        hs.hLine2 = plot(fd.ts.Time, fd.ts.Data, '-g', 'DisplayName', 'Filtered');
 
-    for i = 1:numel(editHandles)
-        hs.(editHandles{i}) = uicontrol('Parent', hs.panel, ...
-                    'Style',        'edit', ...
-                    'Units',        'pixels', ...
-                    'Position',     editPos{i}, ...
-                    'Tag',          editTag{i}, ...
-                    'Callback',     @editBoxCallback);
-    end
+        initialPlot();
+    
+%% UI Creation and hs population ------------------------------------------
+    
+    function createSmoothingGUI()    
     
 
-%% Sliders
+    %% Figure Properties
 
-    sliderHandles = {   'hSlider_gaussSize';
-                        'hSlider_windowSize';
-                        'hSlider_sampleRate'};
+        fig = figure;
 
-    sliderPos =     {   [87 88 300 18];
-                        [87 50 300 18];
-                        [87 13 300 18]};
+            fig.Resize = 'off';
+            fig.Units = 'pixels';
+            fig.Position(3:4) = [560 420];
+            fig.NumberTitle = 'off';
+            fig.Name = 'Data Smoothing Tool';
+        %     fig.Name = strcat('Data Smoothing Tool: ', ts.Name);
+            fig.ToolBar = 'figure';
+            fig.MenuBar = 'none';
 
-    sliderParams =  {   GAUSSIAN_WEIGHTED_SLIDER_BOUNDS;
-                        TIME_AVERAGE_WINDOW_SLIDER_BOUNDS;
-                        SAMPLE_RATE_SLIDER_BOUNDS };
-                    
-	sliderTag   = { 'sliderGaussSize';
-                    'sliderWindowSize';
-                    'sliderSampleRate'};
+            % Customize Toolbar
+            buttonsToDisable = {    'Standard.EditPlot';
+                                    'Standard.PrintFigure';
+                                    'Standard.SaveFigure';
+                                    'Standard.FileOpen';
+                                    'Standard.NewFigure';
+                                    'Exploration.DataCursor';
+                                    'Plottools.PlottoolsOn';
+                                    'Plottools.PlottoolsOff';
+                                    'Exploration.Rotate';
+                                    'Annotation.InsertColorbar';
+                                    'DataManager.Linking'};
 
-    for i = 1:numel(sliderHandles)
-        hs.(sliderHandles{i}) = uicontrol('Parent', hs.panel, ...
-                    'Style',        'slider', ...
-                    'Units',        'pixels', ...
-                    'Position',     sliderPos{i}, ...
-                    'Min',          sliderParams{i}(1), ...
-                    'Max',          sliderParams{i}(3),...
-                    'Value',        sliderParams{i}(2), ...
-                    'Tag',          sliderTag{i});
-    end
+    %                                 'Exploration.Pan';
+    %                                 'Exploration.ZoomOut';
+    %                                 'Exploration.ZoomIn';
+    %                                 'Annotation.InsertLegend';
 
-    hs.listenGSSlider = addlistener(hs.hSlider_gaussSize,  'Value', 'PostSet',@sliderEventListenerCallback);
-    hs.listenWSSlider = addlistener(hs.hSlider_windowSize, 'Value', 'PostSet',@sliderEventListenerCallback);
-    hs.listenSRSlider = addlistener(hs.hSlider_sampleRate, 'Value', 'PostSet',@sliderEventListenerCallback);
+    for i = 1:numel(buttonsToDisable)
+        tObj = findall(fig, 'Tag', buttonsToDisable{i});
 
-%% Labels
-
-    textHandles = { 'hLabel_gaussWindow';
-                    'hLabel_timeAvgWindow';
-                    'hLabel_sampleRate' };
-
-    textPos =   {   [11 107 375 13];
-                    [10 70 375 13];
-                    [10 31 375 13]};
-
-    textStr =   {   'Gaussian Window Size (points)';
-                    'Time Average Window (seconds)';
-                    'Data Sample Rate (Hz)'};
-
-    for i = 1:numel(sliderHandles)
-        hs.(textHandles{i}) = uicontrol('Parent', hs.panel, ...
-                    'Style',        'text', ...
-                    'Position',     textPos{i}, ...
-                    'HorizontalAlignment', 'center', ...
-                    'String',       textStr{i} );
+        tObj.Visible = 'off';
     end
 
 
-%% Button
+        hs.fig = fig;
 
-    buttonHandles =	{   'hButton_save';
-                        'hButton_load'};
-                    
-	buttonFuncs  =  {   @saveFilteredData;
-                        @loadDataFile };
+    %% Axes Properties
 
-    buttonPos = {   [417 20 116 43];
-                    [417 65 116 43]};
+        hs.ax           = axes('Parent', hs.fig);
+        hs.ax.Units     = 'pixels';
+        hs.ax.Position  = [35 163 501 238];    
 
-    buttonStr = {   'Save Filterd Data';
-                    'Load FD'};
 
-    for i = 1:numel(buttonHandles)
-        hs.(buttonHandles{i}) = uicontrol('Parent', hs.panel, ...
-                    'Style',        'pushbutton', ...
-                    'Position',     buttonPos{i}, ...
-                    'String',       buttonStr{i}, ...
-                    'Callback',     buttonFuncs{i} );
+    %% Panel Properties
+
+        panelName = 'Filter Controls';
+        panelUnits = 'pixels';
+        panelPosition = [0 0 559 150];
+
+        hs.panel = uipanel(hs.fig, ...
+                        'Title',        panelName, ...
+                        'Units',        panelUnits, ...
+                        'Position',     panelPosition);
+
+    %% Dropdown Properties
+
+        dropdownContents = {    'Smooth Data';
+                                'Filter Data';
+                                'Make Lightweight' };
+
+        dropdownUnits = 'pixels';
+        % dropdownPos   = [ 0.1 0.1 0.5 0.5];
+        dropdownPos   = [410 110 140 027];
+
+
+        hs.popup = uicontrol(hs.panel, 'Style', 'popup', ...
+                        'Units',        dropdownUnits, ...
+                        'Position',     dropdownPos, ...
+                        'String',       dropdownContents,...
+                        'Value',        1);
+
+
+    %% Edit Boxes
+
+        editHandles = { 'hEdit_gaussSize';
+                        'hEdit_windowSize';
+                        'hEdit_sampleRate'};
+
+        editPos     = { [10 86 70 22];
+                        [10 48 70 22];
+                        [10 11 70 22]};
+
+        editTag     = { 'gaussSize';
+                        'windowSize';
+                        'sampleRate'};
+
+        for i = 1:numel(editHandles)
+            hs.(editHandles{i}) = uicontrol('Parent', hs.panel, ...
+                        'Style',        'edit', ...
+                        'Units',        'pixels', ...
+                        'Position',     editPos{i}, ...
+                        'Tag',          editTag{i}, ...
+                        'Callback',     @editBoxCallback);
+        end
+
+
+    %% Sliders
+
+        sliderHandles = {   'hSlider_gaussSize';
+                            'hSlider_windowSize';
+                            'hSlider_sampleRate'};
+
+        sliderPos =     {   [87 88 300 18];
+                            [87 50 300 18];
+                            [87 13 300 18]};
+
+        sliderParams =  {   GAUSSIAN_WEIGHTED_SLIDER_BOUNDS;
+                            TIME_AVERAGE_WINDOW_SLIDER_BOUNDS;
+                            SAMPLE_RATE_SLIDER_BOUNDS };
+
+        sliderTag   = { 'sliderGaussSize';
+                        'sliderWindowSize';
+                        'sliderSampleRate'};
+
+        for i = 1:numel(sliderHandles)
+            hs.(sliderHandles{i}) = uicontrol('Parent', hs.panel, ...
+                        'Style',        'slider', ...
+                        'Units',        'pixels', ...
+                        'Position',     sliderPos{i}, ...
+                        'Min',          sliderParams{i}(1), ...
+                        'Max',          sliderParams{i}(3),...
+                        'Value',        sliderParams{i}(2), ...
+                        'Tag',          sliderTag{i});
+        end
+
+        hs.listenGSSlider = addlistener(hs.hSlider_gaussSize,  'Value', 'PostSet',@sliderEventListenerCallback);
+        hs.listenWSSlider = addlistener(hs.hSlider_windowSize, 'Value', 'PostSet',@sliderEventListenerCallback);
+        hs.listenSRSlider = addlistener(hs.hSlider_sampleRate, 'Value', 'PostSet',@sliderEventListenerCallback);
+
+    %% Labels
+
+        textHandles = { 'hLabel_gaussWindow';
+                        'hLabel_timeAvgWindow';
+                        'hLabel_sampleRate' };
+
+        textPos =   {   [11 107 375 13];
+                        [10 70 375 13];
+                        [10 31 375 13]};
+
+        textStr =   {   'Gaussian Window Size (points)';
+                        'Time Average Window (seconds)';
+                        'Data Sample Rate (Hz)'};
+
+        for i = 1:numel(sliderHandles)
+            hs.(textHandles{i}) = uicontrol('Parent', hs.panel, ...
+                        'Style',        'text', ...
+                        'Position',     textPos{i}, ...
+                        'HorizontalAlignment', 'center', ...
+                        'String',       textStr{i} );
+        end
+
+
+    %% Button
+
+        buttonHandles =	{   'hButton_save';
+                            'hButton_load'};
+
+        buttonFuncs  =  {   @saveFilteredData;
+                            @loadDataFile };
+
+        buttonPos = {   [417 20 116 43];
+                        [417 65 116 43]};
+
+        buttonStr = {   'Save Filterd Data';
+                        'Load FD'};
+
+        for i = 1:numel(buttonHandles)
+            hs.(buttonHandles{i}) = uicontrol('Parent', hs.panel, ...
+                        'Style',        'pushbutton', ...
+                        'Position',     buttonPos{i}, ...
+                        'String',       buttonStr{i}, ...
+                        'Callback',     buttonFuncs{i} );
+        end
+
+
+
+    
     end
     
     
-    %% Initial Plotting
-
-    
-%     hs.hLine1 = reduce_plot(fd.ts, '-b', 'DisplayName', 'Original');
-    hs.hLine1 = plot(fd.ts, '-b', 'DisplayName', 'Original');
-        dynamicDateTicks;
-        
-    
-    hold on
-    hs.hLine2 = plot(fd.ts.Time, fd.ts.Data, '-g', 'DisplayName', 'Filtered');
-    
-    initialPlot
-    
-    
-    
-    %% Functions ----------------------------------------------------------
+%% Functions --------------------------------------------------------------
     
     function initialPlot
         
