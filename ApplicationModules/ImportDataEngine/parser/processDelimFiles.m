@@ -413,6 +413,13 @@ for i = 1:length(filenameCellList)
                             ts = timeseries( cellfun(@isempty,regexp(valueCell,'^0')), timeVect, 'Name', info.FullString);
                             
                             disp('Discrete data type detected')
+                            
+                        case {'CR', 'SC'}
+                            % Ignore control stuff that is non-numerical
+                            % for now. System Command and Command Response
+                            
+                            disp('File contains data of type ''CR'' - Skipping file ')
+                            skipThisFile = true;
                                                         
                         otherwise
                             % Process with optimized floating point
@@ -421,7 +428,7 @@ for i = 1:length(filenameCellList)
                             % concatenating all values from array into one
                             % long string!!!
                             
-                            
+                           
                             try
                                 ts = timeseries( sscanf(sprintf('%s ', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
                             catch ME
