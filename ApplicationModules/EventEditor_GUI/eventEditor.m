@@ -22,7 +22,7 @@ function varargout = eventEditor(varargin)
 
 % Edit the above text to modify the response to help eventEditor1
 
-% Last Modified by GUIDE v2.5 12-Jul-2016 20:12:32
+% Last Modified by GUIDE v2.5 24-May-2017 15:14:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1043,3 +1043,37 @@ function uiToolbar_openButton_callback(hObject, eventdata, handles)
         % User hit cancel button
         disp('User cancelled load');
     end
+
+
+% --------------------------------------------------------------------
+function uiToolbar_newButton_ClickedCallback(hObject, ~, handles)
+
+% Are you SURE??
+
+    choice = questdlg('Do you want to continue? Any unsaved changes will be lost', ...
+        'New Timeline File', ...
+        'Yes','No','No');
+
+% Handle response
+    switch choice
+        case 'Yes'
+            % Generate new, blank timeline
+            timeline = newTimelineStructure;
+        case 'No'
+            % User cancelled
+            return;
+        otherwise
+            % User closed dialog without selection?
+            return;
+    end
+
+
+    handles.timeline = timeline;
+
+% Call subroutine to enter all values from valid file
+    eventEditor_pre_populate_GUI(handles)
+
+
+% Update handles structure
+    guidata(hObject, handles);
+
