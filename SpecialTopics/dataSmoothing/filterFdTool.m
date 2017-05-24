@@ -65,7 +65,8 @@ function filterFdTool(fdDataFullFile)
         case 1
             
             if ~ exist(fdDataFullFile, 'file')
-                error('Attempted to open a file that does not exist');
+                warn('Attempted to open a file that does not exist');% Call file loading function since no file was passed
+                loadDataFile();
             end
             
             % Call file loading function since no file was passed
