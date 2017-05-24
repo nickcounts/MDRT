@@ -23,9 +23,9 @@ function [ matlabTimeVector ] = makeMatlabTimeVector( timeCellArray , convertUTC
     rawDate = datenum(timeMat(:,1),1,1) + timeMat(:,2) - 1;
     rawDateN = datevec(rawDate);
 
-        yearM   = rawDateN(:,1)
-        monthM  = rawDateN(:,2)
-        dayM    = rawDateN(:,3)
+        yearM   = rawDateN(:,1);
+        monthM  = rawDateN(:,2);
+        dayM    = rawDateN(:,3);
 
 %   TIME VARIABLE: time is a matlab-style time value (double)
     matlabTimeVector = datenum(yearM,monthM,dayM,timeMat(:,3),timeMat(:,4),timeMat(:,5));
@@ -34,7 +34,7 @@ function [ matlabTimeVector ] = makeMatlabTimeVector( timeCellArray , convertUTC
         disp('Convert flag is TRUE')
         timeAdjust = - 5; %hours
         if isDST
-            timeAdjust + 1;
+            timeAdjust = timeAdjust + 1;
         end
         matlabTimeVector = matlabTimeVector + (timeAdjust/24);
     end
