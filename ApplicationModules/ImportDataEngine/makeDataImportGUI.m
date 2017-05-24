@@ -434,7 +434,8 @@ initialValues =    ...
                                      fullfile(pathname, filename{i}));
             end
         elseif isa(filename, 'char')
-            filesToAdd = vertcat(fullfile(pathname, filename));
+            filesToAdd = vertcat(filesToAdd, ...
+                                 fullfile(pathname, filename));
         else
             % What would cause this?
             return
