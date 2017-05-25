@@ -1,11 +1,14 @@
 % MARSsaveFigure is a script for overriding the default save button
 %
-%   Gets the current graphics context, looks for the UserData.graph
-%   structure and generates an automatic name for saving MARS Data Plots.
+%   Gets the current graphics context, looks for a suptitle object and
+%   generates an automatic name for saving MARS Data Plots.
 %
 %   Current version uses getConfig
 %
 %   Counts, Spaceport Support Services, 2014
+
+%   Counts, VCSFA, 2017 - updated to be more fault tolerant. Fixed
+%   documentation
 
 
 
@@ -29,11 +32,14 @@ fh = gcf;
     
 %% Intelligent filename guess based on plot super title
 
-UserData = get(fh, 'UserData');
-
 % Find handle to supertitle object and extract string
 sth = findobj(fh,'Tag','suptitle');
-graphTitle = sth.Children.String;
+
+if size(sth) == 0
+    graphTitle = 'MDRT_Plot';
+else
+    graphTitle = sth.Children.String;
+end
 
 % clean up unhappy reserved filename characters
 %     defaultName = regexprep(UserData.graph.name,'^[!@$^&*~?.|/[]<>\`";#()]','');
@@ -58,4 +64,4 @@ end
 
 
 % Garbage collection
-clear config fh UserData file path defaultName
+clear config fh file path defaultName sth

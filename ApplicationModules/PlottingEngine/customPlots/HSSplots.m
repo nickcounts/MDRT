@@ -51,7 +51,7 @@ range = start:stop;
     
     orient('landscape');
 
-    subPlotAxes = tight_subplot(plotRows,plotsWide,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(plotRows,plotsWide,graphsPlotGap, ... 
                                     GraphsPlotMargin,GraphsPlotMargin);
     suptitle('MARS GN2 Performance Testing Flowdyne Valve Data');
 

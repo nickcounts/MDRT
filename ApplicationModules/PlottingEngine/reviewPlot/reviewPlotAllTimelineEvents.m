@@ -155,7 +155,7 @@ end
 
             eventString = sprintf('T%s%s %s', timeModifier, datestr(abs(dt), 'HH:MM:SS'),timeline.milestone(i).String);
 
-            vline(timeline.milestone(i).Time + deltaT,  '-k' , eventString,  [0.05,-1]);
+            hvl = vline(timeline.milestone(i).Time + deltaT,  '-k' , eventString,  [0.05,-1]);
 
         end
         
@@ -168,7 +168,7 @@ end
 
             eventString = sprintf('%s %s', datestr(eventTime, 'HH:MM:SS'),timeline.milestone(i).String);
 
-            vline(timeline.milestone(i).Time + deltaT,  '-k' , eventString,  [0.05,-1]);
+            hvl = vline(timeline.milestone(i).Time + deltaT,  '-k' , eventString,  [0.05,-1]);
 
         end
         

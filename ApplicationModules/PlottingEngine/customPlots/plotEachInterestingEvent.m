@@ -168,7 +168,7 @@ for i = 1:length(rises)
     
     orient('landscape');
     
-    subPlotAxes = tight_subplot(3,1,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(3,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
                             
         topAxis = get(subPlotAxes(1));

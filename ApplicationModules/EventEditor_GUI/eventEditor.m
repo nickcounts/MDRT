@@ -22,7 +22,7 @@ function varargout = eventEditor(varargin)
 
 % Edit the above text to modify the response to help eventEditor1
 
-% Last Modified by GUIDE v2.5 12-Jul-2016 20:12:32
+% Last Modified by GUIDE v2.5 24-May-2017 15:14:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -111,14 +111,6 @@ function eventEditor1_OpeningFcn(hObject, eventdata, handles, varargin)
 
 handles.timeline = timeline;
 
-    t0Month  = month(timeline.t0.time);
-    t0Day    = day(timeline.t0.time);
-    t0Year   = year(timeline.t0.time);
-
-    t0Hour   = hour(timeline.t0.time);
-    t0Minute = minute(timeline.t0.time);
-    t0Second = second(timeline.t0.time);
-
 % Call subroutine to enter all values from valid file
 eventEditor_pre_populate_GUI(handles)
 
@@ -167,9 +159,13 @@ handles.timeline.milestone(eventIndex);
 
 t = handles.timeline.milestone(eventIndex).Time;
 
-% TODO: rewrite this section so it is NOT dependant on the financial toolbox
+tm = num2cell([ str2double(datestr(t, 'mm')), ...
+                str2double(datestr(t, 'dd')), ...
+                str2double(datestr(t, 'yyyy')), ...
+                str2double(datestr(t, 'HH')), ...
+                str2double(datestr(t, 'MM')), ...
+                str2double(datestr(t, 'SS.FFF')) ]);
 
-tm = num2cell([month(t) day(t) year(t) hour(t) minute(t) second(t)]);
 [eMonth, eDay, eYear, eHour, eMinute, eSecond] = deal(tm{:}); 
 
 % Populate the UI with known values
@@ -180,7 +176,6 @@ tm = num2cell([month(t) day(t) year(t) hour(t) minute(t) second(t)]);
     set(handles.ui_editBox_eventHour,       'String',   eHour);
     set(handles.ui_editBox_eventMinute,     'String',   eMinute);
     set(handles.ui_editBox_eventSecond,     'String',   eSecond);
-
 
 
 set(handles.ui_editBox_eventNameString, 'String',   handles.timeline.milestone(eventIndex).String);
@@ -196,15 +191,17 @@ set(handles.ui_editBox_eventTriggerFD, 'String',   handles.timeline.milestone(ev
         eTimeModifier = '+';
     end
     
-% eventString = sprintf('T%s%s %s', eTimeModifier, datestr(abs(dt), 'HH:MM:SS'),handles.timeline.milestone(eventIndex).String);
-
-
 dt = abs(dt);
 
-% TODO: rewrite this section so it is NOT dependant on the financial toolbox
-
 % Assign T+/- values to working variables
-etm = num2cell([month(dt) day(dt) year(dt) hour(dt) minute(dt) second(dt)]);
+
+etm = num2cell([    str2double(datestr(dt, 'mm')), ...
+                    str2double(datestr(dt, 'dd')), ...
+                    str2double(datestr(dt, 'yyyy')), ...
+                    str2double(datestr(dt, 'HH')), ...
+                    str2double(datestr(dt, 'MM')), ...
+                    str2double(datestr(dt, 'SS.FFF')) ]);
+
 [eeMonth, eeDay, eeYear, eeHour, eeMinute, eeSecond] = deal(etm{:});
 
 
@@ -512,14 +509,13 @@ end
 % is found.
 function eventEditor_pre_populate_GUI(handles)
 
+    t0Month  = str2double(datestr(handles.timeline.t0.time, 'mm'));
+    t0Day    = str2double(datestr(handles.timeline.t0.time, 'dd'));
+    t0Year   = str2double(datestr(handles.timeline.t0.time, 'yyyy'));
 
-    t0Month  = month(handles.timeline.t0.time);
-    t0Day    = day(handles.timeline.t0.time);
-    t0Year   = year(handles.timeline.t0.time);
-
-    t0Hour   = hour(handles.timeline.t0.time);
-    t0Minute = minute(handles.timeline.t0.time);
-    t0Second = second(handles.timeline.t0.time);
+    t0Hour   = str2double(datestr(handles.timeline.t0.time, 'HH'));
+    t0Minute = str2double(datestr(handles.timeline.t0.time, 'MM'));
+    t0Second = str2double(datestr(handles.timeline.t0.time, 'SS.FFF'));
 
     monthList = {'01 Jan', '02 Feb', '03 Mar', '04 Apr', ...
                  '05 May', '06 Jun', '07 Jul', '08 Aug', ...
@@ -570,7 +566,7 @@ function updateGUIfromHandles(handles)
         % There is a t0, so load it and update the editor pane
         t0time = handles.timeline.t0.time;
         
-        handles.ui_popup_monthPicker.Value  = month(t0time);
+        handles.ui_popup_monthPicker.Value  = datestr(t0time, 'mm');
         handles.ui_editBox_year.String      = datestr(t0time, 'yyyy');
         handles.ui_editBox_day.String       = datestr(t0time, 'dd');
         
@@ -581,7 +577,7 @@ function updateGUIfromHandles(handles)
     end
         
     % Update Event information group
-    handles.ui_popup_monthPicker.Value      = month(currentEvent.Time);
+    handles.ui_popup_monthPicker.Value      = datestr(currentEvent.Time, 'mm');
     
     handles.ui_editBox_eventDay.String      = datestr(currentEvent.Time, 'dd');
     handles.ui_editBox_eventYear.String     = datestr(currentEvent.Time, 'yyyy');
@@ -775,8 +771,13 @@ function ui_button_pasteCCTTimeStamp_Callback(hObject, eventdata, handles)
     % Update the timeline structure with the new datenum
     handles.timeline.milestone(eventIndex).Time = t;
 
-    % Matrix-ize to numericals to update the GUI also!
-    tm = num2cell([month(t) day(t) year(t) hour(t) minute(t) second(t)]);
+    % Matrix-ize to numericals to update the GUI also!    
+    tm = num2cell([ str2double(datestr(handles.timeline.t0.time, 'mm')), ...
+                    str2double(datestr(handles.timeline.t0.time, 'dd')), ...
+                    str2double(datestr(handles.timeline.t0.time, 'yyyy')), ...
+                    str2double(datestr(handles.timeline.t0.time, 'HH')), ...
+                    str2double(datestr(handles.timeline.t0.time, 'MM')), ...
+                    str2double(datestr(handles.timeline.t0.time, 'SS.FFF')) ]);
 
     % Update the GUI
     setEventTimeGUIValuesFromNumericArray(tm, handles);
@@ -837,7 +838,7 @@ function uiAddEventButton_Callback(hObject, eventdata, handles)
     if timeline.uset0
         newMilestone.Time = timeline.t0.time;
     else
-        newMilestone.Time = today;
+        newMilestone.Time = floor(now);
     end
     
     % add new timeline event to the structure
@@ -1042,3 +1043,37 @@ function uiToolbar_openButton_callback(hObject, eventdata, handles)
         % User hit cancel button
         disp('User cancelled load');
     end
+
+
+% --------------------------------------------------------------------
+function uiToolbar_newButton_ClickedCallback(hObject, ~, handles)
+
+% Are you SURE??
+
+    choice = questdlg('Do you want to continue? Any unsaved changes will be lost', ...
+        'New Timeline File', ...
+        'Yes','No','No');
+
+% Handle response
+    switch choice
+        case 'Yes'
+            % Generate new, blank timeline
+            timeline = newTimelineStructure;
+        case 'No'
+            % User cancelled
+            return;
+        otherwise
+            % User closed dialog without selection?
+            return;
+    end
+
+
+    handles.timeline = timeline;
+
+% Call subroutine to enter all values from valid file
+    eventEditor_pre_populate_GUI(handles)
+
+
+% Update handles structure
+    guidata(hObject, handles);
+

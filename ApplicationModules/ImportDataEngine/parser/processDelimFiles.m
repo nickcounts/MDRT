@@ -166,8 +166,6 @@ for i = 1:length(filenameCellList)
         progressbar( (bytesProcessed + delimFiles(i).bytes * frac) / totalBytes, frac); 
         disp(sprintf('Assigning cell arrays took: %f seconds',toc));
         
-        
-        
         % Optional Cleanup
         tic;
             clear Q;
@@ -308,6 +306,9 @@ for i = 1:length(filenameCellList)
                     disp(sprintf('Generating state timeseries took: %f seconds',toc));
 
                     % Generate time series for position values
+                    
+                    % valveCommand = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Param')))
+                    % tsCmd = timeseries( sscanf(sprintf('%s ', valveCommand{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Param'))), 'Name', info.FullString);
 
 
 
@@ -412,6 +413,13 @@ for i = 1:length(filenameCellList)
                             ts = timeseries( cellfun(@isempty,regexp(valueCell,'^0')), timeVect, 'Name', info.FullString);
                             
                             disp('Discrete data type detected')
+                            
+                        case {'CR', 'SC'}
+                            % Ignore control stuff that is non-numerical
+                            % for now. System Command and Command Response
+                            
+                            disp('File contains data of type ''CR'' - Skipping file ')
+                            skipThisFile = true;
                                                         
                         otherwise
                             % Process with optimized floating point
@@ -420,7 +428,7 @@ for i = 1:length(filenameCellList)
                             % concatenating all values from array into one
                             % long string!!!
                             
-                            
+                           
                             try
                                 ts = timeseries( sscanf(sprintf('%s ', valueCell{:,1}),'%f'), timeVect, 'Name', info.FullString);
                             catch ME
@@ -522,7 +530,7 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         
 %% New code to fix overloaded FD file names
 
-        fileName = makeFileNameForFD(info);
+        fileName = makeFileNameForFD(info.FullString);
         
         % Check fullstring against override list
         
@@ -551,33 +559,7 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
     end
 
 
-    function fileName = makeFileNameForFD(FDinfo)
-        %% Pseudo code for filename generator
-        
-        % Tokenize the fullstring
-        
-        % fullStringTokens = regexp(info.FullString, '\w*','match');
-        fullStringTokens = regexp(FDinfo.FullString, '\S+','match'); % keeps ABC-1234 together as one token
-        
-        % If fullstring follows ABC-#####, then start filename with #####
-        
-            prependFindNumber = '';
-        
-            if max( logical( regexp( FDinfo.FullString, '\w-\d{4,5}' ) ))
-                
-                reQueryForFindNumber = '(?<=\w+-)(\d{4,5})';
-                
-                prependFindNumber = regexp( FDinfo.FullString, reQueryForFindNumber, 'match' );
-                
-            end
-            
-        
-        % Build filename, use entire FD Fullstring (do I want to exclude
-        % certain terms in the future?)
-        
-            fileName = strjoin([prependFindNumber, fullStringTokens]);
-        
-    end
+
 
 
     function showDataSampleWindow

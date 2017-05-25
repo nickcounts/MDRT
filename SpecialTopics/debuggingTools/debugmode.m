@@ -1,5 +1,15 @@
 function [ output_args ] = debugmode( varargin )
-%debugmode toggles the environment variable for debugout
+%debugmode toggles the debugOutput environment variable for debugout
+%
+%   debugmode
+%   debugmode(true)
+%   debugmode(1)
+%
+%   Calling debugmode with no argument prints the current debugging mode to
+%   the Command Window.
+%
+%   Calling debugmode with a boolean (or 1 or 0) argument sets the debug
+%   mode by setting the environment variable.
 %
 %   Accepts:
 %

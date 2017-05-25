@@ -10,17 +10,10 @@ function [  ] = addToolButtonsToPlot( figureHandle )
     tbh = uitoolbar(fh);
 
 % Add a push tool to the toolbar
-
-if isdeployed
-    imagesPath = fullfile(ctfroot, 'resources', 'images');
-else
-    imagesPath = fullfile('resources', 'images');
-end
-        
  
-    toggleIcon  = imread( fullfile(imagesPath, 'toggleLabelSize_icon_16x16.png'),'png');
-    refreshIcon = imread( fullfile(imagesPath, 'refreshTimeline_icon_16x16.png'),'png');
-    showIcon    = imread( fullfile(imagesPath, 'showTimeline_icon_16x16.png'),'png');
+    toggleIcon  = imread( getResource('toggleLabelSize_icon_16x16.png'),'png');
+    refreshIcon = imread( getResource('refreshTimeline_icon_16x16.png'),'png');
+    showIcon    = imread( getResource('showTimeline_icon_16x16.png'),'png');
     
     
 % % Convert white pixels into a transparent background

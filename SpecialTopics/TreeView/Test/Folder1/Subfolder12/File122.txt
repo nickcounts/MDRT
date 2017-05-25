@@ -1,0 +1,7 @@
+"TreeView" object includes a method allowing user
+to define the callback executed when he selects 
+one or several elements of tree structure 
+(press [Ctrl] and [Shift] for multiple selections)
+
+For example, user can display the data from the 
+selected element (text, image, etc.), like here.

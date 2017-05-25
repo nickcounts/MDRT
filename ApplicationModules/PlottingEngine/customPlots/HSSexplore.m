@@ -66,7 +66,7 @@ testStarts = downIndex(uniqueIndexes);
     
     orient('landscape');
 
-    subPlotAxes = tight_subplot(plotRows,plotsWide,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(plotRows,plotsWide,graphsPlotGap, ... 
                                     GraphsPlotMargin,GraphsPlotMargin);
     suptitle('MARS HSS Performance Testing B Flowdyne Valve Data');
 

@@ -9,6 +9,9 @@ function hs = makeDataImportGUI( varargin )
 %
 % Counts, 2016 VCSFA
 
+figureName = 'Data Import GUI';
+overrideWindowDelete = true;
+
 if nargin == 0
     % Run as standalone GUI for testing
     % Run as standalone GUI for testing
@@ -16,12 +19,15 @@ if nargin == 0
     hs.fig = figure;
         guiSize = [672 387];
         hs.fig.Position = [hs.fig.Position(1:2) guiSize];
-        hs.fig.Name = 'Data Import GUI';
+        hs.fig.Name = figureName;
         hs.fig.NumberTitle = 'off';
         hs.fig.MenuBar = 'none';
         hs.fig.ToolBar = 'none';
         hs.fig.Tag = 'importFigure';
-        hs.fig.DeleteFcn = @windowCloseCleanup;
+        
+        if overrideWindowDelete
+            hs.fig.DeleteFcn = @windowCloseCleanup;
+        end
 
 elseif nargin == 1
     % Populate a UI container
@@ -330,10 +336,10 @@ initialValues =    ...
         files = flbManager.getFileCellArray;
         guessFile = {};
 
-        for i = 1:numel(files)
-            [~, ~, ext] = fileparts(files{i});
+        for j = 1:numel(files)
+            [~, ~, ext] = fileparts(files{j});
             if strcmpi('.delim',ext)
-                guessFile = files{i};
+                guessFile = files{j};
                 break
             end           
         end
@@ -428,15 +434,16 @@ initialValues =    ...
                                      fullfile(pathname, filename{i}));
             end
         elseif isa(filename, 'char')
-            filesToAdd = fullfile(pathname, filename);
+            filesToAdd = vertcat(filesToAdd, ...
+                                 fullfile(pathname, filename));
         else
             % What would cause this?
             return
         end
         
         % Add files to the file list box manager
-        for i = 1:numel(filesToAdd)
-            flbManager.addFilesToList( filesToAdd{i} );
+        for j = 1:numel(filesToAdd)
+            flbManager.addFilesToList( filesToAdd{j} );
         end
         
     end
@@ -448,18 +455,18 @@ initialValues =    ...
         flbManager.clearFileList;
         
         % Pause event listeners to GUI objects being reset
-        for i = 1:numel(el)
-            el(i).Enabled = false;
+        for j = 1:numel(el)
+            el(j).Enabled = false;
         end
         
         % Set GUI elements to initialValues
-        for i = 1:length(initialValues)
-            hs.(initialValues{i,1}).(initialValues{i,2}) = initialValues{i,3};
+        for j = 1:length(initialValues)
+            hs.(initialValues{j,1}).(initialValues{j,2}) = initialValues{j,3};
         end
         
         % Resume event listeners to GUI objects being reset
-        for i = 1:numel(el)
-            el(i).Enabled = true;
+        for j = 1:numel(el)
+            el(j).Enabled = true;
         end
         
         metaData = newMetaDataStructure;

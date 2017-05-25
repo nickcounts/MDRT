@@ -66,7 +66,7 @@ for graphNumber = 1:numberOfGraphs
 % -------------------------------------------------------------------------
     figureHandle(graphNumber) = figure();
     orient('landscape');
-    subPlotAxes = tight_subplot(numberOfSubplots,1,graphsPlotGap, ... 
+    subPlotAxes = MDRTSubplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
                             
     ST_h = suptitle(graph(graphNumber).name);
