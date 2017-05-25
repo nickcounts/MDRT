@@ -24,9 +24,6 @@ function filterFdTool(fdDataFullFile)
 % populated.
 
 
-    fd = newFD;
-    config = MDRTConfig.getInstance;
-    hs = struct();
 
     %% Constant Definitions
 
@@ -34,6 +31,11 @@ function filterFdTool(fdDataFullFile)
         GAUSSIAN_WEIGHTED_SLIDER_BOUNDS     = [1 100 1000];
         TIME_AVERAGE_WINDOW_SLIDER_BOUNDS   = [1 10    60];
         SAMPLE_RATE_SLIDER_BOUNDS           = [1 80   100];
+        
+    % Initialize important variables    
+        fd = newFD;
+        config = MDRTConfig.getInstance;
+        hs = struct();
 
     % Create the tool GUI and all handles
         createSmoothingGUI();
@@ -65,12 +67,18 @@ function filterFdTool(fdDataFullFile)
         case 1
             
             if ~ exist(fdDataFullFile, 'file')
-                warn('Attempted to open a file that does not exist');% Call file loading function since no file was passed
+                warn('Attempted to open a file that does not exist');
+                % Call file loading function since no file was passed
+                % Pass a dummy argument to trigger the uigetfile
+                loadDataFile(true);
+            else
+                % A fullfile was passed and it exists. Try to load the
+                % file. No arguments passed means loadDataFile will skip
+                % the uigetfile() routine and try to open fdDataFullFile
                 loadDataFile();
+                debugout(sprintf('Loading passed file: %s', fdDataFullFile));
             end
             
-            % Call file loading function since no file was passed
-            loadDataFile();
         
         otherwise
             
@@ -466,26 +474,33 @@ function filterFdTool(fdDataFullFile)
 
     function loadDataFile(~, ~)
         
-        % Define paths from config structure
-        % delimPath = '~/Documents/MATLAB/Data Review/ORB-2/delim';
+        % If called from GUI, this executes. Otherwise, it's because of a
+        % fullfile passed to the main function on launch. 
+        % If no arguments are passed, it skips the uigetfile routine
+        if nargin
+            % Define paths from config structure
+            % delimPath = '~/Documents/MATLAB/Data Review/ORB-2/delim';
+            dataPath = config.workingDataPath;
+            loadFilePath = fullfile(dataPath, '..');
 
-        dataPath = config.workingDataPath;
-        loadFilePath = fullfile(dataPath, '..');
+            [loadFileName_str, loadFilePath] = uigetfile( {...
+                            '*.mat', 'MDRT Data File'; ...
+                            '*.*',     'All Files (*.*)'}, ...
+                            'Pick a file', fullfile(loadFilePath, '*.mat'));
 
-        [loadFileName_str, loadFilePath] = uigetfile( {...
-                        '*.mat', 'MDRT Data File'; ...
-                        '*.*',     'All Files (*.*)'}, ...
-                        'Pick a file', fullfile(loadFilePath, '*.mat'));
-
-        if isnumeric(loadFileName_str)
-            % User cancelled .delim pre-parse
-            disp('User cancelled .delim pre-parse');
-            return
+            if isnumeric(loadFileName_str)
+                % User cancelled .delim pre-parse
+                disp('User cancelled .delim pre-parse');
+                return
+            end
+            
+            % Load file and get FD variable!!!
+    
+            fdDataFullFile = fullfile(loadFilePath, loadFileName_str);
+ 
         end
         
-        % Load file and get FD variable!!!
-    
-        fdDataFullFile = fullfile(loadFilePath, loadFileName_str);
+       
         [dataFile_path, fileName_str, extension_str] = fileparts(fdDataFullFile);
         dataFileName_str = strcat(fileName_str, extension_str);
         

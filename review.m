@@ -427,7 +427,7 @@ function uiButton_filterData_Callback(hObject, eventdata, handles)
 index = get(handles.uiPopup_FDList,'Value');
 fdFullFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
 
-keyboard
+
 
 filterFdTool(fdFullFileName);
 
