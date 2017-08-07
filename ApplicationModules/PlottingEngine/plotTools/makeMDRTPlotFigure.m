@@ -1,4 +1,4 @@
-function [ figureHandle ] = makeMDRTPlotFigure( graph )
+function [ figureHandle ] = makeMDRTPlotFigure( graph, graphNumber )
 %makeMDRTPlotFigure creates a new figure window with the MDRT toolbars and
 %menus and returns the figure handle.
 %
@@ -6,7 +6,7 @@ function [ figureHandle ] = makeMDRTPlotFigure( graph )
 %   figHandle = makeMDRTPlotFigure ( graph )
 %
 %   If passed a graph structure, it will be added to the figure's appdata
-%   structure
+%   structure. If passed a graph number, it will also be added
 
 % TODO:
 % Allowable commands for the future?
@@ -30,6 +30,7 @@ end
     % Add graph structure to appdata
     if  passGraph
         setappdata(figureHandle, 'graph', graph);
+        setappdata(figureHandle, 'graphNumber', graphNumber);
     end
     
     saveButtonHandle = findall(figureHandle,'ToolTipString','Save Figure');

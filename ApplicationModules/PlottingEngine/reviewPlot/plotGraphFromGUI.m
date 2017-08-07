@@ -107,7 +107,7 @@ for graphNumber = 1:numberOfGraphs
 % -------------------------------------------------------------------------
     UserData.graph = graph;
     
-    figureHandle(graphNumber) = makeMDRTPlotFigure(UserData.graph);
+    figureHandle(graphNumber) = makeMDRTPlotFigure(UserData.graph, graphNumber);
     
     subPlotAxes = MDRTSubplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);

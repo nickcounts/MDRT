@@ -19,6 +19,8 @@ if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
     t = load(fullfile(config.dataFolderPath, 'timeline.mat'));
     milestoneString = string(cellstr({t.timeline.milestone.String}'));
     milestoneString = [milestoneString; t.timeline.t0.name];
+    milestoneTime = {t.timeline.milestone.Time}';
+    milestoneTime = [milestoneTime; t.timeline.t0.time];    
     disp('Timeline File Successfully Loaded.');
     
 else
@@ -228,7 +230,16 @@ disableArray = [handles.noneStop handles.offsetStop handles.offsetStopInput...
                 set(disableArray(:,[3 5 7]), 'Enable', 'off'); 
                 i = find(strcmp(handles.milestoneStartInput.String, ...
                             graph.time.startTime.String));
-                set(handles.milestoneStartInput,'Value',i(1));
+                        % The issue is that there is a low flow command
+                        % that occurs at different times. In this case,
+                        % manually pull the index from the timeline file,
+                        % assuming that the index alignment didn't change
+                        % from originally loading the file. 
+                if length(i) ~= 1
+                    i = find(cell2mat(milestoneTime) == ...
+                            graph.time.startTime.Time);
+                end                        
+                set(handles.milestoneStartInput,'Value',i);
                 
             case 'offset'
                 handles.startTime.SelectedObject = handles.offsetStart;
@@ -257,7 +268,11 @@ disableArray = [handles.noneStop handles.offsetStop handles.offsetStopInput...
                 set(disableArray(:,[3 5 8]), 'Enable', 'off');
                 i = find(strcmp(handles.milestoneStopInput.String, ...
                             graph.time.stopTime.String));
-                set(handles.milestoneStopInput,'Value',i(1));
+                if length(i) ~= 1
+                    i = find(cell2mat(milestoneTime) == ...
+                            graph.time.stopTime.Time);
+                end                        
+                set(handles.milestoneStopInput,'Value',i);
                 
             case 'offset'
                 handles.stopTime.SelectedObject = handles.offsetStop;

@@ -10,10 +10,10 @@ function updateTimeAxesLimits( varargin )
 
 %% Variable Definitions
 parentFigure = varargin{1}.Parent.Parent;
-graphNumber = parentFigure.Number;
 
 % In order to pass graph structure through plot, it's stored to the appdata
 graph = getappdata(parentFigure, 'graph'); 
+graphNumber = getappdata(parentFigure, 'graphNumber');
 config = getConfig;
 
 % Load timeline file
@@ -21,6 +21,8 @@ if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
     t = load(fullfile(config.dataFolderPath, 'timeline.mat'));
     milestoneString = string(cellstr({t.timeline.milestone.String}'));
     milestoneString = [milestoneString; t.timeline.t0.name];
+    milestoneTime = {t.timeline.milestone.Time}';
+    milestoneTime = [milestoneTime; t.timeline.t0.time];    
     disp('Timeline File Successfully Loaded.');
     
 else
@@ -251,7 +253,16 @@ disableArray = [tl.noneStop tl.offsetStop tl.offsetStopInput tl.offsetStart ...
                 set(disableArray(:,[1:2 9]), 'Enable', 'on');
                 set(disableArray(:,[3 5 7]), 'Enable', 'off'); 
                 i = find(strcmp(tl.milestoneStartInput.String, ...
-                            graph(graphNumber).time.startTime.String));
+                            graph(graphNumber).time.startTime.String)); 
+                    % The issue is that there is a low flow command
+                    % that occurs at different times. In this case,
+                    % manually pull the index from the timeline file,
+                    % assuming that the index alignment didn't change
+                    % from originally loading the file. 
+                if length(i) ~= 1
+                    i = find(cell2mat(milestoneTime) == ...
+                            graph(graphNumber).time.startTime.Time);
+                end
                 set(tl.milestoneStartInput,'Value',i);
             
             case 'offset'
@@ -281,6 +292,10 @@ disableArray = [tl.noneStop tl.offsetStop tl.offsetStopInput tl.offsetStart ...
                 set(disableArray(:,[3 5 8]), 'Enable', 'off');
                 i = find(strcmp(tl.milestoneStopInput.String, ...
                             graph(graphNumber).time.stopTime.String));
+                if length(i) ~= 1
+                    i = find(cell2mat(milestoneTime) == ...
+                            graph(graphNumber).time.stopTime.Time);
+                end                       
                 set(tl.milestoneStopInput,'Value',i);
             
             case 'offset'
