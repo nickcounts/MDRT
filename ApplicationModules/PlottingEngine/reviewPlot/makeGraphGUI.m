@@ -131,46 +131,10 @@ function varargout = makeGraphGUI_OutputFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% uiTab Creation - T.Patel 07/2017
-timeGUI = gcf;
-
-tabGroup = uitabgroup('SelectionChangedFcn', {@switchTab, handles});
-tab1 = uitab(tabGroup,'Title','Variable Selection');
-tab2 = uitab(tabGroup,'Title','Axes Setup');
-
-while length(timeGUI.Children) > 2
-set(timeGUI.Children(3),'Parent',tab1); 
-% there's a bug where it won't run if any other figure is open
-end
-
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
 
-function switchTab ( hObject, eventData, handles)
-% Initiate Axes Setup GUI upon switch tab
-switch eventData.NewValue.Title
-    
-    case 'Axes Setup'
-        handles = guidata(hObject);
-        % something to repop the GUI or place this line in the timeAxes
-        % itself to populate with the rest
-         
-        graph = returnGraphStructureFromGUI(handles);
-         
-        % Load graph structure as input, and output updated structure
-        graph = setTimeAxesLimits(graph, handles);
-        
-        handles = guidata(hObject);
-        handles.graph = graph;
-        guidata(hObject,handles);
-        
-    case 'Variable Selection'
-%         handles = guidata(hObject);
-        uiresume
-        % anything else to include here??
-        
-end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -359,8 +323,6 @@ graph = handles.graph;
 
     ui_checkbox_subplot2active_Callback(hObject, eventdata, handles);
     ui_checkbox_subplot3active_Callback(hObject, eventdata, handles);
-        
-
 
 
 
@@ -605,7 +567,6 @@ disp('Still in the GRAPH function')
 
     % DUMMY OPTIONS VARIABLE TO BE IMPLEMENTED LATER
     options = 5;
-
     
     plotGraphFromGUI(graph, options);
     
@@ -971,7 +932,7 @@ function uiLoadButton_ClickedCallback(hObject, eventdata, handles)
         case 1
             % selected a *.gcf file
             % graph = load(fullfile(pathname, filename),'-mat');
-            savedConfig = load(fullfile(pathname, filename),'-mat');
+            load(fullfile(pathname, filename),'-mat');
         case 2,3
             % selected an excel file
             % TODO: Implement excel file parsing
@@ -985,10 +946,10 @@ function uiLoadButton_ClickedCallback(hObject, eventdata, handles)
             load(fullfile(pathname, filename),'-mat');
     end
     
-   
+    
     
     % Store new graph structure
-    handles.graph = savedConfig.graph;
+    handles.graph = graph;
     
     % Update the GUI data for visibility in other functions
     guidata(hObject, handles);

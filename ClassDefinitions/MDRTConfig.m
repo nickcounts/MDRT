@@ -674,7 +674,7 @@ classdef MDRTConfig < handle
             %% Environment Check
 
             if ispc
-                pathToConfig = fullfile(getenv('appdata'), self.applicationName );
+                pathToConfig = fullfile(getenv('appdata'), selfapplicationName );
                 defaultConfigFile = self.winConfigFile;
 
             elseif ismac
