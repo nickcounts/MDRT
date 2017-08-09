@@ -95,7 +95,6 @@ end
 numberOfGraphs = length(graph);
 
 
-
 for graphNumber = 1:numberOfGraphs
 % -------------------------------------------------------------------------
 % Create a new graph
@@ -106,10 +105,10 @@ for graphNumber = 1:numberOfGraphs
 % -------------------------------------------------------------------------
 % Generate new figure and handle. Set up for priting
 % -------------------------------------------------------------------------
-    figureHandle(graphNumber) = makeMDRTPlotFigure();
-    
     UserData.graph = graph;
-
+    
+    figureHandle(graphNumber) = makeMDRTPlotFigure(UserData.graph, graphNumber);
+    
     subPlotAxes = MDRTSubplot(numberOfSubplots,1,graphsPlotGap, ... 
                                 GraphsPlotMargin,GraphsPlotMargin);
                             
@@ -345,7 +344,7 @@ for graphNumber = 1:numberOfGraphs
             switch graph(graphNumber).time.isStartTimeUTC
                 case true
                     % absolute timestamp
-                    timeLimits(1) = graph(graphNumber).time.startTime;
+                    timeLimits(1) = graph(graphNumber).time.startTime.Time;
                 case false
                     % T- timestamp
                     % Added if/end block to accomodate non-timeline plots
@@ -359,7 +358,7 @@ for graphNumber = 1:numberOfGraphs
             switch graph(graphNumber).time.isStopTimeUTC
                 case true
                     % absolute timestamp
-                    timeLimits(2) = graph(graphNumber).time.stopTime;
+                    timeLimits(2) = graph(graphNumber).time.stopTime.Time;
                     disp('Using UTC time!!! Hooray')
                 case false
                     % T- timestamp
@@ -369,17 +368,22 @@ for graphNumber = 1:numberOfGraphs
                     end
             end
         end
-
         
+        % Add a buffer on each side of the x axis scaling
+        bound = 0.04;
+        delta = 0.04*(timeLimits(2)-timeLimits(1));
+        timeLimits = [timeLimits(1)-delta, timeLimits(2)+delta];
         
         set(subPlotAxes(subPlotNumber),'XLim',timeLimits);
         
-
+        if ~graph(graphNumber).time.isStartTimeAuto && ~graph(graphNumber).time.isStopTimeAuto
+            reviewRescaleAllTimelineEvents(gcf);
+        end
 
     % Fix paper orientation for saving
         orient(figureHandle(graphNumber), 'landscape');
 
-    % Pause execution to allow user to adjust plot prior to saving?makeRe
+    % Pause execution to allow user to adjust plot prior to saving?
     
     % Call a redraw to correct the grid bug
     refresh(figureHandle(graphNumber))
