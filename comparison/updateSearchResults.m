@@ -45,7 +45,7 @@ function updateSearchResults(anyUIhandle, ~, varargin)
 
         end 
         % combine matches (and searching, not or)
-        ind = boolean(prod(ind,2));
+        ind = logical(prod(ind,2));
 
   
     
