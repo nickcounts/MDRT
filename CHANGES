@@ -1,3 +1,24 @@
+Version 0.5.0:
+ - Merge branch 'release-0.4.7'
+ - updated bumpversion to fix duplicate release tags
+ - Merge remote-tracking branch 'origin/develop' into develop
+ - Merge pull request #50 from nickcounts/TheJakeBranch
+ - Merge remote-tracking branch 'origin/develop' into develop
+ - Merge pull request #49 from nickcounts/Trisha
+ - Revert "Merge pull request #48 from nickcounts/Trisha"
+ - Added Hyperlinks to HTML Help Files
+ - HTML Help Files For Capstone Code
+ - Push of Capstone Projects 8-8-17
+ - Updated titles and annotations
+ - Fixed Repeat Timeline Events and Passed graphNumber for Multiplots
+ - File No Longer Necessary
+ - Changed UI Type
+ - Capstone Updates and Enhancements
+ - bug fix
+ - Fixed Error in PC Configuration
+ - file cleanup
+ - Merge branch 'master' into develop
+
 Version 0.4.5:
  - open data file at startup if passed a fullfile string
  - Auto stash before merge of "develop" and "origin/develop"
