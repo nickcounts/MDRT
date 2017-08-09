@@ -2,7 +2,6 @@ function addAdvancedMenuToPlot( figureHandle )
 %addAdvancedMenuToPlot adds a menu to plot windows
 %
 
-
 m = uimenu(figureHandle, 'Label', 'Advanced');
 
 uimenu(m,   'Label',        'Link Axes', ...
@@ -25,6 +24,11 @@ uimenu(m,   'Label',        'Export Figure', ...
         
 uimenu(m,   'Label',        'Data Analysis', ...
             'Callback',     @MDRTbrushMenu, ...
+            'Separator',    'on');
+
+%TUP:the below uimenu item was added for a horizontal line plotter        
+uimenu(m,   'Label',        'Horizontal Lines', ...
+            'Callback',     @plotHorizLine, ...
             'Separator',    'on');
         
 end
