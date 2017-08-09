@@ -605,8 +605,8 @@ disp('Still in the GRAPH function')
 
     % DUMMY OPTIONS VARIABLE TO BE IMPLEMENTED LATER
     options = 5;
-%     timeAxesLimiter callback function implementation here??
- 
+
+    
     plotGraphFromGUI(graph, options);
     
 

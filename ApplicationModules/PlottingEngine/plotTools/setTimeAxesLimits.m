@@ -9,6 +9,8 @@ function graph = setTimeAxesLimits( graph, handles, varargin )
 %
 % July 2017, Patel - Mid-Atlantic Regional Spaceport
 
+disp('<a href="timeAxesToolHelpScript.html">Time Axes Tool Help Page</a>')
+
 %% Load Timeline
 
 config = getConfig;
@@ -377,7 +379,7 @@ guiStopPopulate()
                     % it is treated in a separate if statement here. 
                     if ~strcmp(hObject.String(index),'T0')
                         tl.setAxes.start = t.timeline.milestone(index);
-                    
+                        
                     else
                         tl.setAxes.start = t.timeline.t0;
                         % The T0 timeline structure is not case consistent
@@ -481,7 +483,7 @@ uiwait % Waits for user to click apply or switch tabs to resume
         if ~graph(1).time.isStopTimeAuto
             graph(1).time.stopTime = tl.setAxes.stop;
         end
-         
+        
         uiresume
         
     end

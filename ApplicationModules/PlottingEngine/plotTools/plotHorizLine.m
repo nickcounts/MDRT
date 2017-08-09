@@ -8,6 +8,8 @@ function hl = plotHorizLine( varargin )
 %
 % Modified 2017, Patel - Mid-Atlantic Regional Spaceport
 
+disp('<a href="horizontalLineToolHelpScript.html">Horizontal Line Tool</a>')
+
 figureHandle = varargin{1}.Parent.Parent; % calls the handle of the original plot
 
 %% GUI Setup

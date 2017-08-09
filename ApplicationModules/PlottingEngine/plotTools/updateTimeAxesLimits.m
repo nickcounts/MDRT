@@ -8,6 +8,8 @@ function updateTimeAxesLimits( varargin )
 %
 % July 2017, Patel - Mid-Atlantic Regional Spaceport
 
+disp('<a href="timeAxesToolHelpScript.html">Time Axes Tool Help Page</a>')
+
 %% Variable Definitions
 parentFigure = varargin{1}.Parent.Parent;
 

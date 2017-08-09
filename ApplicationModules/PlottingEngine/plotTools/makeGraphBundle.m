@@ -11,6 +11,8 @@ function makeGraphBundle ( varargin )
 %
 % August 2017, Patel - Mid-Atlantic Regional Spaceport
 
+disp('<a href="makeGraphBundleHelpScript.html">Graph Bundle Help Page</a>')
+
 %% GUI Setup
 
     r.fig = figure; % creates handle for the GUI window
