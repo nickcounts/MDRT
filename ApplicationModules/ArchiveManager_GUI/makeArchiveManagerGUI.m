@@ -35,9 +35,12 @@
 
 
 
+config = MDRTConfig.getInstance;
 
 
-[mtree, container]  = uitree('v0', 'Root','~/Documents/Spaceport/Data/', ... 
+
+
+[mtree, container]  = uitree('v0', 'Root',config.dataArchivePath, ... 
                              'Parent',       hs.fig, ...
                              'SelectionChangeFcn',    @nodeSelected ...
                              );
