@@ -24,7 +24,7 @@ function samplesPerSecond = getSampleRate( dataBrush )
             end
             
         case 'timeseries'
-            dataBrush = [dataBrush.Time dataBrush.Data];
+            dataBrush = [dataBrush.Time dataBrush.Data,];
             
         case 'double'
             if size(dataBrush,2) == 2
