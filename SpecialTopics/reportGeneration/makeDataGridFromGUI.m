@@ -161,7 +161,7 @@ hs.t = uitable(hs.fig, 'Data', outputCellArray, ...
 
 
 
-
+runCalculations
 
 
 
