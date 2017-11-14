@@ -241,7 +241,7 @@ reverseStr = '';
         grepFilename = regexprep(fileName, '\s','\\ ');
                 
         % Generate egrep command to split delim into parseable files
-        egrepCommand = ['egrep "', FDlistForGrep{i}, '" ',grepFilename, ' > ', outputFile];
+        egrepCommand = ['grep -F "', FDlistForGrep{i}, '" ',grepFilename, ' > ', outputFile];
         system(egrepCommand);
         
                 
