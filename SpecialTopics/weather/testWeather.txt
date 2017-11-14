@@ -1,0 +1,50 @@
+
+11-10-17-14:10:50 - Weather script starting NOW.
+172.16.0.35 == (#1-NORTH) && 172.16.0.105 == (#2-SOUTH)
+
+
+11-10-17-14:10:50: BAROMETER #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="4"><value>30193</value></register></modbusregisters></xml>
+11-10-17-14:10:50: BAROMETER #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="4"><value>30177</value></register></modbusregisters></xml>
+11-10-17-14:10:50: TEMPERATURE #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="5"><value>626</value></register></modbusregisters></xml>
+11-10-17-14:10:50: TEMPERATURE #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="5"><value>668</value></register></modbusregisters></xml>
+11-10-17-14:10:50: WIND SPEED #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="8"><value>13</value></register></modbusregisters></xml>
+11-10-17-14:10:50: WIND SPEED #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="8"><value>18</value></register></modbusregisters></xml>
+11-10-17-14:10:50: WIND DIR #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="10"><value>84</value></register></modbusregisters></xml>
+11-10-17-14:10:50: WIND DIR #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="10"><value>129</value></register></modbusregisters></xml>
+
+11-10-17-14:11:00: BAROMETER #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="4"><value>30193</value></register></modbusregisters></xml>
+11-10-17-14:11:00: BAROMETER #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="4"><value>30177</value></register></modbusregisters></xml>
+11-10-17-14:11:00: TEMPERATURE #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="5"><value>626</value></register></modbusregisters></xml>
+11-10-17-14:11:00: TEMPERATURE #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="5"><value>668</value></register></modbusregisters></xml>
+11-10-17-14:11:00: WIND SPEED #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="8"><value>9</value></register></modbusregisters></xml>
+11-10-17-14:11:00: WIND SPEED #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="8"><value>20</value></register></modbusregisters></xml>
+11-10-17-14:11:00: WIND DIR #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="10"><value>99</value></register></modbusregisters></xml>
+11-10-17-14:11:00: WIND DIR #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="10"><value>126</value></register></modbusregisters></xml>
+
+11-10-17-14:11:10: BAROMETER #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="4"><value>30193</value></register></modbusregisters></xml>
+11-10-17-14:11:11: BAROMETER #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="4"><value>30177</value></register></modbusregisters></xml>
+11-10-17-14:11:11: TEMPERATURE #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="5"><value>626</value></register></modbusregisters></xml>
+11-10-17-14:11:11: TEMPERATURE #2:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="5"><value>668</value></register></modbusregisters></xml>
+11-10-17-14:11:11: WIND SPEED #1:
+<xml device="KTA-282" firmwareversion="108"><modbusregisters><register id="8"><value>24</value></register></modbusregisters></xml>
+11-10-17-14:11:11: WIND SPEED #2:
