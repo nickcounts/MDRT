@@ -32,6 +32,12 @@ hs.infoString = uicontrol(hs.fig, 'Style', 'text', ...
                         'HorizontalAlignment', 'left', ...
                         'String', 'Human Readable Description');
                     
+
+%% Contents of getUniqueEventsFromDelim function
+[t, c1, c2, uc1, uc2] = getUniqueEventsFromDelim
+
+
+%%
                     
                     
 % hs.master.String = uc2;
