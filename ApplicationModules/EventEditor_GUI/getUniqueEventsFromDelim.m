@@ -1,18 +1,25 @@
-
-%splitDelimFiles reads a .delim file and splits it into discrete .delim
-%files for parsing by the MARS Review Tool
+function [t, c1, c2, uc1, uc2] = getUniqueEventsFromDelim
+%getUniqueEventsFromDelim reads a .delim file and finds all unique FDs for
+%use in the MARS Review Tool timeline/events structures
+%
+%   Prompts for a .delim file and returns the following variables:
+%
+%       t   = time vector for all FDs
+%       c1  = All FD Strings
+%       c2  = All FD Readable Strings
+%       uc1 = Unique FD Strings
+%       uc2 = Unique FD Readable Strings
 %
 %   This tool has been updated to support Windows as well as *nix systems.
 %   getFileLineCount.m and countlines.pl are required
 %   
-%   Counts, Spaceport Support Services. 2014
+%   Counts, VCSFA 11-2017
 
 
 % textParseString = '%*s %*s %*s %s %*[^\n]';
 textParseString = '%s %*s %*s %s %*s %s %*[^\n]';
 
 [fileName, processPath] = uigetfile('*.delim');
-
 
 
 % Open the file selected above
@@ -71,7 +78,7 @@ textParseString = '%s %*s %*s %s %*s %s %*[^\n]';
     else
     
     % Read data file into 
-    % -------------------------------------------------------------------------
+    % ---------------------------------------------------------------------
         allData = textscan(fid,textParseString,'Delimiter',',');
         
         % Make unique lists (keep in order!)
