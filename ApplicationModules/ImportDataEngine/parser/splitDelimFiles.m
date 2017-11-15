@@ -168,6 +168,13 @@ fid = fopen(fileName);
     
 % Make FD List for grep without any valve data
     FDlistForGrep = uniqueFDs(cellfun('isempty',valveFDs));
+    
+    % Append a , to the end of each FD to make GREP string better.
+    % Hopefully this will protect the "valve group" without breaking other
+    % retrievals where the FDs share a common root. In the future, perhaps
+    % do away with the valve blocks and move this trick to the actual grep
+    % command assembly.
+    FDlistForGrep = cellfun(@(c)[c ','], FDlistForGrep, 'uni', false);
 
 % make cell array of strings containing all unique valve identifiers
 % -------------------------------------------------------------------------
