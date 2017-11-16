@@ -1,19 +1,19 @@
 function varargout = eventEditor(varargin)
-% EVENTEDITOR1 MATLAB code for eventEditor1.fig
-%      EVENTEDITOR1, by itself, creates a new EVENTEDITOR1 or raises the existing
+% eventEditor MATLAB code for eventEditor.fig
+%      eventEditor, by itself, creates a new eventEditor or raises the existing
 %      singleton*.
 %
-%      H = EVENTEDITOR1 returns the handle to a new EVENTEDITOR1 or the handle to
+%      H = eventEditor returns the handle to a new eventEditor or the handle to
 %      the existing singleton*.
 %
-%      EVENTEDITOR1('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in EVENTEDITOR1.M with the given input arguments.
+%      eventEditor('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in eventEditor.M with the given input arguments.
 %
-%      EVENTEDITOR1('Property','Value',...) creates a new EVENTEDITOR1 or raises the
+%      eventEditor('Property','Value',...) creates a new eventEditor or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before eventEditor1_OpeningFcn gets called.  An
+%      applied to the GUI before eventEditor_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to eventEditor1_OpeningFcn via varargin.
+%      stop.  All inputs are passed to eventEditor_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
@@ -922,17 +922,23 @@ function uibutton_allowEditing_Callback(hObject, eventdata, handles)
 % Update the handles.timeline structure from the GUI
 % -------------------------------------------------------------------------
 
-function getTimelineFromGUI(handles)
+function getTimelineFromGUI
+
+    handles = guidata(gcf);
 
     timeline = handles.timeline;
 
-    isUTC = get(handles.radiobuttion_UTC, 'Value');
+    isUTC = get(handles.radiobutton_UTC, 'Value');
     isDST = get(handles.checkbox_DST, 'Value');
     useT0 = get(handles.checkbox_UseT0, 'Value');
 
     timeline.uset0 = useT0;
     timeline.t0.utc = isUTC;
-    timeline.t0.dst = isDST;
+    % timeline.t0.dst = isDST;
+    
+    handles.timeline = timeline;
+    
+    guidata(gcf, handles);
     
     
 function newString = returnStringWithoutWhitespace(originalString)
@@ -941,7 +947,9 @@ function newString = returnStringWithoutWhitespace(originalString)
     newString = originalString(originalString~=' ');
     
 function updateT0fromGUI(hObject, handles)
-
+    
+    disp(sprintf('updateT0fromGUI 1: %s', datestr(handles.timeline.t0.time)));
+    
     M = get(handles.ui_popup_monthPicker,   'Value');
     D = get(handles.ui_editBox_day,         'String');
     Y = get(handles.ui_editBox_year,        'String');
@@ -954,8 +962,6 @@ function updateT0fromGUI(hObject, handles)
     datestamp = datenum(dateString);
     
     handles.timeline.t0.time = datestamp;
-    
-    disp(sprintf('updateT0fromGUI 1: %s', datestr(handles.timeline.t0.time)));
     
     guidata(hObject, handles);
     
@@ -975,6 +981,11 @@ function uiToolbar_saveButton_callback(hObject, eventdata, handles)
 % Use this in GUIDE Toolbar Editor as the callback
 % eventEditor('uiToolbar_saveButton_callback',hObject,eventdata,guidata(hObject))
 
+    getTimelineFromGUI();
+    updateT0fromGUI(hObject, handles);
+    
+    handles = guidata(gcf);
+        
     path = handles.config.dataFolderPath;
     timelineFile = 'timeline.mat';
 
