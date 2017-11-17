@@ -1,4 +1,4 @@
-function ImportFromGUI( filesIn, metaData, folderName )
+function ImportFromGUI( filesIn, metaData, folderName, autoSkip )
 %ImportFromGUI 
 %   Automates the data importing process.
 %
@@ -119,7 +119,7 @@ end
 
 %% Parse stripped .delim files
 
-processDelimFiles(config)
+processDelimFiles(config, autoSkip);
 
 
 %% Start Indexing!

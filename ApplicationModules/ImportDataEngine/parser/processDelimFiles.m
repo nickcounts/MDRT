@@ -1,4 +1,4 @@
-function [ output_args ] = processDelimFiles( config )
+function [ output_args ] = processDelimFiles( config, varargin )
 %% processDelimFiles - 
 %
 %   processDelimFiles parses .delim files containing a single FD (for
@@ -10,6 +10,15 @@ function [ output_args ] = processDelimFiles( config )
 %   reports are printed to the Matlab command window during execution to
 %   help the user find problem spots in data files.
 %
+%   Arguments:
+%
+%       processDelimFiles( config )
+%       processDelimFiles( config, 'autoskip' )
+%
+%   'autoskip' as a string, or as a true/false value toggles the "automatic
+%   skipping" of malformed delim files. A report will be displated on
+%   console indicating which files were skipped.
+%  
 %   config is a structure variable passed to the function that specifies
 %   the location of the .delim files to be processed and the desired
 %   storage location for processed .mat files.
@@ -43,13 +52,25 @@ else
     savePath = config.dataFolderPath;
 end
 
-
-
 delimFiles = dir(fullfile(path, '*.delim'));
 filenameCellList = {delimFiles.name};
 
+skippedFilesList = {};
+skipAllErrors = false;
 
+% Handle automated parsing options:
+switch nargin
+    case 0
+    case 1
+    case 2
+        if varargin{1} || strcmpi('autoskip', varargin{1})
+            skipAllErrors = true;
+        end
+        
+    otherwise
+        end
 
+        
 % Instantiate a progress bar!
 progressbar('Processing .delim Files','Parsing File')
 
@@ -495,6 +516,10 @@ for i = 1:length(filenameCellList)
 end
 progressbar(1,1)
 
+% Display all files with errors
+%TODO: Make a GUI popup with a text area/listbox that has this information
+    skippedFilesList
+
 % clean up after yourself!!!
 clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueCell valueTypeCell info delimFiles
 
@@ -605,24 +630,37 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
     function handleParseFailure(ME)
         
         warning('There was a problem generating a timeseries from these data');
+        
+            skippedFilesList = vertcat(skippedFilesList, filenameCellList(i));
+            
+            if skipAllErrors
+                return
+            end
                                 
             % Open a window with some of the data
             showDataSampleWindow();
 
             % Pause execution for now
+            
+            % TODO: Add Skip All Button
 
-            skipButton = 'Skip This File';
-            haltButton = 'Halt';
+            skipButton      = 'Skip This File';
+            skipAllButton   = 'Skip All Errors';
+            haltButton      = 'Halt';
 
             ButtonName = questdlg('There was an error parsing this data file. How do you want to proceed?', ...
                                 'MARS DRT Data Parse Error', ...
-                                skipButton, haltButton, haltButton);
+                                skipButton, skipAllButton, haltButton, haltButton);
 
             switch ButtonName
+                case skipAllButton
+                    disp('User selected SKIP ALL ERRORS');
+                    skipThisFile = true;
+                    skipAllErrors = true;
+                    
                 case skipButton
                     disp('User selected SKIP');
                     skipThisFile = true;
-
 
                 case haltButton
 
@@ -652,6 +690,7 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
                 otherwise
                     % Assume user did something weird
                     % Rethrow the exception and exit
+                    skippedFilesList
                     rethrow(ME)
             end
         

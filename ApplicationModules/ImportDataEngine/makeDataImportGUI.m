@@ -84,7 +84,8 @@ checkboxPositions       = { [300 339 117 23];
                             [14 114 111 23];
                             [14 81 111 23];
                             [14 48 111 23];
-                            [14 15 111 23]
+                            [14 15 111 23];
+                            [300 100 200 23]
                             };
 
                         
@@ -92,7 +93,8 @@ checkboxTags            = { 'checkbox_autoName';
                             'checkbox_isOperation';
                             'checkbox_isMARS';
                             'checkbox_hasUID';
-                            'checkbox_vehicleSupport'
+                            'checkbox_vehicleSupport';
+                            'checkbox_autoSkipErrors'
                             };
                             
 
@@ -100,7 +102,8 @@ checkboxStrings         = { 'Auto-name folder';
                             'Operation';
                             'MARS Procedure';
                             'Has MARS UID';
-                            'Vehicle support'
+                            'Vehicle support';
+                            'Auto-skip parsing errors'
                             };
 
 
@@ -108,10 +111,12 @@ checkboxParents         =   {   'fig';
                                 'panel_metaData';
                                 'panel_metaData';
                                 'panel_metaData';
-                                'panel_metaData'
+                                'panel_metaData';
+                                'fig'
                             };
                         
 checkboxValue           =   {   true;
+                                false;
                                 false;
                                 false;
                                 false;
@@ -401,7 +406,10 @@ initialValues =    ...
         
         updateFolderGuess;
         
-        ImportFromGUI( flbManager.getFileCellArray, metaData, hs.edit_folderName.String);
+        ImportFromGUI(  flbManager.getFileCellArray, ... 
+                        metaData, ...
+                        hs.edit_folderName.String, ...
+                        hs.checkbox_autoSkipErrors.Value );
         
     end
 
