@@ -48,6 +48,8 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
 
                 F = load( fullfile(path, filesOfType(i).name),'-mat');
                 % disp(sprintf('%s',[fd.Type '-' fd.ID]))
+                                
+                debugout(filesOfType(i).name);
 
                 if isfield(F, 'fd')
                     % we loaded a structure called fd
@@ -55,7 +57,11 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
                     availFDs{i,1} = F.fd.FullString;
                     availFDs{i,2} = filesOfType(i).name;
                     
-                    thisTimeSpan = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
+                    if isfield(F.fd, 'position')
+                        thisTimeSpan = [F.fd.position.Time(1), F.fd.position.Time(end)];
+                    else
+                        thisTimeSpan = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
+                    end
                     
                     if isempty(timespan)
                         timespan = thisTimeSpan;
