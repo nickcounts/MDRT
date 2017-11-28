@@ -114,7 +114,7 @@ for i = 1:numberOfFiles
             debugout('Found fd variable')
             
             % Handle old combined valve data
-            fixOldValveFile();
+            wasProcessedAsValve = fixOldValveFile();
             
             % Make the new filename
             newFileName_str = makeFileNameForFD(loadedVar.fd);
@@ -122,13 +122,17 @@ for i = 1:numberOfFiles
             renamedFullFile = fullfile(rootDir_path, strcat(newFileName_str, '.mat') );
             
             % Check for Filename Collisions
-            if ~exist(renamedFullFile, 'file')
+            if ~exist(renamedFullFile, 'file') && ~wasProcessedAsValve
 
                 % rename the file in place
                 [status, ~, ~] = movefile(thisFullFile, renamedFullFile);
                 
                 % Someday I will check this status and do something smart
                 
+            elseif wasProcessedAsValve
+                % Nohing to do, just catching the condition where
+                % everything worked and we skipped the file moving dance
+                % becasue we already sorted it out in the valve function
             else
                 % There was a collison
                 
@@ -171,7 +175,7 @@ end
 %% Sub Functions:
 % -------------------------------------------------------------------------
 
-function fixOldValveFile
+    function isValve = fixOldValveFile
     % fixOldValveFile makes a temporary fd struct, moves the proportional
     % data into the normal 'ts' field, clears all old-system fields that
     % refer to 'isProportional' and 'position', saves the file, and then
@@ -189,6 +193,8 @@ function fixOldValveFile
     %     isProportional: 1
     %           position: [1x1 timeseries]
     
+    isValve = false;
+    
     debugout('Checking for legacy valve data...')
 
     fd = loadedVar.fd;
@@ -200,6 +206,9 @@ function fixOldValveFile
         
         debugout('Found a position timeseries')
         debugout(fd)
+        
+        % Set ouput for file skipping in calling function
+        isValve = false;
         
         % Move the positioner data to the ts field
         fd.ts = fd.position;
@@ -228,26 +237,10 @@ function fixOldValveFile
             % Make the new filename
             newFileName_str = makeFileNameForFD(fd);
 
-            renamedFullFile = fullfile(rootDir_path, strcat(newFileName_str, '.mat') );
+            renamedFullFile = fullfile(rootDir_path, ...
+                                       strcat(newFileName_str, '.mat') );
 
-            % Check for Filename Collisions
-            if ~exist(renamedFullFile, 'file')
-
-                % Save the new data file
-                save(renamedFullFile, 'fd');
-                
-                debugout('Saved valve position data to file')
-
-            else
-                % There was a collison
-
-                % put the offending file in issues directory and leave
-                % the original alone. Move on
-                save( fullfile(issuesDir_path, newFileName_str), 'fd');
-                
-                debugout('Filename collision, saving file to issues subdirectory')
-
-            end
+            saveDataFile(renamedFullFile, newFileName_str, fd);
             
             
         % Update the original FD to remove the proportional data so it can 
@@ -266,11 +259,20 @@ function fixOldValveFile
         % Update fullstring from the new ts
         loadedVar.fd.FullString = loadedVar.fd.ts.Name;
         
+        debugout('Created new FD for valve state data')        
         debugout(loadedVar.fd)
         
-        % After this point, the loadedVar.fd should be in good shape to be
-        % re-indexed/updated by the main loop. Returning to normal function
-        % business logic
+        % Save updated data
+        % -----------------------------------------------------------------
+        
+            % Make the new filename
+            newFileName_str = makeFileNameForFD(loadedVar.fd);
+
+            renamedFullFile = fullfile(rootDir_path, ... 
+                                       strcat(newFileName_str, '.mat') );
+
+            saveDataFile(renamedFullFile, newFileName_str, loadedVar.fd);
+        
         
         debugout('Returning to normal processing loop')
         
@@ -278,8 +280,36 @@ function fixOldValveFile
     
     
 
-end
+    end
 
+    function saveDataFile (newFullFile, newFileNameStr, fd)
+        % Saves the variable 'fd' to a file named newFileNameStr (includes
+        % extension) - newFullFile is the fullfile() output. newFileNameStr
+        % is for use in error cases.
+        
+        debugout(sprintf('Saving %s', newFileNameStr))
+        debugout(fd)
+        
+        % Check for Filename Collisions
+            if ~exist(newFullFile, 'file')
+
+                % Save the new data file
+                save(newFullFile, 'fd');
+                
+                debugout('Saved valve position data to file')
+
+            else
+                % There was a collison
+
+                % put the offending file in issues directory and leave
+                % the original alone. Move on
+                save( fullfile(issuesDir_path, newFileNameStr), 'fd');
+                
+                debugout('Filename collision, saving file to issues subdirectory')
+
+            end
+        
+    end
 
 end % End of Main Function
 
