@@ -227,142 +227,6 @@ for i = 1:length(filenameCellList)
         % Different handlings for different retrieval types
         switch upper(info.Type)
 
-            % -----------------------------------------------------------------
-            % Process Valve Data
-            % -----------------------------------------------------------------
-
-            case {'DCVNC','DCVNO','RV','BV','FV'}
-                %% --------------------------------------------------------
-                % Process as a Discrete Valve Retrieval
-                % ---------------------------------------------------------
-                
-                %  TODO: Discrete Valve Retrieval parsing - add more than just "state" variable parsing and fold into FD timeseries structure. 
-
-                    
-                try
-                    
-                    disp('Processing state only until further implementation');
-
-                    % Strip out the values that contain 'State' in the descriptor
-
-                    if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
-                        % Special Exception for WDS proportional valves
-                        valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
-                    else
-                        valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
-                    end
-
-
-
-                    if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
-                        % Special Exception for WDS proportional valves
-                        info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'Mon')),1,'first')});
-                    else
-                        info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
-                    end    
-
-
-
-                    % Generate time series for state values            
-                    tic;
-
-                        % ts = timeseries( sscanf(sprintf('%s', valveState{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-
-
-                    if strcmp(info.Type, 'BV') && ( strcmp(info.ID, '0009') || strcmp(info.ID, '0010'))
-                        % Special Exception for WDS proportional valves
-                        ts = timeseries( str2double(valvePosition), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
-                    else
-                        ts = timeseries( str2double(valveState), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                    end
-
-                    disp(sprintf('Generating timeseries took: %f seconds',toc));            
-
-
-                    fd = struct('ID', info.ID,...
-                                    'Type', info.Type,...
-                                    'System', info.System,...
-                                    'FullString', info.FullString,...
-                                    'ts', ts, ...
-                                    'isValve', true);
-
-                    % write timeSeries to disk as efficient 'mat' format
-                    tic;
-    %                     save([savePath info.ID '.mat'],'fd','-mat')
-                        saveFDtoDisk(fd)
-                    disp(sprintf('Writing data to disk took: %f seconds',toc));
-
-                    disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
-                    
-                catch ME
-
-                    handleParseFailure(ME)
-
-                end
-
-            case {'PCVNO','PCVNC'}
-                %% --------------------------------------------------------
-                % Process as a Proportional Valve Retrieval
-                % ---------------------------------------------------------
-                
-                disp('Processing state and percent open');
-                
-                try
-                
-                    % Strip out the values that contain 'State' in the descriptor
-                    valveState = valueCell(~cellfun('isempty',strfind(shortNameCell, 'State')));
-                    if ~isempty(valveState)
-                        info = getDataParams(shortNameCell{find(~cellfun('isempty',strfind(shortNameCell, 'State')),1,'first')});
-                    else
-                        disp('NOTE: Valve state not found. No state data added to structure');
-                    end
-
-                    valvePosition = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Mon')));
-
-                    % Generate time series for state values            
-                    tic;
-
-                        tsState = timeseries( sscanf(sprintf('%s ', valveState{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                        % tsState = timeseries( str2double(valveState), timeVect(~cellfun('isempty',strfind(shortNameCell, 'State'))), 'Name', info.FullString);
-                    disp(sprintf('Generating state timeseries took: %f seconds',toc));
-
-                    % Generate time series for position values
-                    
-                    % valveCommand = valueCell(~cellfun('isempty',strfind(shortNameCell, 'Param')))
-                    % tsCmd = timeseries( sscanf(sprintf('%s ', valveCommand{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Param'))), 'Name', info.FullString);
-
-
-
-                    tic;
-                        tsPos = timeseries( sscanf(sprintf('%s ', valvePosition{:,1}),'%f'), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
-                        % tsPos = timeseries( str2double(valvePosition), timeVect(~cellfun('isempty',strfind(shortNameCell, 'Mon'))), 'Name', info.FullString);
-                    disp(sprintf('Generating position timeseries took: %f seconds',toc));
-
-                    fd = struct('ID', info.ID,...
-                                    'Type', info.Type,...
-                                    'System', info.System,...
-                                    'FullString', info.FullString,...
-                                    'ts', tsState, ...
-                                    'isValve', true, ...
-                                    'isProportional', true, ...
-                                    'position', tsPos);
-
-                    % write timeSeries to disk as efficient 'mat' format
-                    tic;
-    %                     save([savePath info.ID '.mat'],'fd','-mat')
-                        saveFDtoDisk(fd)
-
-                    disp(sprintf('Writing data to disk took: %f seconds',toc));
-
-                    disp(sprintf('Finished file %i of %i',i,length(filenameCellList)));
-                    
-                catch ME
-
-                    handleParseFailure(ME)
-
-                end
-
-
 
             case {'RANGE','SETPOINT','SET POINT','BOUND','BOUNDS','BOUNDARY','LIMIT','HTR'}
                 %% --------------------------------------------------------
@@ -388,6 +252,8 @@ for i = 1:length(filenameCellList)
                                 'FullString',   info.FullString,...
                                 'ts',           ts, ...
                                 'isLimit',      true);
+                            
+                            % TODO: Catch ctrl params and add as setpoints
 
                     % write timeSeries to disk as efficient 'mat' format
                     tic;
@@ -535,22 +401,6 @@ clear fid filenameCellList i longNameCell shortNameCell timeCell timeVect valueC
         % This helper function writes the newly parsed FD to disk, after
         % first checking the structure against a list of special cases and
         % updating the FD fields and filename.
-        
-%% Old Code to hanle file naming
-        % Start with default filename
-%         fileName = info.ID;
-        
-        % Adjust file names for special cases for set-point types
-            
-%         if ismember(upper(info.Type), {'RANGE','SETPOINT','SET POINT','BOUND','BOUNDS','BOUNDARY','LIMIT','HTR'})
-%             if isequal(info.Type, 'Set Point')
-%                 % default filename is fine
-%                 fileName = info.ID;
-%             else
-%                 % modify fileName for typical FDs
-%                 fileName = [info.System ' ' info.ID];
-%             end
-%         end
         
         
 %% New code to fix overloaded FD file names

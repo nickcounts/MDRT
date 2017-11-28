@@ -170,18 +170,25 @@ debugout(fileName);
     
     debugout(uniqueFDs)
 
+% %% Legacy code that handled valves as a combined entity
+% % -----------------------------------------------------------------------
 % find all FDs that are valve related - returns cell array of cells of
 % strings
 % -------------------------------------------------------------------------
 %     valveFDs = regexp(uniqueFDs, '[DP]CVN[CO]-[0-9]{4}','match');
 
-% Include System ID String
-    valveFDs = regexp(uniqueFDs, '\w* [DP]CVN[CO]-[0-9]{4}','match');
-    
-    debugout(valveFDs)
 
-    % Make FD List for grep without any valve data
-    FDlistForGrep = uniqueFDs(cellfun('isempty',valveFDs));
+% % Include System ID String
+%     valveFDs = regexp(uniqueFDs, '\w* [DP]CVN[CO]-[0-9]{4}','match');
+%     
+%     debugout('Valve FDs for combined processing:')
+%     debugout(valveFDs)
+% 
+%     % Make FD List for grep without any valve data
+%     FDlistForGrep = uniqueFDs(cellfun('isempty',valveFDs));
+    
+    % Patch to stop combining valve data
+    FDlistForGrep = uniqueFDs;
     
     debugout(FDlistForGrep)
     
@@ -192,11 +199,11 @@ debugout(fileName);
     % command assembly.
     FDlistForGrep = cellfun(@(c)[c ','], FDlistForGrep, 'uni', false);
 
-% make cell array of strings containing all unique valve identifiers
-% -------------------------------------------------------------------------
-    uniqueValves = unique(cat(1,valveFDs{:}));
-    
-    debugout(uniqueValves)
+% % make cell array of strings containing all unique valve identifiers
+% % -------------------------------------------------------------------------
+%     uniqueValves = unique(cat(1,valveFDs{:}));
+%     
+%     debugout(uniqueValves)
     
 % % % Generate cell array of cell array of strings (listing FDs for each valve)
 % % % -------------------------------------------------------------------------
@@ -213,8 +220,8 @@ debugout(fileName);
     
 % Combine Valve FDs with uniqueFDs for .delim grep
 % -------------------------------------------------------------------------
-    
-    FDlistForGrep = cat(1,FDlistForGrep, uniqueValves);
+%     % Disabling combined valve processing
+%     FDlistForGrep = cat(1,FDlistForGrep, uniqueValves);
     
 % Remove FDs with leading underscores
     FDlistForGrep(~cellfun('isempty',regexp(FDlistForGrep,'^_'))) = [];
