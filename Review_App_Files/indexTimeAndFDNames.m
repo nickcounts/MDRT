@@ -57,7 +57,8 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
                     availFDs{i,1} = F.fd.FullString;
                     availFDs{i,2} = filesOfType(i).name;
                     
-                    if isfield(F.fd, 'position')
+                    % Legacy support for combined valve data.
+                    if isfield(F.fd, 'position') && (length(F.fd.position.Time) > 1);
                         thisTimeSpan = [F.fd.position.Time(1), F.fd.position.Time(end)];
                     else
                         thisTimeSpan = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
