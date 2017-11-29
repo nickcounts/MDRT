@@ -117,7 +117,7 @@ end
 
 % Update handles structure
     guidata(hObject, handles);
-
+    
 % UIWAIT makes makeGraphGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -132,16 +132,24 @@ function varargout = makeGraphGUI_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % uiTab Creation - T.Patel 07/2017
-timeGUI = gcf;
+fig = gcf;
+fig.Position(4) = fig.Position(4) * 1.05;
 
 tabGroup = uitabgroup('SelectionChangedFcn', {@switchTab, handles});
 tab1 = uitab(tabGroup,'Title','Variable Selection');
 tab2 = uitab(tabGroup,'Title','Axes Setup');
 
-while length(timeGUI.Children) > 2
-set(timeGUI.Children(3),'Parent',tab1); 
-% there's a bug where it won't run if any other figure is open
-end
+% Set the parent of all existing objects to the "Variable Selection" tab
+objs = findobj('Parent',gcf, '-not', 'Type', 'uitabgroup', ...
+                             '-not', 'Type', 'uitoolbar', ...
+                             '-not', 'Parent', tab1, ...
+                             '-not', 'Parent', tab2);
+set(objs, 'Parent', tab1)
+
+% while length(timeGUI.Children) > 2
+% set(timeGUI.Children(3),'Parent',tab1); 
+% % there's a bug where it won't run if any other figure is open
+% end
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
@@ -153,7 +161,7 @@ switch eventData.NewValue.Title
     
     case 'Axes Setup'
         handles = guidata(hObject);
-        % something to repop the GUI or place this line in the timeAxes
+        % something to repop the GUI or place this line in the timeA(3xes
         % itself to populate with the rest
          
         graph = returnGraphStructureFromGUI(handles);
