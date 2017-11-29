@@ -28,7 +28,7 @@ function varargout = review(varargin)
 
 % Edit the above text to modify the response to help review
 
-% Last Modified by GUIDE v2.5 17-Jul-2017 07:36:54
+% Last Modified by GUIDE v2.5 29-Nov-2017 19:54:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -637,3 +637,27 @@ function PIDButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 PIDSimulator
+
+
+% --- Executes on button press in ui_button_ArchiveManager.
+function ui_button_ArchiveManager_Callback(hObject, eventdata, handles)
+% hObject    handle to ui_button_ArchiveManager (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Construct a questdlg with three options
+
+cancelButton = 'Oops, sorry, forget I asked';
+proceedButton = 'Shut up, I know what I''m doing';
+defaultButton = cancelButton;
+
+choice = questdlg('You are about to open the data archive manager. Only do this if you actually know what you are doing! You can really break stuff in here', ...
+	'!! WARNING !!', ...
+	cancelButton, proceedButton, defaultButton);
+% Handle response
+switch choice
+    case cancelButton
+    case proceedButton
+        makeArchiveManagerGUI
+    otherwise
+end
