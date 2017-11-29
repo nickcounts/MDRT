@@ -325,7 +325,8 @@ function uiButton_quickPlotFD_Callback(hObject, eventdata, handles)
 
 
 
-index = get(handles.uiPopup_FDList,'Value');
+index = get(handles.uiPopup_FDList,'Value')
+keyboard
 fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
 
 % TODO: Does you even need this, brah?
@@ -388,6 +389,19 @@ function uiButton_updateFDList_Callback(hObject, eventdata, handles)
 
         % updates the dropdown.
             set(handles.uiPopup_FDList, 'String', FDList(:,1))
+            
+        % Fix dropdown selected index
+            v = handles.uiPopup_FDList.Value;
+            
+            if v < 1
+                v = 1;
+                debugout('FDList index was less than 1')
+            elseif v > length(handles.quickPlotFDs)
+                v = length(handles.quickPlotFDs);
+                debugout('FDList index bigger than the list length')
+            end
+            
+            handles.uiPopup_FDList.Value = v;
 
         % Write the new list to disk
             save(fullfile(handles.configuration.dataFolderPath, 'AvailableFDs.mat'),'FDList');
@@ -600,11 +614,12 @@ function ui_newDataButton_Callback(hObject, eventdata, handles)
     set(handles.uiTextbox_dataFolderTextbox, 'String', newDataPath);
     set(handles.uiTextbox_delimFolderTextbox, 'String', newDelimPath);
     set(handles.uiTextbox_outputFolderTextbox, 'String', newPlotPath);
+    
+    guidata(hObject, handles);
 
     % Refresh the FD list
     uiButton_updateFDList_Callback(hObject, eventdata, handles);
     
-    guidata(hObject, handles);
 
 
 % --- Executes on button press in compareDataButton.
