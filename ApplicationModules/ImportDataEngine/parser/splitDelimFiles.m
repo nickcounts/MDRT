@@ -305,14 +305,17 @@ reverseStr = '';
         
         % Check for faster grep binary
         if exist('/usr/local/bin/grep', 'file')
-            grepExecutable = '/usr/local/bin/grep -F "'
+            grepExecutable = '/usr/local/bin/grep -F "';
         elseif exist('/usr/local/bin/ggrep', 'file')
-            grepExecutable = '/usr/local/bin/ggrep -F "'
+            grepExecutable = '/usr/local/bin/ggrep -F "';
         else
-            grepExecutable = 'grep -F "'
+            grepExecutable = 'grep -F "';
         end
         
         egrepCommand = [grepExecutable , FDlistForGrep{i}, '" ',grepFilename, ' > ', outputFile];
+        
+        debugout(egrepCommand)
+        
         system(egrepCommand);
         
                 

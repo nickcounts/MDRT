@@ -325,8 +325,8 @@ function uiButton_quickPlotFD_Callback(hObject, eventdata, handles)
 
 
 
-index = get(handles.uiPopup_FDList,'Value')
-keyboard
+index = get(handles.uiPopup_FDList,'Value');
+
 fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
 
 % TODO: Does you even need this, brah?
