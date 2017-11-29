@@ -88,7 +88,7 @@ for i = 1:numel(filesIn)
     workingFiles = vertcat( workingFiles, newFile);
 
     copyWorked = copyfile(filesIn{i}, newFile );
-    
+        
 	if ~copyWorked
         warningMsg = sprintf('Moving file: %s failed', filesIn{i});
         warning(warningMsg)
@@ -108,10 +108,10 @@ end
 
 %% Split .delim files
 
-for i = 1:numel(filesIn)
+for i = 1:numel(workingFiles)
     
     % Eventually add try/catch for error handling?
-    splitDelimFiles( filesIn{i}, config )
+    splitDelimFiles( workingFiles{i}, config )
     
 end
 
