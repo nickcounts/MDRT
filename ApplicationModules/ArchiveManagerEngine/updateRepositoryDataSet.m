@@ -48,8 +48,8 @@ switch nargin
             return
         end
     case 1
-        if exist(fullfile(varargin(1), DATA_FOLDER_NAME), 'dir')
-            rootDir_path = fullfile(varargin(1), DATA_FOLDER_NAME);
+        if exist(fullfile(varargin{1}, DATA_FOLDER_NAME), 'dir')
+            rootDir_path = fullfile(varargin{1}, DATA_FOLDER_NAME);
         else
             % TODO: Check if I am in a data folder and use the current path
             return
@@ -105,6 +105,7 @@ bWriteMetadataFile = false;
 
 % Generate metadata
 metadata = newMetaDataStructure;
+metadata.fdList = FDList;
     
 if ~exist(fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'file')
 
