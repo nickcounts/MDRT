@@ -1,4 +1,4 @@
-function [ availFDs, timespan ] = indexTimeAndFDNames( path )
+function [ availFDs, timespan, varargout ] = indexTimeAndFDNames( path )
 %indexTimeAndFDNames 
 %
 %   [ availFDs, timespan ] =indexTimeAndFDNames( path )
@@ -24,12 +24,12 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path )
 
     filesOfType = dir( fullfile( path, '*.mat') );
     
-    availFDs = {};
-    timespan = [];
-
     N = numel(filesOfType);
     
-    
+    availFDs = {};
+    timespan = [];
+    timeCell = zeros(N, 2);
+
     
     if N % Files are found!
     
@@ -59,8 +59,12 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path )
                     % Legacy support for combined valve data.
                     if isfield(F.fd, 'position') && ~isempty(F.fd.position.Time);
                         thisTimeSpan = [F.fd.position.Time(1), F.fd.position.Time(end)];
+                        timeCell(i, :) = thisTimeSpan;
+                        
                     elseif ~isempty(F.fd.ts.Time) > 0
                         thisTimeSpan = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
+                        timeCell(i, :) = thisTimeSpan;
+                        
                     else % If we fell through here, then it's an empty ts
                         thisTimeSpan = [];
                     end
@@ -68,8 +72,6 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path )
                     if isempty(timespan)
                         timespan = thisTimeSpan;
                     end
-                    
-                    
                     
                     timespan(1) = min( min(timespan), min(thisTimeSpan) );
                     timespan(2) = max( max(timespan), max(thisTimeSpan) );
@@ -85,12 +87,15 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path )
         availFDs = availFDs(~cellfun('isempty',availFDs));
 
         availFDs = reshape(availFDs,length(availFDs)/2,2);
+        
+        if nargout == 3
+            varargout(1) = {timeCell};
+        end
     
     else % no files are found
         % return an empty cell
         
     end
-    
         
 end
 
