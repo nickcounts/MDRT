@@ -1,8 +1,7 @@
-function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
+function [ availFDs, timespan ] = indexTimeAndFDNames( path )
 %indexTimeAndFDNames 
 %
-%   [ availFDs, timespan ] =indexTimeAndFDNames( path, fileType )
-%
+%   [ availFDs, timespan ] =indexTimeAndFDNames( path )
 %
 %       path is a string and should be a well formed directory string.
 %       now checks to be sure there is an fd structure in the variable
@@ -58,10 +57,12 @@ function [ availFDs, timespan ] = indexTimeAndFDNames( path  )
                     availFDs{i,2} = filesOfType(i).name;
                     
                     % Legacy support for combined valve data.
-                    if isfield(F.fd, 'position') && (length(F.fd.position.Time) > 1);
+                    if isfield(F.fd, 'position') && ~isempty(F.fd.position.Time);
                         thisTimeSpan = [F.fd.position.Time(1), F.fd.position.Time(end)];
-                    else
+                    elseif ~isempty(F.fd.ts.Time) > 0
                         thisTimeSpan = [F.fd.ts.Time(1), F.fd.ts.Time(end)];
+                    else % If we fell through here, then it's an empty ts
+                        thisTimeSpan = [];
                     end
                     
                     if isempty(timespan)
