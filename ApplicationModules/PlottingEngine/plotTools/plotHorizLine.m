@@ -47,7 +47,9 @@ figureHandle = varargin{1}.Parent.Parent; % calls the handle of the original plo
     
     else
         prevlist = '';
-        data.list = strings(1);
+        % data.list = strings(1);
+        data.list = {''};
+
     end
     
     % Find all subplots in graph. 

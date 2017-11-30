@@ -1,4 +1,4 @@
-function ImportFromGUI( filesIn, metaData, folderName )
+function ImportFromGUI( filesIn, metaData, folderName, autoSkip )
 %ImportFromGUI 
 %   Automates the data importing process.
 %
@@ -68,40 +68,50 @@ else
     
     config.writeConfigurationToDisk;
     
-
+    
     
 end
 
 
 %% Move files to location to process
 
+workingFiles = {};
+badCopyIndex = [];
+
 for i = 1:numel(filesIn)
-    
-    
     
     [a b c] = fileparts(filesIn{i});
     fileBeingCopied = [b, c];
     
-    
-    copyWorked = copyfile(filesIn{i}, fullfile(config.workingDelimPath, ...
-                                               'original', ...
-                                               fileBeingCopied) );
-    
+    newFile = fullfile(config.workingDelimPath, 'original', fileBeingCopied);
+
+    workingFiles = vertcat( workingFiles, newFile);
+
+    copyWorked = copyfile(filesIn{i}, newFile );
+        
 	if ~copyWorked
         warningMsg = sprintf('Moving file: %s failed', filesIn{i});
         warning(warningMsg)
+        badCopyIndex = vertcat(badCopyIndex, i);
 %         return
     end
                                            
 end
 
+% Clear entries for files that didn't copy correctly
+if length(badCopyIndex)
+    workingFiles(badCopyIndex) = [];
+end
+
+
+
 
 %% Split .delim files
 
-for i = 1:numel(filesIn)
+for i = 1:numel(workingFiles)
     
     % Eventually add try/catch for error handling?
-    splitDelimFiles( filesIn{i}, config )
+    splitDelimFiles( workingFiles{i}, config )
     
 end
 
@@ -109,7 +119,7 @@ end
 
 %% Parse stripped .delim files
 
-processDelimFiles(config)
+processDelimFiles(config, autoSkip);
 
 
 %% Start Indexing!

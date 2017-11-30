@@ -1,5 +1,6 @@
 dataIndex.mat
 review.cfg
 processDelimFiles.cfg
+.DS_Store
 
 *.m~

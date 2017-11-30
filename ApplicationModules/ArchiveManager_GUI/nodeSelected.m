@@ -16,6 +16,8 @@ function [ output_args ] = nodeSelected( hobj, event, varargin )
     
     
     htext = findobj(hobj.Parent.Children, 'Style', 'text');
+    %setappdata(hobj.Parent, 'SelectedPathFF', npath);
+    setappdata(gcf, 'SelectedPathFF', npath);
     htext.String = npath;
 
 end

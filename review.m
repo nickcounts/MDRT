@@ -28,7 +28,7 @@ function varargout = review(varargin)
 
 % Edit the above text to modify the response to help review
 
-% Last Modified by GUIDE v2.5 17-Jul-2017 07:36:54
+% Last Modified by GUIDE v2.5 29-Nov-2017 19:54:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -326,6 +326,7 @@ function uiButton_quickPlotFD_Callback(hObject, eventdata, handles)
 
 
 index = get(handles.uiPopup_FDList,'Value');
+
 fdFileName = fullfile(handles.configuration.dataFolderPath, handles.quickPlotFDs{index, 2} );
 
 % TODO: Does you even need this, brah?
@@ -388,6 +389,19 @@ function uiButton_updateFDList_Callback(hObject, eventdata, handles)
 
         % updates the dropdown.
             set(handles.uiPopup_FDList, 'String', FDList(:,1))
+            
+        % Fix dropdown selected index
+            v = handles.uiPopup_FDList.Value;
+            
+            if v < 1
+                v = 1;
+                debugout('FDList index was less than 1')
+            elseif v > length(handles.quickPlotFDs)
+                v = length(handles.quickPlotFDs);
+                debugout('FDList index bigger than the list length')
+            end
+            
+            handles.uiPopup_FDList.Value = v;
 
         % Write the new list to disk
             save(fullfile(handles.configuration.dataFolderPath, 'AvailableFDs.mat'),'FDList');
@@ -600,11 +614,12 @@ function ui_newDataButton_Callback(hObject, eventdata, handles)
     set(handles.uiTextbox_dataFolderTextbox, 'String', newDataPath);
     set(handles.uiTextbox_delimFolderTextbox, 'String', newDelimPath);
     set(handles.uiTextbox_outputFolderTextbox, 'String', newPlotPath);
+    
+    guidata(hObject, handles);
 
     % Refresh the FD list
     uiButton_updateFDList_Callback(hObject, eventdata, handles);
     
-    guidata(hObject, handles);
 
 
 % --- Executes on button press in compareDataButton.
@@ -622,3 +637,27 @@ function PIDButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 PIDSimulator
+
+
+% --- Executes on button press in ui_button_ArchiveManager.
+function ui_button_ArchiveManager_Callback(hObject, eventdata, handles)
+% hObject    handle to ui_button_ArchiveManager (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Construct a questdlg with three options
+
+cancelButton = 'Oops, sorry, forget I asked';
+proceedButton = 'Shut up, I know what I''m doing';
+defaultButton = cancelButton;
+
+choice = questdlg('You are about to open the data archive manager. Only do this if you actually know what you are doing! You can really break stuff in here', ...
+	'!! WARNING !!', ...
+	cancelButton, proceedButton, defaultButton);
+% Handle response
+switch choice
+    case cancelButton
+    case proceedButton
+        makeArchiveManagerGUI
+    otherwise
+end

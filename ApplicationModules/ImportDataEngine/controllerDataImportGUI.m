@@ -14,10 +14,10 @@ switch hobj.Style
         targetOnString = '';
         targetOffMode = 'off';
         targetOnMode = 'on';
-        
+
         switch hobj.Tag
             case 'checkbox_autoName'
-                target = findobj('Tag', 'edit_folderName');
+                target = findobj(gcf, 'Tag', 'edit_folderName');
                 % targetOnString = makeAutoString;
                 targetOffString = target.String;
                 
@@ -39,6 +39,7 @@ switch hobj.Style
                 return
                 
         end
+        
         
         if hobj.Value
             target.Enable = targetOnMode;

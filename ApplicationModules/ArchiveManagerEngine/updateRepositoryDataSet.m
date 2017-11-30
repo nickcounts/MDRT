@@ -1,3 +1,14 @@
+function updateRepositoryDataSet(varargin)
+%% updateRepositoryDataSet(pathToDataFolder)
+%
+%   updateRepositoryDataSet()
+%   updateRepositoryDataSet(varargin)
+%
+%   Called without an argument, opens a UI to select a directory
+%
+%
+% Counts, VCSFA 2017
+
 %% Script to update a data-set in the data repository
 %
 %   1) All data files will be renamed with the currently implemented
@@ -19,19 +30,37 @@
 FD_INDEX_FILE_NAME_STR = 'AvailableFDs.mat'; % Should this come from a project
                                           % configuration file?
                                           
-                                          
+
+DATA_FOLDER_NAME = 'data';
 METADATA_FILE_NAME_STR = 'metadata.mat';
 DATAINDEX_FILE_NAME_STR = 'dataIndex.mat';
 DATA_FOLDERS_LEVELS_DEEP_IN_ARCHIVE = 2;
+    
 
 %% STEP 0: Select data directory to update/refresh
 
-rootDir_path = uigetdir;
+switch nargin
+    case 0        
+        rootDir_path = uigetdir;
 
-if rootDir_path == 0
-    % User pressed cancel
-    return
+        if rootDir_path == 0
+            % User pressed cancel
+            return
+        end
+    case 1
+        if exist(fullfile(varargin{1}, DATA_FOLDER_NAME), 'dir')
+            rootDir_path = fullfile(varargin{1}, DATA_FOLDER_NAME);
+        else
+            % TODO: Check if I am in a data folder and use the current path
+            return
+        end
+    otherwise
+        % TODO: Add better argument parsing. For now, fail with too many
+        % arguments passed
+        warning('Too many arguments passed')
+        return
 end
+
 
 %% STEP 1: rename all files in data set
 
@@ -76,6 +105,7 @@ bWriteMetadataFile = false;
 
 % Generate metadata
 metadata = newMetaDataStructure;
+metadata.fdList = FDList;
     
 if ~exist(fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'file')
 

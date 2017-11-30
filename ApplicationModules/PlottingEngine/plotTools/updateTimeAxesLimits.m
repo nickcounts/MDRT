@@ -21,7 +21,8 @@ config = getConfig;
 % Load timeline file
 if exist(fullfile(config.dataFolderPath, 'timeline.mat'),'file')
     t = load(fullfile(config.dataFolderPath, 'timeline.mat'));
-    milestoneString = string(cellstr({t.timeline.milestone.String}'));
+    % milestoneString = string(cellstr({t.timeline.milestone.String}'));
+    milestoneString = cellstr({t.timeline.milestone.String}');
     milestoneString = [milestoneString; t.timeline.t0.name];
     milestoneTime = {t.timeline.milestone.Time}';
     milestoneTime = [milestoneTime; t.timeline.t0.time];    

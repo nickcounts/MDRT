@@ -16,6 +16,17 @@ function [ output_args ] = splitDelimFiles( varargin )
 %   Updated 2016, Counts, VCSFA - Better delim naming convention, should
 %   eliminate overloaded filenames.
 
+
+%% Constant definitions
+
+    % Number of lines in a file that will be parsed in one chunk:
+    MAX_LINE_COUNT = 50000;
+    
+    DELIM_SPLIT_LINES = 2000000;
+    
+    
+%% Argument parsing
+
 switch nargin
     case 1
         configVar = varargin{1};
@@ -29,8 +40,6 @@ switch nargin
         
 end
         
-        
-
 % Handle configuration variable argument
 if isa(configVar, 'MDRTConfig')
     delimPath = configVar.workingDelimPath;
@@ -78,9 +87,9 @@ end
 % Open the file selected above
 % -------------------------------------------------------------------------
 fid = fopen(fileName);
+debugout(fileName);
 
-
-% Get lines in data file to chunk large files
+%% Get lines in data file to chunk large files
 % -------------------------------------------------------------------------
     
     numLines = getFileLineCount(fileName);
@@ -131,7 +140,7 @@ fid = fopen(fileName);
     
     
     
-% Put data into an nx1 cell array of strings for parsing
+%% Put data into an nx1 cell array of strings for parsing
 % -------------------------------------------------------------------------
     
     % Handle different variable forms from chunk vs direct file parsing
@@ -149,30 +158,52 @@ fid = fopen(fileName);
 %     clear allData fid;
     
 % 2014/193/13:03:30.450043, , ,__RP1 FM-1016 Input Signal Si__,BA,,----------------,, 
+% 2017/314/22:43:05.692136, , ,ECS PCVNC-5256 Globe Valve  Cmd Param, A,FGSE M-P0A-GN2-PCV-5256 Process Outlet Control Valve,----------------,0.000000000000000000E+00, 
 
 
 
 
 
-% find all unique FD strings - store in cell array of strings
+%% find all unique FD strings - store in cell array of strings
 % -------------------------------------------------------------------------
     uniqueFDs = unique(fileData);
+    
+    debugout(uniqueFDs)
 
+% %% Legacy code that handled valves as a combined entity
+% % -----------------------------------------------------------------------
 % find all FDs that are valve related - returns cell array of cells of
 % strings
 % -------------------------------------------------------------------------
 %     valveFDs = regexp(uniqueFDs, '[DP]CVN[CO]-[0-9]{4}','match');
 
-% Include System ID String
-    valveFDs = regexp(uniqueFDs, '\w* [DP]CVN[CO]-[0-9]{4}','match');
-    
-% Make FD List for grep without any valve data
-    FDlistForGrep = uniqueFDs(cellfun('isempty',valveFDs));
 
-% make cell array of strings containing all unique valve identifiers
-% -------------------------------------------------------------------------
-    uniqueValves = unique(cat(1,valveFDs{:}));
+% % Include System ID String
+%     valveFDs = regexp(uniqueFDs, '\w* [DP]CVN[CO]-[0-9]{4}','match');
+%     
+%     debugout('Valve FDs for combined processing:')
+%     debugout(valveFDs)
+% 
+%     % Make FD List for grep without any valve data
+%     FDlistForGrep = uniqueFDs(cellfun('isempty',valveFDs));
     
+    % Patch to stop combining valve data
+    FDlistForGrep = uniqueFDs;
+    
+    debugout(FDlistForGrep)
+    
+    % Append a , to the end of each FD to make GREP string better.
+    % Hopefully this will protect the "valve group" without breaking other
+    % retrievals where the FDs share a common root. In the future, perhaps
+    % do away with the valve blocks and move this trick to the actual grep
+    % command assembly.
+    FDlistForGrep = cellfun(@(c)[c ','], FDlistForGrep, 'uni', false);
+
+% % make cell array of strings containing all unique valve identifiers
+% % -------------------------------------------------------------------------
+%     uniqueValves = unique(cat(1,valveFDs{:}));
+%     
+%     debugout(uniqueValves)
     
 % % % Generate cell array of cell array of strings (listing FDs for each valve)
 % % % -------------------------------------------------------------------------
@@ -189,8 +220,8 @@ fid = fopen(fileName);
     
 % Combine Valve FDs with uniqueFDs for .delim grep
 % -------------------------------------------------------------------------
-    
-    FDlistForGrep = cat(1,FDlistForGrep, uniqueValves);
+%     % Disabling combined valve processing
+%     FDlistForGrep = cat(1,FDlistForGrep, uniqueValves);
     
 % Remove FDs with leading underscores
     FDlistForGrep(~cellfun('isempty',regexp(FDlistForGrep,'^_'))) = [];
@@ -202,6 +233,8 @@ fid = fopen(fileName);
 progressbar('Pre-processing .delim files');
 reverseStr = '';
 
+    %% Handle special output naming convetions
+    % ---------------------------------------------------------------------
     % TODO: rename variabls with semantic names for future clarity 
     
     useCustomNames = false;
@@ -211,15 +244,42 @@ reverseStr = '';
         useCustomNames = true;
     end 
 
+    
+%% On Mac or Linux, always split the delim file into 2,000,000 line chunks    
+% -------------------------------------------------------------------------
+%     
+% if ispc
+%     disp('MS Windows OS does not have naitive file splitting tools and large .delim files may parse very slowly.') 
+% else
+%     % split by lines, not by size
+%     splitCommand = ['split -l ', ...
+%                     num2str(DELIM_SPLIT_LINES), ' "', fileName, '" "',...
+%                     fullfile(delimPath, 'dataSplit.delim'), '"'];
+%                 
+% 	fileToGrep = fullfile(delimPath, 'dataSplit.delim*');
+%     fileName = fileToGrep;
+%     
+%     % Split the file no matter what!!
+%     system(splitCommand);
+%     
+% end
 
+    
+    
+%     % Build list of file chunks to parse
+%         dirList = dir( fullfile(processPath, 'dataSplit.delim*') );
+%         FilesToGrep = {dirList.name}'
+
+
+
+%% GREP for each unique FD and dump to its own .delim file for parsing    
+    
     for i = 1:length(FDlistForGrep)
         
 %         % Find indices of cells containing FD Identifier
 %         FDindexC = strfind(fileData, uniqueFDs{i});
 %         FDindex  = find(not(cellfun('isempty', FDindexC)));
 %         
-
-        
         
         % max(max(strcmp('ECS C1ECU Fan Speed Setpoint', customFDnames)));
         isCustomRule = find(strcmp(FDlistForGrep{i}, customFDnames));
@@ -234,14 +294,28 @@ reverseStr = '';
                 outName = strcat(m{1:end},'.delim');
             end
 
-        
+        % Handle Spaces in filenames for *nix systems
         outputFile = fullfile(delimPath, outName);
         outputFile = regexprep(outputFile, '\s','\\ ');
         
         grepFilename = regexprep(fileName, '\s','\\ ');
                 
-        % Generate egrep command to split delim into parseable files
-        egrepCommand = ['egrep "', FDlistForGrep{i}, '" ',grepFilename, ' > ', outputFile];
+        % Generate grep command to split delim into parseable files
+        % time LC_ALL=C grep -F "TELHS_SYS1 PT33  Mon" ../original/TEL-mon-s.delim > test.delim
+        
+        % Check for faster grep binary
+        if exist('/usr/local/bin/grep', 'file')
+            grepExecutable = '/usr/local/bin/grep -F "';
+        elseif exist('/usr/local/bin/ggrep', 'file')
+            grepExecutable = '/usr/local/bin/ggrep -F "';
+        else
+            grepExecutable = 'grep -F "';
+        end
+        
+        egrepCommand = [grepExecutable , FDlistForGrep{i}, '" ',grepFilename, ' > ', outputFile];
+        
+        debugout(egrepCommand)
+        
         system(egrepCommand);
         
                 
@@ -259,7 +333,8 @@ reverseStr = '';
     % Print a newline character to clean the console
     fprintf('\n');
         
-    
+    %% Cleanup any split files
+    % keyboard
     
 
 end
