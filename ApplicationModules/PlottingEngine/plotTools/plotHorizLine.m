@@ -42,7 +42,7 @@ figureHandle = varargin{1}.Parent.Parent; % calls the handle of the original plo
     % listbox GUI. Otherwise leave blank. 
     if ~isempty(prevtext)
         data.text = prevtext;
-        prevlist = flipud(string(cellstr({prevtext.String}')));
+        prevlist = flipud( cellstr({prevtext.String}' ));
         data.list = prevlist;
     
     else
@@ -343,8 +343,10 @@ guidata(hl.fig,handles); % Creates structure of guidata based on tags
         data.select = select(num); % Return index of selected listbox item. Must be highlighted blue to return.
         
         % Find the horizontal line with the Display Name tag (same as listbox name)
-        selLine = findall(figureHandle, 'Tag', 'hline','DisplayName',char(data.select));
-        selLine.Selected = 'on';
+        if ~isempty(num)            
+            selLine = findall(figureHandle, 'Tag', 'hline','DisplayName',char(data.select));
+            selLine.Selected = 'on';
+        end
     end
 
 % Deletes selected horizontal line
