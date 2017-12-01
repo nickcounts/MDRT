@@ -66,7 +66,8 @@ disp('<a href="makeGraphBundleHelpScript.html">Graph Bundle Help Page</a>')
                         'String',   'Select',...
                         'Tag',      'contents', ...
                         'Units',    'characters',...
-                        'Position', [6, 6, 47, 18]);   
+                        'Position', [6, 6, 47, 18],...
+                        'Callback', @clickCallback);   
 
         r.selectedList = uicontrol('Parent', r.fig, ...
                         'Style',    'listbox', ...
@@ -128,37 +129,35 @@ handles.pathnames = {}; % Create empty handles fields to be populated in the cal
 handles.filenames = {};
 handles.graph = [];
 
-guidata(r.fig, handles);
-
 %% Variable Definitions
 
     plotFlag = false; % flag for checking if graph structure combined properly
-    config = getConfig; % pulls configuration path files
+    config = MDRTConfig.getInstance; % pulls configuration path files
+
+%% Initial Population from MDRT Config
+
+    changeToDirectory(config.graphConfigFolderPath);
+
+    guidata(r.fig, handles);
+
 
 %% Callback Functions
     
-    function browseCallback( hObject, events, handles )
-        handles = guidata(hObject);
+    function browseCallback( hObject, events )
         
         % User chooses the folder holding graph configs
         % You can switch browse folders after initial selection
-        handles.path = uigetdir;
-        handles.folder = fullfile(handles.path, '*.gcf');
+        newDirectory = uigetdir;
         
-        % The files and the file names are stored to the guidata and
-        % updates the listbox string. 
-        handles.files = dir(handles.folder); 
-        fileList = string(cellstr({handles.files.name}')); 
+        if newDirectory % Handle 'user presses cancel'
+            if exist(newDirectory, 'dir') % Check that we got a directory
+                changeToDirectory(newDirectory)
+            end
+        end
         
-        set(handles.contents,'String',fileList);
-        set(handles.contents,'Value',1);
-        drawnow
-        
-        guidata(hObject, handles)
     end
     
-    function clearCallback( hObject, events, handles )
-        handles = guidata(hObject);
+    function clearCallback( hObject, events )
         
         % Clears the listbox and all associated stored handles
         set(handles.select,'String','');
@@ -169,8 +168,7 @@ guidata(r.fig, handles);
         guidata(hObject, handles)
     end
 
-    function toggleCallback( hObject, events, handles )
-        handles = guidata(hObject);
+    function toggleCallback( hObject, events )
         
         switch hObject.Tag
             case 'add'
@@ -180,7 +178,7 @@ guidata(r.fig, handles);
                 index = handles.contents.Value; 
                 selFileName = char(handles.contents.String(index,:));
                 selPath = fullfile(handles.path,selFileName);
-                
+
                 % Store selection to guidata and create a list.
                 handles.pathnames{end+1} = selPath;
                 handles.filenames{end+1} = selFileName;
@@ -221,18 +219,16 @@ guidata(r.fig, handles);
         
     end
 
-    function generateCallback( hObject, events, handles )
-        handles = guidata(hObject)
+    function generateCallback( hObject, events )
         
         % Load the files based on the pathname and concatenate it to a
         % graph structure. 
+        graph = newGraphStructure;
+        
         for i = 1:length(handles.pathnames)
             dummy = load(handles.pathnames{i},'-mat');
-            if i == 1
-                graph = dummy.graph;
-            else
-                graph = [graph dummy.graph];
-            end
+            dummy.graph
+            graph(i) = dummy.graph;
         end   
         
         % Check if the graph structure length and # of paths match up 
@@ -254,12 +250,12 @@ guidata(r.fig, handles);
             structName = char(structName);         
             
             % Attempt to autopopulate the path
-            if isfield(config, 'graphConfigFolderPath')
+            if exist(config.graphConfigFolderPath, 'dir')
                 % Loads path from configuration
                 lookInPath = config.graphConfigFolderPath;
             else
                 % Set default path... to graph
-                lookInPath = config.dataFolderPath;
+                lookInPath = mfilename('fullpath');
             end    
 
             % Open UI for save name and path
@@ -272,8 +268,7 @@ guidata(r.fig, handles);
         end
     end
 
-    function plotCallback ( hObject, events, handles )
-        handles = guidata(hObject);
+    function plotCallback ( hObject, events )
         
         % If there is no graph structure already in the guidata, open and
         % load a new one to plot. 
@@ -292,6 +287,66 @@ guidata(r.fig, handles);
         
     end
 
+
+    function clickCallback(obj,evt)
+        
+        persistent chk
+        if isempty(chk)
+              chk = 1;
+              pause(0.5); %Add a delay to distinguish single click from a double click
+              if chk == 1
+                  % This is single click behavior
+                  chk = [];
+              end
+        else
+              chk = [];
+              % This is double click behavior
+              
+              if isempty(obj.Value)
+                  return
+              end
+              
+              tryDir = fullfile(handles.path, obj.String{obj.Value})
+              
+              if exist(tryDir, 'dir')
+                  %User picked a directory. Let's change to it
+                  
+                  changeToDirectory(tryDir)
+              end
+              
+              
+        end
+    end
+
+    function changeToDirectory(newDir)
+        
+        % User chooses the folder holding graph configs
+        % You can switch browse folders after initial selection
+            handles.path = newDir;
+            %handles.folder = fullfile(handles.path);
+
+        % The files and the file names are stored to the guidata and
+        % updates the listbox string. 
+            handles.files = dir(newDir);
+            % fileList = {handles.files.name}'; 
+        % Populate the GUI
+        
+        configIndexes = ~cellfun('isempty',(strfind({handles.files.name}', '.gcf')));
+        dirIndexes = [handles.files.isdir]';
+        fileList = {handles.files(dirIndexes | configIndexes).name}';
+        
+        
+        
+            set(handles.contents,'String',fileList);
+            set(handles.contents,'Value',1);
+            drawnow
+        
+%         d = dir('/Users/nickcounts/Documents/MATLAB/MARS Review Tool/GraphConfigs')
+%         configIndexes = ~cellfun('isempty',(strfind({d.name}', '.gcf')))
+%         dirIndexes = [d.isdir]'
+%         {d(dirIndexes | configIndexes).name}'
+        
+    end
 
 
 end
