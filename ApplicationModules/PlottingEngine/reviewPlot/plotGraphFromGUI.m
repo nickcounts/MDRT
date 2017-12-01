@@ -301,6 +301,8 @@ for graphNumber = 1:numberOfGraphs
                     set(subPlotAxes(subPlotNumber),'YGrid','on','YMinorGrid','on','YMinorTick','on');
 
                 % dynamicDateTicks
+                dynamicDateTicks(subPlotAxes, 'linked')
+
                     
                     xLim = get(subPlotAxes(subPlotNumber), 'XLim');
 %                     setDateAxes(subPlotAxes(subPlotNumber), 'XLim', [timeToPlot.start timeToPlot.stop]);
@@ -335,6 +337,7 @@ for graphNumber = 1:numberOfGraphs
     
     % Link x axes?
         linkaxes(subPlotAxes(:),'x');
+        
         
     % Automatic X axis scaling:
     % --------------------------------------------------------------------- 
