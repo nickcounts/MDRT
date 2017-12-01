@@ -301,12 +301,12 @@ for graphNumber = 1:numberOfGraphs
                     set(subPlotAxes(subPlotNumber),'YGrid','on','YMinorGrid','on','YMinorTick','on');
 
                 % dynamicDateTicks
-                dynamicDateTicks(subPlotAxes, 'linked')
-
+                    dynamicDateTicks(subPlotAxes, 'linked') 
+                
                     
                     xLim = get(subPlotAxes(subPlotNumber), 'XLim');
 %                     setDateAxes(subPlotAxes(subPlotNumber), 'XLim', [timeToPlot.start timeToPlot.stop]);
-                    setDateAxes(subPlotAxes(subPlotNumber), 'XLim', xLim);
+                     setDateAxes(subPlotAxes(subPlotNumber), 'XLim', xLim);
                     
                     
                 % Override the data cursor text callback to show time stamp
@@ -323,11 +323,11 @@ for graphNumber = 1:numberOfGraphs
                     
                     if subPlotNumber == numberOfSubplots
                         % on last subplot, so add date string
-                        tlabel('WhichAxes', 'last')
+%                         tlabel('WhichAxes', 'last')
                         debugout('last tlabel call')
                         
                     else
-                        tlabel('Reference', 'none')
+%                         tlabel('Reference', 'none')
                         debugout('regular tlabel call')
                         
                     end
