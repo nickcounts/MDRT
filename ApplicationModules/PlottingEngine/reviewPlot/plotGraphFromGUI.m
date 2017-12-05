@@ -85,6 +85,7 @@
 
 if useTimeline
     t0 = timeline.t0.time;
+    debugout('Found t0 in timeline struct')
 else
     % Should I do something here?
 end

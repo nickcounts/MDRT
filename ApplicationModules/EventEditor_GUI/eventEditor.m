@@ -962,6 +962,7 @@ function updateT0fromGUI(hObject, handles)
     datestamp = datenum(dateString);
     
     handles.timeline.t0.time = datestamp;
+    handles.timeline.uset0 = handles.checkbox_UseT0.Value;
     
     guidata(hObject, handles);
     

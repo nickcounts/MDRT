@@ -142,6 +142,8 @@ end
     
         t0string = [timeline.t0.name, ': ', datestr(timeline.t0.time,'HH:MM.SS'), ' ' timezone];
         vline(timeline.t0.time + deltaT,'r-',t0string,0.5)
+        
+        debugout('Plotted T0 line');
 
         for i = 1:length(timeline.milestone)
             dt = timeline.milestone(i).Time - timeline.t0.time;
