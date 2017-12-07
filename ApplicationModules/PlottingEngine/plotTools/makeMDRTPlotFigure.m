@@ -26,6 +26,7 @@ end
 % -------------------------------------------------------------------------
     
     figureHandle = figure();
+    debugout(sprintf('Created MDRtFigure: %d', figureHandle.Number))
     
     % Add graph structure to appdata
     if  passGraph
@@ -52,6 +53,8 @@ end
     % Override File/Save(as)
     hMenuSave   = findall(gcf,'tag','figMenuFileSave');
     set(hMenuSave, 'Callback', 'MARSsaveFigure');
+    
+    debugout('Overridden default Save and added Advanced menu')
     
 
 end

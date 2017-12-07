@@ -27,7 +27,8 @@ fh = gcf;
     legends = findall(fh, 'Type', 'Legend');
     set(legends, 'FontSize', 7); % default font was 9
     
-    % Timeline Events
+    % Timeline Events - fix stacking order
+    reviewEventLabelsToTop(fh);
     
     
 %% Intelligent filename guess based on plot super title

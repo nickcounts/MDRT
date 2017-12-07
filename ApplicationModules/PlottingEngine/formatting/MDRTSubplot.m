@@ -18,8 +18,7 @@ function [ hAaxes ] = MDRTSubplot( plotsHigh, plotsWide, gap, marginWidth, margi
         defaultNumperOfPlots = 1;
         defaultPlotGap = 0.05;
         defaultPlotMargin = 0.06;
-        
-
+              
 % Handle input arguments
     if (nargin == 1 && isa(plotsHigh, 'matlab.ui.Figure'))
         
@@ -48,7 +47,6 @@ axwidth  = (1-sum(marginHeight) - (plotsWide-1) * gap(2)) / plotsWide;
 
 yPos = 1 - marginWidth(2) - axheight; 
 
-% hax = zeros(plotsHigh*plotsWide,1);
 % Init empty cell array of axes handles
 hAaxes = {};
 ii = 0;
@@ -71,9 +69,13 @@ for ih = 1:plotsHigh
                 'YMinorGrid','on', ...
                 'YMinorTick','on', ...
                 'YTickLabelMode', 'auto', ...
-                'Box', 'on') );
+                'Box', 'on', ...
+                'Tag', 'MDRTAxes') );
             
         xPos = xPos+axwidth+gap(2);
+    
+    debugout('Created MDRT Subplot axes')
+    
     end
     yPos = yPos-axheight-gap(1);
 end

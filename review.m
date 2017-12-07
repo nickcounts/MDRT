@@ -61,6 +61,14 @@ function review_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for review
 handles.output = hObject;
 
+% Handle first-run case and run startup.m if required
+if ~isappdata(groot, 'hasRunStartup') || (isappdata(groot, 'hasRunStartup') && ~getappdata(groot, 'hasRunStartup'))
+    % TODO: force the correct path for this startup.m file in case there
+    % are other startup.m files on the path.
+    startup
+    debugout('Executed startup script')
+end
+
 % This is where I put my initialization code
 % -------------------------------------------------------------------------
 config = getConfig;

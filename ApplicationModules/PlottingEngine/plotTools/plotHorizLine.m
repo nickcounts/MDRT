@@ -42,7 +42,7 @@ figureHandle = varargin{1}.Parent.Parent; % calls the handle of the original plo
     % listbox GUI. Otherwise leave blank. 
     if ~isempty(prevtext)
         data.text = prevtext;
-        prevlist = flipud(string(cellstr({prevtext.String}')));
+        prevlist = flipud( cellstr({prevtext.String}' ));
         data.list = prevlist;
     
     else
@@ -284,10 +284,10 @@ guidata(hl.fig,handles); % Creates structure of guidata based on tags
                             data.label,'color',get(h,'color'),'Tag','hlabel');
                         data.text(index+1) = l;
                     end
-                    name = string(data.label);
+                    name = data.label;
                 
                 else % If no input line name provided, create generic one
-                    checkName = 'Line' + string(index+1);
+                    checkName = 'Line' + sprintf('%d',index+1);
                     logic = strcmp(checkName, data.list);
                     
                     % If the generic Line# is not already in the list, add
@@ -300,7 +300,7 @@ guidata(hl.fig,handles); % Creates structure of guidata based on tags
                         lineNumMatrix = char(data.list');
                         lineNumMatrix = str2num(lineNumMatrix(:,5));
                         newLineNumber = max(lineNumMatrix);                        
-                        name = 'Line' + string(newLineNumber+1);
+                        name = 'Line' + sprintf('%d',newLineNumber+1);
                     
                     end
                     
@@ -313,7 +313,7 @@ guidata(hl.fig,handles); % Creates structure of guidata based on tags
                 h.DisplayName = name;
                 
                 data.line(index+1) = h; % store the horizontal line structure at its indexed value
-                data.list(index+1) = name; % store all data labels at their indexed values
+                data.list(index+1) = {name}; % store all data labels at their indexed values
                 
                 handles = guidata(hl.fig);
                 handles.listbox.String = data.list; % update listbox with data labels of plotted lines
@@ -337,14 +337,16 @@ guidata(hl.fig,handles); % Creates structure of guidata based on tags
     function listCallback (hObject,event, handles)
         set(data.line, 'Selected','off'); % Set all selected states off
         
-        select = string(hObject.String);
+        select = hObject.String;
         num = hObject.Value;
        
         data.select = select(num); % Return index of selected listbox item. Must be highlighted blue to return.
         
         % Find the horizontal line with the Display Name tag (same as listbox name)
-        selLine = findall(figureHandle, 'Tag', 'hline','DisplayName',char(data.select));
-        selLine.Selected = 'on';
+        if ~isempty(num)            
+            selLine = findall(figureHandle, 'Tag', 'hline','DisplayName',char(data.select));
+            selLine.Selected = 'on';
+        end
     end
 
 % Deletes selected horizontal line

@@ -104,8 +104,8 @@ end
 bWriteMetadataFile = false;
 
 % Generate metadata
-metadata = newMetaDataStructure;
-metadata.fdList = FDList;
+metaData = newMetaDataStructure;
+metaData.fdList = FDList;
     
 if ~exist(fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'file')
 
@@ -119,7 +119,7 @@ if ~exist(fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'file')
 	switch choice
         case 'Yes'
             bWriteMetadataFile = true;
-        otherwise            
+        otherwise
 	end
 
 else
@@ -128,20 +128,24 @@ else
     m = load( fullfile(rootDir_path, METADATA_FILE_NAME_STR));
     
     % use existing metadata variable if it exists
-    if isfield(m, 'metadata')
-        metadata = m.metadata;
+    if isfield(m, 'metaData')
+        metaData = m.metaData;
         bWriteMetadataFile = true;
+        debugout('Found existing metaData.mat file')
     else
+        debugout('metaData.mat file was malformed')
+        warning('Metadata file issue. No action being taken. Review the file');
     end
 
 end
 
 
-metadata.timeSpan = timespan;
+metaData.timeSpan = timespan;
 
 
 if bWriteMetadataFile
-	save( fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'metadata');
+    debugout(sprintf('Saving %s file', METADATA_FILE_NAME_STR))
+	save( fullfile(rootDir_path, METADATA_FILE_NAME_STR), 'metaData');
 end
 
 
@@ -196,8 +200,8 @@ if exist(dataIndexFullFile, 'file')
     
     if bWriteToIndex
         
-        dataIndex(indexIndex).metaData = metadata;
-        dataIndex(indexIndex).FDList = metadata.fdList;
+        dataIndex(indexIndex).metaData = metaData;
+        dataIndex(indexIndex).FDList = metaData.fdList;
         dataIndex(indexIndex).pathToData = rootDir_path;
         
     end
