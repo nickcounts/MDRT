@@ -13,33 +13,36 @@
 
 %% Clean up paths in case a user saved them
 
+[MDRTpath, ~, ~] = fileparts(mfilename('fullpath'));
+
 warning('off', 'MATLAB:rmpath:DirNotFound')
 
-    rmpath( genpath('overloads'));
-    rmpath( genpath('developerArea'))
-    rmpath( genpath('Documentation'))
-    rmpath( genpath('Snippets'))
-    rmpath( genpath('unused'))
+    rmpath( genpath(fullfile(MDRTpath,'overloads')))
+    rmpath( genpath(fullfile(MDRTpath,'developerArea')))
+    rmpath( genpath(fullfile(MDRTpath,'Documentation')))
+    rmpath( genpath(fullfile(MDRTpath,'Snippets')))
+    rmpath( genpath(fullfile(MDRTpath,'unused')))
     
 warning( 'on', 'MATLAB:rmpath:DirNotFound')
 
 %% Set function handles to any overloaded standard functions.
 % This must be done before the /overloads/ directory is added to the path
 
-setappdata(groot,'realcla',@cla);
+rmpath('overloads') % So important we do it twice
+setappdata(groot,'realcla',@cla)
 
 %% Set all the paths and subfolders required for MDRT here
 
-addpath(genpath('overloads'));
-addpath(genpath('ApplicationModules'));
-addpath(genpath('ClassDefinitions'));
-addpath(genpath('comparison'));
-addpath(genpath('extensions'));
-addpath(genpath('helpers'));
-addpath(genpath('resources'));
-addpath(genpath('Review_App_Files'));
-addpath(genpath('SpecialTopics'));
-addpath(genpath('Structures'));
+addpath(genpath(fullfile(MDRTpath,'overloads')));
+addpath(genpath(fullfile(MDRTpath,'ApplicationModules')));
+addpath(genpath(fullfile(MDRTpath,'ClassDefinitions')));
+addpath(genpath(fullfile(MDRTpath,'comparison')));
+addpath(genpath(fullfile(MDRTpath,'extensions')));
+addpath(genpath(fullfile(MDRTpath,'helpers')));
+addpath(genpath(fullfile(MDRTpath,'resources')));
+addpath(genpath(fullfile(MDRTpath,'Review_App_Files')));
+addpath(genpath(fullfile(MDRTpath,'SpecialTopics')));
+addpath(genpath(fullfile(MDRTpath,'Structures')));
 
 %% Set a flag in groot that MDRT can check on startup
 
