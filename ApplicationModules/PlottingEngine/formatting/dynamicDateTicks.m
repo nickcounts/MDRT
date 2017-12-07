@@ -118,11 +118,13 @@ set(d,'UpdateFcn',@dateTip);
         % Get the current axes ticks & labels
         ticks  = get(ax1, 'XTick');
         labels = get(ax1, 'XTickLabel');
+        debugout(size(ticks))
         
         % Sometimes the first tick can be outside axes limits. If so, remove it & its label
         if all(ticks(1) < get(ax1,'xlim'))
             ticks(1) = [];
             labels(1,:) = [];
+            debugout(size(ticks))
         end
         
         [yr, mo, da] = datevec(ticks); % Extract year & day information (necessary for ticks on the boundary)
