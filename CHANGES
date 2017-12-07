@@ -1,3 +1,72 @@
+Version 0.6.0:
+ - Merge branch 'develop'
+ - Bug Fix: Plot Setup GUI now displays properly within tabs
+ - New Feature: Archive Manager GUI added to Review main GUI
+ - Cleanup: Supressed non-essential console output and removed debug hook
+ - Bug Fix: Process the .delim files from their new location after copy
+ - Update Git Settings: Ignoring Mac OSX files .DS_Store
+ - Bug Fix: Using "New Data" button correctly updates working data set
+ - Bug Fix: Accepts path string as varargin. Updates FDList properly
+ - Added button to update a selected data set
+ - New Feature: Data Repository Update Function
+ - Bug Fix: Reindexer was breaking on empty timeseries objects.
+ - New Feature: Stop combining valve state and position data in one FD
+ - Bug Fix: Doesn't movw old combined valve file on top of new files
+ - New Feature: Splits old style combined valve data into separate files
+ - New Function: Returns the true FCS FD for Valve Position FDs by lookup
+ - Added support for GNU Grep without --default-names
+ - Bug Fix - horizonal line tool not launching
+ - Incorporated jsystem wrapper for faster system calls
+ - Hooks for splitting large .delim files prior to grep
+ - Performance Boost: Now checks for better grep and uses it
+ - Bug Fix: Valves with empty fd.ts now look for fd.position
+ - Bug Fix: eventEditor didn't save updated T0 times
+ - New function - save selected milestones to a timeline.mat file
+ - Added 'prompt to save' option to save milestones call
+ - Added call to getUniqueEventsFromDelim
+ - Converted from script to function
+ - Fixed Bug - doesn't mix FDs that share a common root string.
+ - Batch retrieval initial commits
+ - Added to repo
+ - Increased humor content
+ - optimized grep command for faster search
+ - Fixed file copy/move functionality
+ - Fixed bug when multiple GUI instances
+ - "initial commit"
+ - initial commit - custom script for tel data review (averaging PTs)
+ - "initial commit. GUI maker and launcher for data grid making tool"
+ - "mod of other callback. looks for targetList in appdata to know what UI object to update"
+ - "Added data grid gui tool. Commented and tested"
+ - "added ability to use on a single list. Can disable updates specific to comparison gui"
+ - started splitter that automatically splits all delims
+ - "fixed cell to char bug. removed depricated string() call"
+ - Merge remote-tracking branch 'origin/master' into develop
+ - Merge remote-tracking branch 'origin/master'
+ - Merge pull request #48 from nickcounts/Trisha
+ - Add files via upload
+ - Add files via upload
+
+Version 0.5.0:
+ - Merge branch 'release-0.4.7'
+ - updated bumpversion to fix duplicate release tags
+ - Merge remote-tracking branch 'origin/develop' into develop
+ - Merge pull request #50 from nickcounts/TheJakeBranch
+ - Merge remote-tracking branch 'origin/develop' into develop
+ - Merge pull request #49 from nickcounts/Trisha
+ - Revert "Merge pull request #48 from nickcounts/Trisha"
+ - Added Hyperlinks to HTML Help Files
+ - HTML Help Files For Capstone Code
+ - Push of Capstone Projects 8-8-17
+ - Updated titles and annotations
+ - Fixed Repeat Timeline Events and Passed graphNumber for Multiplots
+ - File No Longer Necessary
+ - Changed UI Type
+ - Capstone Updates and Enhancements
+ - bug fix
+ - Fixed Error in PC Configuration
+ - file cleanup
+ - Merge branch 'master' into develop
+
 Version 0.4.5:
  - open data file at startup if passed a fullfile string
  - Auto stash before merge of "develop" and "origin/develop"
