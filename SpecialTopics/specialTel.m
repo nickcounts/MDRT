@@ -1,3 +1,7 @@
+%% Script to process TELHS data and resample the listed FDs
+% This allows direct comparison (subtraction, etc) and can be easily
+% exported to Excel... We did it for Stevens
+
 path = '/Users/nickcounts/Documents/Spaceport/Data/Testing/2017-09-27 - TEL Cyl Test/data'
 
 % PT30 has the most data points
