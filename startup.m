@@ -28,7 +28,10 @@ warning( 'on', 'MATLAB:rmpath:DirNotFound')
 %% Set function handles to any overloaded standard functions.
 % This must be done before the /overloads/ directory is added to the path
 
-rmpath('overloads') % So important we do it twice
+warning('off', 'MATLAB:rmpath:DirNotFound')
+    rmpath('overloads') % So important we do it twice
+warning( 'on', 'MATLAB:rmpath:DirNotFound')
+
 setappdata(groot,'realcla',@cla)
 
 %% Set all the paths and subfolders required for MDRT here
