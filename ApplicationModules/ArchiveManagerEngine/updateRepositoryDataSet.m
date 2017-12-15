@@ -238,7 +238,30 @@ if exist(dataIndexFullFile, 'file')
 else
     % Didn't find the data index
     
-    % Prompt user to locate index
+    bWriteDataIndexFile = false;
+    
+    YesButton = 'Yes';
+    NoButton = 'No';
+    DefaultButton = NoButton;
+    
+    % Ask if you want to write new dataIndex
+    qString = 'Save new dataIndex.mat to disk?';
+    titleString = 'No dataIndex.mat File Found';
+    choice = questdlg(  qString, ...
+                        titleString, ...
+                        YesButton, NoButton, DefaultButton);
+	switch choice
+        case YesButton
+            bWriteDataIndexFile = true;
+        otherwise  
+            
+	end
+    
+    if bWriteDataIndexFile
+        
+        save(dataIndexFullFile, 'dataIndex', '-mat');
+                                 
+    end
     
     
 end
