@@ -63,4 +63,4 @@ process can cause issues with version control.
 
 ## Credits
 
-MDRT was initially developed by Nick Counts at Spaceport Support Services in 2012. Additional development and contributions have been provided by Paige Pruce, Staten Longo, Trisha Patel, and Jake Singh.
+MDRT was initially developed by [Nick Counts](https://github.com/nickcounts) at Spaceport Support Services in 2012. Additional development and contributions have been provided by Paige Pruce, [Staten Longo](https://github.com/StatenLongo), [Trisha Patel](https://github.com/tpatel823), and [Jake Singh](https://github.com/jtsingh7).
