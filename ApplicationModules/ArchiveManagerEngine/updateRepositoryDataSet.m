@@ -259,6 +259,12 @@ else
     
     if bWriteDataIndexFile
         
+        dataIndex = struct;
+        
+        dataIndex.metaData = metaData;
+        dataIndex.FDList = metaData.fdList;
+        dataIndex.pathToData = rootDir_path;
+        
         save(dataIndexFullFile, 'dataIndex', '-mat');
                                  
     end
