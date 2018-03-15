@@ -1,4 +1,4 @@
-function [ output_args ] = trendMath( dataBrushVariable )
+function [ trend ] = trendMath( dataBrushVariable )
 %trendMath.m
 %   Calculates basic linear trends from data-brush variables.
 %   Time handling updated to display durations greater than 24 hours
@@ -73,9 +73,6 @@ SStotal = (length(dataBrushVariable)-1) * var(dataBrushVariable(:,2));
 rsq = 1 - SSresid/SStotal;
 
 
-
-
-
 disp(sprintf('Start\t\tend\t\tduration'))
 disp(sprintf('%s\t%s\t%s',startString, stopString, durationString))
 
@@ -83,6 +80,19 @@ disp(sprintf('Delta\t\tdy/min\t\tr^2'))
 disp(sprintf('%5.2f\t\t%5.3f\t\t%1.4f',dy, rate, rsq))
 
 
+    trend = struct();
+
+        trend.starts    = startString;
+        trend.stops     = stopString;
+        trend.durations = durationString;
+
+        trend.start     = t1;
+        trend.stop      = t2;
+        trend.duration  = dt;
+
+        trend.delta     = dy;
+        trend.rate      = rate;
+        trend.rsq       = rsq;
 
 end
 
