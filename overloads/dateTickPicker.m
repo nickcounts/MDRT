@@ -203,7 +203,8 @@ low = low(ndx);
 format = format(ndx);
 
 % Estimate the extent of each format as a fraction of the axes width or height
-if ~graphicsversion(hFig,'handlegraphics')
+if ~verLessThan('matlab','8.4.0')
+% if ~graphicsversion(hFig,'handlegraphics')
     extent = localGetExtentHG2(formlen,format,ax,axh,dateInd,axPos);
 else
     extent = localGetExtentHG1(formlen,format,ax,axh,dateInd,axPos);
