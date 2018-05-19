@@ -22,7 +22,7 @@ function varargout = makeGraphGUI(varargin)
 
 % Edit the above text to modify the response to help makeGraphGUI
 
-% Last Modified by GUIDE v2.5 09-Oct-2014 18:46:24
+% Last Modified by GUIDE v2.5 18-May-2018 22:53:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -80,8 +80,10 @@ if exist(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'file')
     % Add the loaded list to the GUI handles structure
     handles.quickPlotFDs = FDList;
     
+    setappdata(hObject, 'fdMasterList', FDList);
+    
     % add the list to the GUI menu
-    set(handles.ui_dropdown_dataStreamList, 'String', FDList(:,1));
+%     set(handles.ui_dropdown_dataStreamList, 'String', FDList(:,1));
     
 else
     
@@ -112,6 +114,8 @@ end
     handles.figure1.Name = makeDataSetTitleStringFromActiveConfig(config);
     handles.figure1.NumberTitle = 'off';
 
+
+    
 % Choose default command line output for makeGraphGUI
     handles.output = hObject;
 
@@ -150,6 +154,10 @@ set(objs, 'Parent', tab1)
 % set(timeGUI.Children(3),'Parent',tab1); 
 % % there's a bug where it won't run if any other figure is open
 % end
+
+
+    updateSearchResults(hObject);
+
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
@@ -506,7 +514,72 @@ function ui_button_addDataStream_Callback(hObject, eventdata, handles)
     
     
     
+function fdListCallback(hObject, eventData, handles)
+        
+    persistent lastTime
+
+    ONE_SEC = 1/(60*60*24);
     
+    if isempty(lastTime) || now-lastTime > 0.3*ONE_SEC
+        lastTime = now;
+        % process a single-click
+        
+    else
+        % Process a double-click        
+        fdMasterList = getappdata(handles.figure1, 'fdMasterList');
+        
+        % Get the selected FD String
+        fds = cellstr(hObject.String{ hObject.Value });
+        
+        cellfind = @(string)(@(cell_contents)(strcmp(string,cell_contents)));
+        fdIndex = cellfun(cellfind(fds),fdMasterList(:,1));
+        newListDataRow = fdMasterList(fdIndex,:);
+        
+        
+        
+        % set index for which listbox we are using
+        i = handles.activeList;
+    
+    tempStreams = handles.graph.streams;
+    
+    % This avoids indexing errors for structure array streams(i).toPlot by
+    % populating a missing but needed array.
+    if length(tempStreams) < i
+        tempStreams(i).toPlot = {};
+    end
+    
+    % creates a copy of the streams variable (with an added blank toPlot
+    % struct if required.
+    oldStreams = tempStreams(i).toPlot;
+        if isempty(oldStreams)
+            oldStreams = {};
+        end
+        
+    newStreams = { oldStreams{:} newListDataRow{2}(1:end-4) };
+
+    % update graph.streams with the newly constructed newStreams
+    handles.graph.streams(i).toPlot = newStreams;
+
+    % update the handles structure
+    guidata(hObject, handles);
+        
+        
+        
+	
+% Fix GUI selection bug for listboxes
+% -------------------------------------------------------------------------
+
+    makeListSelectionsValid(hObject, eventData, handles);
+
+% refresh the GUI
+    updateGUIfromGraphStructure(hObject, eventData, handles);
+        
+        
+    end
+    
+    
+    
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1169,3 +1242,24 @@ function contents = getEditboxContents(handle)
     
 
         
+
+
+% --- Executes during object creation, after setting all properties.
+function searchBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to searchBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+% --- Executes during object creation, after setting all properties.
+function figure1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

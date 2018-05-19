@@ -1,4 +1,5 @@
-function updateSearchResults(anyUIhandle, ~, varargin)
+function updateSearchResults(hObj, ~, varargin)
+
 %updateSearchResults 
 %
 %   Accepts a handle to any uicontrol.
@@ -8,17 +9,23 @@ function updateSearchResults(anyUIhandle, ~, varargin)
 %   Expects appdata from the calling app/gui called 'fdMasterList'
 %
 %   Counts, VCSFA 2016
- 
-    mdrt = getappdata(anyUIhandle.Parent);
+    
+    if isequal(class(hObj), 'matlab.ui.Figure')
+        disp(sprintf('Passed a matlab.ui.Figure'))
+        parentFig = hObj;
+    else
+        parentFig = ancestor(hObj, 'figure');
+    end
 
+    mdrt = getappdata(parentFig);
+    debugout('some message')
     masterList = mdrt.fdMasterList(:,1);
 
     % get handle to the list of search results
-    lsr = findobj(anyUIhandle.Parent.Children,'tag', 'listSearchResults');
+    lsr = findobj(parentFig,'tag', 'listSearchResults');
     
     % get handle to the search box (for sure!)
-    hebox = findobj(anyUIhandle.Parent.Children, 'tag', 'searchBox');
-    
+    hebox = findobj(parentFig, 'tag', 'searchBox');
     
     % Access the Java object to get the stupid text. Why, Matlab? Why?
     ebh = findjobj(hebox);
