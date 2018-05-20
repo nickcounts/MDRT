@@ -10,22 +10,21 @@ function updateSearchResults(hObj, ~, varargin)
 %
 %   Counts, VCSFA 2016
     
-    if isequal(class(hObj), 'matlab.ui.Figure')
-        disp(sprintf('Passed a matlab.ui.Figure'))
-        parentFig = hObj;
-    else
-        parentFig = ancestor(hObj, 'figure');
-    end
 
-    mdrt = getappdata(parentFig);
-    debugout('some message')
-    masterList = mdrt.fdMasterList(:,1);
+    hDataHolder = hObj;
+    
+    while ~isappdata(hDataHolder, 'fdMasterList')
+        hDataHolder = hDataHolder.Parent;
+    end
+    
+    masterList = getappdata(hDataHolder, 'fdMasterList');
+    masterList = masterList(:,1);
 
     % get handle to the list of search results
-    lsr = findobj(parentFig,'tag', 'listSearchResults');
+    lsr = findobj(hDataHolder,'tag', 'listSearchResults');
     
     % get handle to the search box (for sure!)
-    hebox = findobj(parentFig, 'tag', 'searchBox');
+    hebox = findobj(hDataHolder, 'tag', 'searchBox');
     
     % Access the Java object to get the stupid text. Why, Matlab? Why?
     ebh = findjobj(hebox);

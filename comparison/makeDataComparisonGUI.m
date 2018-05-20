@@ -202,9 +202,6 @@ function hs = makeDataComparisonGUI(targetParentHandle)
 %% Populate GUI with stuff from dataIndex
 
 allDataSetNames = {};
-matchingFDList = {};
-op1eventList = {};
-op2eventList = {};
 
 for i = 1:numel(dataIndex)
     

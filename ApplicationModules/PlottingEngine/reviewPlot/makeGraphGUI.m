@@ -79,9 +79,7 @@ if exist(fullfile(config.dataFolderPath, 'AvailableFDs.mat'),'file')
     
     % Add the loaded list to the GUI handles structure
     handles.quickPlotFDs = FDList;
-    
-    setappdata(hObject, 'fdMasterList', FDList);
-    
+        
     % add the list to the GUI menu
 %     set(handles.ui_dropdown_dataStreamList, 'String', FDList(:,1));
     
@@ -155,7 +153,10 @@ set(objs, 'Parent', tab1)
 % % there's a bug where it won't run if any other figure is open
 % end
 
-
+    % Add the FD List to the Make Graph GUI for the Search Bar functions
+    % Do this here so Trisha's GUI rearranging doesn't change the UI
+    % Parent/Child heigherarchy out from under us.
+    setappdata(hObject, 'fdMasterList', handles.quickPlotFDs);
     updateSearchResults(hObject);
 
 
