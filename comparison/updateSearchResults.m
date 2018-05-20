@@ -13,16 +13,12 @@ function updateSearchResults(hObj, ~, varargin)
     if isequal(class(hObj), 'matlab.ui.Figure')
         disp(sprintf('Passed a matlab.ui.Figure'))
         parentFig = hObj;
-    elseif isequal(class(hObj.Parent), 'matlab.ui.container.Tab')
-        debugout('called on a tab pane');
-        parentFig = hObj.Parent;
     else
         parentFig = ancestor(hObj, 'figure');
     end
 
     mdrt = getappdata(parentFig);
     debugout('some message')
-    
     masterList = mdrt.fdMasterList(:,1);
 
     % get handle to the list of search results
